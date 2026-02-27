@@ -1,0 +1,30 @@
+@import "@mint/ui/styles";
+
+@theme inline {
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-pixel-circle);
+}
+
+@utility container {
+  width: min(64rem, calc(100% - 1rem));
+  margin-inline: auto;
+}
+
+@utility corner-square {
+  @apply absolute size-2 rounded-xs border border-border bg-background;
+  translate: var(--sq-x, -50%) var(--sq-y, -50%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}

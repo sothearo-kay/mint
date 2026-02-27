@@ -1,0 +1,39 @@
+{
+  "name": "web",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint --max-warnings 0",
+    "lint:fix": "eslint --fix",
+    "check-types": "next typegen && tsc --noEmit"
+  },
+  "dependencies": {
+    "@mint/api-client": "workspace:*",
+    "@mint/env": "workspace:*",
+    "@mint/ui": "workspace:*",
+    "geist": "catalog:ui",
+    "lucide-react": "catalog:ui",
+    "next": "catalog:dev",
+    "next-themes": "catalog:ui",
+    "react": "catalog:react",
+    "react-dom": "catalog:react"
+  },
+  "devDependencies": {
+    "@mint/eslint-config": "workspace:*",
+    "@next/eslint-plugin-next": "catalog:dev",
+    "@tailwindcss/postcss": "catalog:ui",
+    "@tanstack/react-query": "catalog:react",
+    "@types/node": "catalog:dev",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "eslint": "catalog:dev",
+    "postcss": "catalog:ui",
+    "tailwindcss": "catalog:ui",
+    "typescript": "catalog:dev",
+    "zod": "catalog:server"
+  }
+}

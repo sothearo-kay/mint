@@ -1,0 +1,26 @@
+{
+  "name": "server",
+  "type": "module",
+  "exports": {
+    "./routes": "./src/routes/index.ts"
+  },
+  "scripts": {
+    "dev": "tsx watch --env-file=.env src/index.ts",
+    "build": "tsdown",
+    "start": "node --env-file=.env dist/index.js",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mint/env": "workspace:*",
+    "@hono/node-server": "catalog:server",
+    "@hono/zod-openapi": "catalog:server",
+    "@scalar/hono-api-reference": "catalog:server",
+    "hono": "catalog:server",
+    "zod": "catalog:server"
+  },
+  "devDependencies": {
+    "tsdown": "catalog:dev",
+    "tsx": "catalog:dev",
+    "typescript": "catalog:dev"
+  }
+}

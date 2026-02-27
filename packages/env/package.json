@@ -1,0 +1,25 @@
+{
+  "name": "@mint/env",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./web": "./src/web.ts",
+    "./server": "./src/server.ts"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0",
+    "lint:fix": "eslint --fix"
+  },
+  "dependencies": {
+    "@t3-oss/env-core": "catalog:env",
+    "@t3-oss/env-nextjs": "catalog:env",
+    "zod": "catalog:server"
+  },
+  "devDependencies": {
+    "@mint/eslint-config": "workspace:*",
+    "@types/node": "catalog:dev",
+    "eslint": "catalog:dev",
+    "typescript": "catalog:dev"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "@mint/eslint-config",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./eslint.config.js",
+    "./create-config": "./create-config.js"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^7.6.1",
+    "eslint": "catalog:dev",
+    "eslint-plugin-format": "^2.0.1"
+  }
+}

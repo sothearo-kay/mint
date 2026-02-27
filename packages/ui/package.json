@@ -1,0 +1,39 @@
+{
+  "name": "@mint/ui",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./components/*": "./src/components/ui/*.tsx",
+    "./lib/*": "./src/lib/*.ts",
+    "./hooks/*": "./src/hooks/*.ts",
+    "./styles": "./src/styles/globals.css"
+  },
+  "scripts": {
+    "lint": "eslint --max-warnings 0",
+    "lint:fix": "eslint --fix"
+  },
+  "peerDependencies": {
+    "react": "catalog:react",
+    "react-dom": "catalog:react"
+  },
+  "dependencies": {
+    "@base-ui/react": "catalog:ui",
+    "class-variance-authority": "catalog:ui",
+    "clsx": "catalog:ui",
+    "lucide-react": "catalog:ui",
+    "shadcn": "catalog:ui",
+    "tailwind-merge": "catalog:ui",
+    "tw-animate-css": "catalog:ui"
+  },
+  "devDependencies": {
+    "@eslint-react/eslint-plugin": "catalog:dev",
+    "@mint/eslint-config": "workspace:*",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "eslint-plugin-react-hooks": "catalog:dev",
+    "eslint-plugin-react-refresh": "catalog:dev",
+    "tailwindcss": "catalog:ui",
+    "typescript": "catalog:dev"
+  }
+}

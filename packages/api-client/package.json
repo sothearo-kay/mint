@@ -1,0 +1,19 @@
+{
+  "name": "@mint/api-client",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "hono": "catalog:server"
+  },
+  "devDependencies": {
+    "server": "workspace:*",
+    "typescript": "catalog:dev"
+  }
+}
