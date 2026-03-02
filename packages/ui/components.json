@@ -17,5 +17,5 @@
     "lib": "@mint/ui/lib",
     "hooks": "@mint/ui/hooks"
   },
-  "iconLibrary": "lucide"
+  "iconLibrary": "hugeicons"
 }

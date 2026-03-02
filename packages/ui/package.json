@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
+    "./components/ui/*": "./src/components/ui/*.tsx",
     "./components/*": "./src/components/ui/*.tsx",
     "./lib/*": "./src/lib/*.ts",
     "./hooks/*": "./src/hooks/*.ts",
@@ -19,10 +20,13 @@
   },
   "dependencies": {
     "@base-ui/react": "catalog:ui",
+    "@hugeicons/core-free-icons": "catalog:ui",
+    "@hugeicons/react": "catalog:ui",
     "class-variance-authority": "catalog:ui",
     "clsx": "catalog:ui",
-    "lucide-react": "catalog:ui",
+    "next-themes": "catalog:ui",
     "shadcn": "catalog:ui",
+    "sonner": "catalog:ui",
     "tailwind-merge": "catalog:ui",
     "tw-animate-css": "catalog:ui"
   },
