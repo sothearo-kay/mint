@@ -15,6 +15,7 @@
     "@mint/api-client": "workspace:*",
     "@mint/env": "workspace:*",
     "@mint/ui": "workspace:*",
+    "better-auth": "catalog:db",
     "geist": "catalog:ui",
     "lucide-react": "catalog:ui",
     "next": "catalog:dev",

@@ -37,12 +37,19 @@ catalogs:
     "@t3-oss/env-core": "^0.13.10"
     "@t3-oss/env-nextjs": "^0.13.10"
 
+  db:
+    better-auth: "^1.5.0"
+    drizzle-orm: "^0.45.1"
+    pg: "^8.19.0"
+    "@types/pg": "^8.18.0"
+
   dev:
     typescript: "5.9.2"
     eslint: "^9.39.1"
     "@eslint-react/eslint-plugin": "^2.13.0"
     "@next/eslint-plugin-next": "^16.1.6"
     "@types/node": "22.15.3"
+    drizzle-kit: "^0.31.9"
     eslint-plugin-react-hooks: "^7.0.1"
     eslint-plugin-react-refresh: "^0.5.2"
     next: "16.1.5"

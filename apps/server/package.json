@@ -11,10 +11,12 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
+    "@mint/db": "workspace:*",
     "@mint/env": "workspace:*",
     "@hono/node-server": "catalog:server",
     "@hono/zod-openapi": "catalog:server",
     "@scalar/hono-api-reference": "catalog:server",
+    "better-auth": "catalog:db",
     "hono": "catalog:server",
     "zod": "catalog:server"
   },
