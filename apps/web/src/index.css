@@ -17,6 +17,15 @@
 }
 
 @layer base {
+  :root {
+    --header-height: 60px;
+    --footer-height: 64px;
+    --features-height: 150px;
+    --hero-height: calc(
+      100svh - 1rem - 2px - var(--header-height) - var(--footer-height) -
+        var(--features-height)
+    );
+  }
   * {
     @apply border-border outline-ring/50;
   }
