@@ -1,4 +1,5 @@
 import { Button } from "@mint/ui/components/button";
+import Link from "next/link";
 
 export function Hero() {
   return (
@@ -8,9 +9,15 @@ export function Hero() {
         A minimalist expense tracker to help you stay on top of your finances.
       </p>
       <div className="flex items-center gap-3">
-        <Button>Get Started</Button>
+        <Button
+          nativeButton={false}
+          render={<Link href="/transactions/new" />}
+        >
+          Get Started
+        </Button>
         <Button
           variant="outline"
+          nativeButton={false}
           render={(
             <a
               href="https://github.com/sothearo-kay/mint"

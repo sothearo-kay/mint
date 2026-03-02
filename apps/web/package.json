@@ -12,12 +12,13 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@hugeicons/core-free-icons": "catalog:ui",
+    "@hugeicons/react": "catalog:ui",
     "@mint/api-client": "workspace:*",
     "@mint/env": "workspace:*",
     "@mint/ui": "workspace:*",
     "better-auth": "catalog:db",
     "geist": "catalog:ui",
-    "lucide-react": "catalog:ui",
     "next": "catalog:dev",
     "next-themes": "catalog:ui",
     "react": "catalog:react",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@mint/eslint-config": "workspace:*",
     "@next/eslint-plugin-next": "catalog:dev",
+    "@svgr/webpack": "catalog:dev",
     "@tailwindcss/postcss": "catalog:ui",
     "@tanstack/react-query": "catalog:react",
     "@types/node": "catalog:dev",

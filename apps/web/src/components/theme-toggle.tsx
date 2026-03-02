@@ -1,15 +1,16 @@
 "use client";
 
-import { Monitor, Moon, Sun } from "lucide-react";
+import { ComputerIcon, Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons";
+import { Icon } from "@mint/ui/components/icon";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 
 const themes = [
-  { value: "system", icon: Monitor },
-  { value: "light", icon: Sun },
-  { value: "dark", icon: Moon },
-] as const;
+  { value: "system", icon: ComputerIcon },
+  { value: "light", icon: Sun03Icon },
+  { value: "dark", icon: Moon02Icon },
+];
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -29,7 +30,7 @@ export function ThemeToggle() {
 
   return (
     <div className="flex items-center rounded-full border bg-muted p-px">
-      {themes.map(({ value, icon: Icon }) => {
+      {themes.map(({ value, icon: ThemeIcon }) => {
         const isActive = mounted && theme === value;
         return (
           <button
@@ -41,7 +42,11 @@ export function ThemeToggle() {
             {isActive && (
               <div className="absolute inset-0 rounded-full bg-background shadow-sm [view-transition-name:theme-indicator]" />
             )}
-            <Icon className="relative z-10 size-4" />
+            <Icon
+              icon={ThemeIcon}
+              size={16}
+              className="relative z-10"
+            />
           </button>
         );
       })}

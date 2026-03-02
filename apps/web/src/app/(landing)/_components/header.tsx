@@ -1,11 +1,16 @@
 import { Button } from "@mint/ui/components/button";
+import Link from "next/link";
 
 export function Header() {
   return (
     <header className="sticky top-2 flex h-(--header-height) items-center border-b bg-background px-6 before:absolute before:content-[''] before:-inset-x-px before:-top-2 before:h-2 before:bg-background before:border-b before:border-border">
       <div className="flex w-full items-center justify-between">
         <span className="font-heading text-xl">Mint</span>
-        <Button variant="outline" render={<a href="/app" />}>
+        <Button
+          variant="outline"
+          nativeButton={false}
+          render={<Link href="/transactions/new" />}
+        >
           Track It
         </Button>
       </div>
