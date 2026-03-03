@@ -8,6 +8,8 @@
     "dev": "tsx watch --env-file=.env src/index.ts",
     "build": "tsdown",
     "start": "node --env-file=.env dist/index.js",
+    "lint": "eslint --max-warnings 0",
+    "lint:fix": "eslint --fix",
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
@@ -17,10 +19,13 @@
     "@hono/zod-openapi": "catalog:server",
     "@scalar/hono-api-reference": "catalog:server",
     "better-auth": "catalog:db",
+    "drizzle-orm": "catalog:db",
     "hono": "catalog:server",
     "zod": "catalog:server"
   },
   "devDependencies": {
+    "@mint/eslint-config": "workspace:*",
+    "eslint": "catalog:dev",
     "tsdown": "catalog:dev",
     "tsx": "catalog:dev",
     "typescript": "catalog:dev"

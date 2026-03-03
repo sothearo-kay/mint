@@ -7,9 +7,7 @@ export const category = pgTable(
   "category",
   {
     id: text("id").primaryKey(),
-    userId: text("user_id")
-      .notNull()
-      .references(() => user.id, { onDelete: "cascade" }),
+    userId: text("user_id").references(() => user.id, { onDelete: "cascade" }),
     name: text("name").notNull(),
     icon: text("icon").notNull(),
     type: transactionTypeEnum("type").notNull(),

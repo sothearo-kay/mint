@@ -1,6 +1,6 @@
-import type { AppRouteHandler } from "@/lib/types";
-
 import type { CheckRoute } from "./health.routes";
+
+import type { AppRouteHandler } from "@/lib/types";
 
 export const check: AppRouteHandler<CheckRoute> = (c) => {
   return c.json({

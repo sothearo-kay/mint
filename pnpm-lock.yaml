@@ -169,6 +169,9 @@ importers:
       better-auth:
         specifier: catalog:db
         version: 1.5.1(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.2))(typescript@5.9.2))(drizzle-kit@0.31.9)(drizzle-orm@0.45.1(@electric-sql/pglite@0.3.15)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.2))(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(mysql2@3.15.3)(pg@8.19.0)(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.2)))(mongodb@7.1.0)(mysql2@3.15.3)(next@16.1.5(@babel/core@7.29.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(pg@8.19.0)(prisma@7.4.2(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.2))(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      drizzle-orm:
+        specifier: catalog:db
+        version: 0.45.1(@electric-sql/pglite@0.3.15)(@prisma/client@7.4.2(prisma@7.4.2(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.2))(typescript@5.9.2))(@types/pg@8.18.0)(kysely@0.28.11)(mysql2@3.15.3)(pg@8.19.0)(postgres@3.4.7)(prisma@7.4.2(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.2))
       hono:
         specifier: catalog:server
         version: 4.12.3
@@ -176,6 +179,12 @@ importers:
         specifier: catalog:server
         version: 4.3.6
     devDependencies:
+      '@mint/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      eslint:
+        specifier: catalog:dev
+        version: 9.39.3(jiti@2.6.1)
       tsdown:
         specifier: catalog:dev
         version: 0.21.0-beta.2(synckit@0.11.12)(typescript@5.9.2)
@@ -293,6 +302,9 @@ importers:
       drizzle-kit:
         specifier: catalog:dev
         version: 0.31.9
+      tsx:
+        specifier: catalog:dev
+        version: 4.21.0
       typescript:
         specifier: catalog:dev
         version: 5.9.2
@@ -385,6 +397,9 @@ importers:
       '@types/react-dom':
         specifier: catalog:react
         version: 19.2.2(@types/react@19.2.2)
+      eslint:
+        specifier: catalog:dev
+        version: 9.39.3(jiti@2.6.1)
       eslint-plugin-react-hooks:
         specifier: catalog:dev
         version: 7.0.1(eslint@9.39.3(jiti@2.6.1))

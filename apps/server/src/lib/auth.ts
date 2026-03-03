@@ -1,8 +1,8 @@
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@mint/db";
 import * as schema from "@mint/db/schema";
 import { env } from "@mint/env/server";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg", schema }),
