@@ -1,10 +1,11 @@
-import { useTheme } from "next-themes"
-import { Toaster as Sonner, type ToasterProps } from "sonner"
-import { Icon } from "@mint/ui/components/ui/icon"
-import { CheckmarkCircle02Icon, InformationCircleIcon, Alert02Icon, MultiplicationSignCircleIcon, Loading03Icon } from "@hugeicons/core-free-icons"
+import type { ToasterProps } from "sonner";
+import { Alert02Icon, CheckmarkCircle02Icon, InformationCircleIcon, Loading03Icon, MultiplicationSignCircleIcon } from "@hugeicons/core-free-icons";
+import { Icon } from "@mint/ui/components/ui/icon";
+import { useTheme } from "next-themes";
+import { Toaster as Sonner } from "sonner";
 
-const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
+function Toaster({ ...props }: ToasterProps) {
+  const { theme = "system" } = useTheme();
 
   return (
     <Sonner
@@ -42,8 +43,8 @@ const Toaster = ({ ...props }: ToasterProps) => {
       }}
       {...props}
     />
-  )
+  );
 }
 
-export { toast } from "sonner"
-export { Toaster }
+export { toast } from "sonner";
+export { Toaster };

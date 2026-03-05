@@ -16,10 +16,30 @@
   translate: var(--sq-x, -50%) var(--sq-y, -50%);
 }
 
+@utility bg-stripe {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    rgba(255, 255, 255, 0.18) 5px,
+    rgba(255, 255, 255, 0.18) 10px
+  );
+}
+
+@utility bg-stripe-muted {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 5px,
+    rgba(128, 128, 128, 0.1) 5px,
+    rgba(128, 128, 128, 0.1) 10px
+  );
+}
+
 @layer base {
   :root {
     --header-height: 60px;
-    --footer-height: 64px;
+    --footer-height: 60px;
     --features-height: 150px;
     --hero-height: calc(
       100svh - 1rem - 2px - var(--header-height) - var(--footer-height) -

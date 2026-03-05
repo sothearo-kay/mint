@@ -20,6 +20,8 @@
     "better-auth": "catalog:db",
     "geist": "catalog:ui",
     "next": "catalog:dev",
+    "date-fns": "catalog:ui",
+    "motion": "catalog:ui",
     "next-themes": "catalog:ui",
     "react": "catalog:react",
     "react-dom": "catalog:react"

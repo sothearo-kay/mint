@@ -2,14 +2,56 @@
 
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { Cancel01Icon } from "@hugeicons/core-free-icons";
-
-import { Icon } from "@mint/ui/components/ui/icon";
 import { Button } from "@mint/ui/components/ui/button";
+import { Icon } from "@mint/ui/components/ui/icon";
 import { cn } from "@mint/ui/lib/utils";
+import { AnimatePresence, motion } from "motion/react";
 import * as React from "react";
 
-function Dialog({ ...props }: DialogPrimitive.Root.Props) {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+type DialogContextValue = {
+  isOpen: boolean;
+  close: () => void;
+  unmount: () => void;
+};
+
+const DialogOpenContext = React.createContext<DialogContextValue>({
+  isOpen: false,
+  close: () => {},
+  unmount: () => {},
+});
+
+function Dialog({
+  open,
+  onOpenChange,
+  defaultOpen,
+  ...props
+}: DialogPrimitive.Root.Props) {
+  const [internalOpen, setInternalOpen] = React.useState(defaultOpen ?? false);
+  const isOpen = open ?? internalOpen;
+  const actionsRef = React.useRef<DialogPrimitive.Root.Actions | null>(null);
+
+  return (
+    <DialogOpenContext
+      value={{
+        isOpen,
+        close: () => actionsRef.current?.close(),
+        unmount: () => actionsRef.current?.unmount(),
+      }}
+    >
+      <DialogPrimitive.Root
+        data-slot="dialog"
+        open={isOpen}
+        onOpenChange={(nextOpen, eventDetails) => {
+          if (open === undefined)
+            setInternalOpen(nextOpen);
+          onOpenChange?.(nextOpen, eventDetails);
+        }}
+        defaultOpen={defaultOpen}
+        actionsRef={actionsRef}
+        {...props}
+      />
+    </DialogOpenContext>
+  );
 }
 
 function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
@@ -17,25 +59,27 @@ function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props) {
 }
 
 function DialogPortal({ ...props }: DialogPrimitive.Portal.Props) {
-  return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
+  return <DialogPrimitive.Portal data-slot="dialog-portal" keepMounted {...props} />;
 }
 
 function DialogClose({ ...props }: DialogPrimitive.Close.Props) {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
-function DialogOverlay({
-  className,
-  ...props
-}: DialogPrimitive.Backdrop.Props) {
+function DialogOverlay({ className }: { className?: string }) {
+  const { isOpen, close, unmount } = React.use(DialogOpenContext);
   return (
-    <DialogPrimitive.Backdrop
+    <motion.div
       data-slot="dialog-overlay"
-      className={cn(
-        "data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs",
-        className,
-      )}
-      {...props}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      onAnimationComplete={() => {
+        if (!isOpen)
+          unmount();
+      }}
+      onClick={close}
+      className={cn("fixed inset-0 isolate z-50 bg-black/30", className)}
     />
   );
 }
@@ -48,35 +92,40 @@ function DialogContent({
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
 }) {
+  const { isOpen } = React.use(DialogOpenContext);
   return (
-    <DialogPortal>
-      <DialogOverlay />
-      <DialogPrimitive.Popup
-        data-slot="dialog-content"
-        className={cn(
-          "bg-background data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-4 rounded-xl p-4 text-sm ring-1 duration-100 outline-none sm:max-w-sm",
-          className,
-        )}
-        {...props}
-      >
-        {children}
-        {showCloseButton && (
-          <DialogPrimitive.Close
-            data-slot="dialog-close"
-            render={(
-              <Button
-                variant="ghost"
-                className="absolute top-2 right-2"
-                size="icon"
-              />
+    <AnimatePresence>
+      {isOpen && (
+        <DialogPortal>
+          <DialogOverlay />
+          <DialogPrimitive.Popup
+            data-slot="dialog-content"
+            className={cn(
+              "bg-background data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 ring-foreground/10 fixed top-1/2 left-1/2 z-50 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-5 rounded-xl p-5 text-sm ring-1 duration-150 outline-none sm:max-w-sm",
+              className,
             )}
+            {...props}
           >
-            <Icon icon={Cancel01Icon} />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
-        )}
-      </DialogPrimitive.Popup>
-    </DialogPortal>
+            {children}
+            {showCloseButton && (
+              <DialogPrimitive.Close
+                data-slot="dialog-close"
+                render={(
+                  <Button
+                    variant="ghost"
+                    className="absolute top-3 right-3"
+                    size="icon"
+                  />
+                )}
+              >
+                <Icon icon={Cancel01Icon} />
+                <span className="sr-only">Close</span>
+              </DialogPrimitive.Close>
+            )}
+          </DialogPrimitive.Popup>
+        </DialogPortal>
+      )}
+    </AnimatePresence>
   );
 }
 
