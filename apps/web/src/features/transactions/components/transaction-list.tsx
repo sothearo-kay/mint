@@ -95,13 +95,13 @@ export function TransactionList() {
                 <div className="h-9 w-32 bg-muted rounded-lg animate-pulse" />
                 <div className="flex items-center gap-4">
                   <div className="space-y-1">
-                    <div className="h-2.5 w-10 bg-muted rounded-full animate-pulse" />
-                    <div className="h-4 w-20 bg-muted rounded-full animate-pulse" />
+                    <div className="h-3 w-10 bg-muted rounded-full animate-pulse" />
+                    <div className="h-4.5 w-20 bg-muted rounded-full animate-pulse" />
                   </div>
                   <div className="w-px h-6 bg-muted" />
                   <div className="space-y-1">
-                    <div className="h-2.5 w-12 bg-muted rounded-full animate-pulse" />
-                    <div className="h-4 w-20 bg-muted rounded-full animate-pulse" />
+                    <div className="h-3 w-12 bg-muted rounded-full animate-pulse" />
+                    <div className="h-4.5 w-20 bg-muted rounded-full animate-pulse" />
                   </div>
                 </div>
               </div>
@@ -203,8 +203,8 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-5">
       {[1, 2].map(g => (
-        <div key={g} className="space-y-2">
-          <div className="h-3 w-16 bg-muted rounded-full animate-pulse" />
+        <div key={g} className="space-y-3">
+          <div className="h-4 w-16 bg-muted rounded-full animate-pulse" />
           <div className="space-y-3.5">
             {[1, 2, 3].map(i => (
               <div key={i} className="flex items-center gap-3">

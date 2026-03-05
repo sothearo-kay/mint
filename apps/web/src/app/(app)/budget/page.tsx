@@ -5,6 +5,7 @@ import { Cancel01Icon, Coins01Icon, MoneyNotFoundIcon, PencilEdit02Icon, Tick02I
 import { Button } from "@mint/ui/components/button";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@mint/ui/components/input-group";
+import { Progress } from "@mint/ui/components/ui/progress";
 import { Separator } from "@mint/ui/components/ui/separator";
 import { cn } from "@mint/ui/lib/utils";
 import { format } from "date-fns";
@@ -106,7 +107,7 @@ export default function BudgetPage() {
                 <div className="flex gap-1.5 h-10">
                   {pct > 0 && (
                     <div
-                      className="h-full rounded-xl bg-primary bg-stripe shrink-0 transition-all duration-500"
+                      className="h-full rounded-xl bg-primary dark:bg-primary/80 bg-stripe shrink-0 transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   )}
@@ -212,12 +213,7 @@ export default function BudgetPage() {
                                       {fmt(cat.amount)}
                                     </span>
                                   </div>
-                                  <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                                    <div
-                                      className="h-full rounded-full bg-primary transition-all duration-500"
-                                      style={{ width: `${catPct}%` }}
-                                    />
-                                  </div>
+                                  <Progress value={catPct} className="**:data-[slot=progress-indicator]:dark:bg-primary/80" />
                                 </div>
                               </div>
                             );
@@ -233,13 +229,13 @@ export default function BudgetPage() {
 
 function SummarySkeleton() {
   return (
-    <div className="space-y-3 pb-5 border-b border-border/60">
+    <div className="space-y-3 pb-5 border-b-2 border-dashed border-border/60">
       <div className="flex items-center justify-between">
         <div className="h-4 w-28 bg-muted rounded-full animate-pulse" />
         <div className="h-3 w-6 bg-muted rounded-full animate-pulse" />
       </div>
       <div className="h-10 w-full bg-muted rounded-xl animate-pulse" />
-      <div className="h-3 w-44 bg-muted rounded-full animate-pulse ml-auto" />
+      <div className="h-5 w-44 bg-muted rounded-full animate-pulse ml-auto" />
     </div>
   );
 }
