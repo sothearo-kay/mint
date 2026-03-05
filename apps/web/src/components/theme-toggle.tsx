@@ -1,55 +1,36 @@
 "use client";
 
-import { ComputerIcon, Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons";
+import { Moon02Icon, Sun03Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 
-const themes = [
-  { value: "system", icon: ComputerIcon },
-  { value: "light", icon: Sun03Icon },
-  { value: "dark", icon: Moon02Icon },
-];
-
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { resolvedTheme, setTheme } = useTheme();
 
-  useEffect(() => setMounted(true), []);
-
-  const handleChange = (value: string) => {
+  const handleToggle = () => {
+    const next = resolvedTheme === "dark" ? "light" : "dark";
     if (!document.startViewTransition) {
-      setTheme(value);
+      setTheme(next);
       return;
     }
     document.startViewTransition(() => {
-      flushSync(() => setTheme(value));
+      flushSync(() => setTheme(next));
     });
   };
 
   return (
-    <div className="flex items-center rounded-full border bg-muted p-px">
-      {themes.map(({ value, icon: ThemeIcon }) => {
-        const isActive = mounted && theme === value;
-        return (
-          <button
-            key={value}
-            onClick={() => handleChange(value)}
-            className="relative flex size-8 items-center justify-center rounded-full text-muted-foreground transition-colors duration-200 hover:text-foreground data-[active=true]:text-foreground"
-            data-active={isActive}
-          >
-            {isActive && (
-              <div className="absolute inset-0 rounded-full bg-background shadow-sm [view-transition-name:theme-indicator]" />
-            )}
-            <Icon
-              icon={ThemeIcon}
-              size={16}
-              className="relative z-10"
-            />
-          </button>
-        );
-      })}
-    </div>
+    <button
+      role="switch"
+      aria-label="Toggle theme"
+      onClick={handleToggle}
+      className="relative flex h-6 w-10 items-center outline-none"
+    >
+      <div className="mx-px h-3 w-full rounded-full bg-input transition-colors duration-300 dark:bg-muted" />
+      <div className="absolute flex size-5.5 translate-x-0 items-center justify-center rounded-full border border-border bg-background shadow-sm transition-transform duration-300 ease-in-out dark:translate-x-5.5 [view-transition-name:theme-thumb]">
+        <Icon icon={Sun03Icon} className="size-3 text-foreground dark:hidden" />
+        <Icon icon={Moon02Icon} className="size-3 text-foreground hidden dark:block" />
+      </div>
+    </button>
   );
 }

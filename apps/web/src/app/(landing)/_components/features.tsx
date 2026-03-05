@@ -18,9 +18,9 @@ const features = [
 
 export function Features() {
   return (
-    <section className="grid h-(--features-height) grid-cols-3 divide-x border-t">
+    <section className="grid md:h-(--features-height) md:grid-cols-3 md:divide-x max-md:divide-y border-t bg-background">
       {features.map(({ title, description }) => (
-        <div key={title} className="flex flex-col justify-center gap-1.5 px-6">
+        <div key={title} className="flex flex-col gap-1.5 p-4 max-md:h-36">
           <p className="font-mono text-sm font-medium">{title}</p>
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>

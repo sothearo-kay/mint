@@ -11,16 +11,20 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
-        outline:
+        "default": "bg-primary text-primary-foreground [a]:hover:bg-primary/80",
+        "outline":
           "border-border bg-background hover:bg-muted hover:text-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 aria-expanded:bg-muted aria-expanded:text-foreground",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground",
-        ghost:
+        "secondary":
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80 aria-expanded:bg-secondary aria-expanded:text-secondary-foreground dark:bg-input/30 dark:hover:bg-input/50",
+        "ghost":
           "hover:bg-muted hover:text-foreground dark:hover:bg-muted/50 aria-expanded:bg-muted aria-expanded:text-foreground",
-        destructive:
+        "destructive":
           "bg-destructive/10 hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/20 text-destructive focus-visible:border-destructive/40 dark:hover:bg-destructive/30",
-        link: "text-primary underline-offset-4 hover:underline",
+        "link": "text-primary underline-offset-4 hover:underline",
+        "raise-default":
+          "bg-(--raise-bg) text-(color:--raise-fg) border-(--raise-border) drop-shadow-[0_0_1_2px_var(--raise-shadow)] shadow-[inset_0_-2px_2px_0_var(--raise-border),inset_0_0_0_2px_var(--raise-highlight)] [--raise-bg:var(--primary)] [--raise-fg:var(--primary-foreground)] [--raise-border:color-mix(in_oklch,var(--raise-bg),black_15%)] [--raise-highlight:color-mix(in_oklch,var(--raise-bg),white_10%)] [--raise-shadow:color-mix(in_oklch,var(--raise-bg)_20%,transparent)] active:scale-[0.95]",
+        "raise-secondary":
+          "bg-(--raise-bg) text-(color:--raise-fg) border-(--raise-border) drop-shadow-[0_0_1_2px_var(--raise-shadow)] shadow-[inset_0_-2px_2px_0_var(--raise-border),inset_0_0_0_2px_var(--raise-highlight)] [--raise-bg:var(--secondary)] [--raise-fg:var(--secondary-foreground)] [--raise-border:color-mix(in_oklch,var(--raise-bg),black_5%)] [--raise-highlight:color-mix(in_oklch,var(--raise-bg),white_10%)] [--raise-shadow:color-mix(in_oklch,var(--raise-bg)_40%,transparent)] active:scale-[0.95]",
       },
       size: {
         "default":
