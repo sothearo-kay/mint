@@ -1,0 +1,55 @@
+import type { QueryConfig } from "@/lib/react-query";
+import { queryOptions, useQuery } from "@tanstack/react-query";
+import { client } from "@/lib/api-client";
+
+export type TransactionType = "income" | "expense";
+
+export type Transaction = {
+  id: string;
+  type: TransactionType;
+  amount: string;
+  currency: "USD" | "KHR";
+  note: string | null;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  category: {
+    id: string;
+    name: string;
+    icon: string;
+    type: TransactionType;
+  };
+};
+
+type GetTransactionsParams = {
+  type?: "income" | "expense";
+  categoryId?: string;
+  from?: string;
+  to?: string;
+};
+
+export async function getTransactions(params: GetTransactionsParams = {}): Promise<Transaction[]> {
+  const res = await client.api.transactions.$get({ query: params });
+  if (!res.ok)
+    throw new Error("Failed to fetch transactions");
+  return res.json();
+}
+
+export function getTransactionsQueryOptions(params: GetTransactionsParams = {}) {
+  return queryOptions({
+    queryKey: ["transactions", params],
+    queryFn: () => getTransactions(params),
+  });
+}
+
+type UseTransactionsOptions = {
+  params?: GetTransactionsParams;
+  queryConfig?: QueryConfig<typeof getTransactionsQueryOptions>;
+};
+
+export function useTransactions({ params, queryConfig }: UseTransactionsOptions = {}) {
+  return useQuery({
+    ...getTransactionsQueryOptions(params),
+    ...queryConfig,
+  });
+}

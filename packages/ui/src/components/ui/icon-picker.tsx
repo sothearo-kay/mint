@@ -61,17 +61,16 @@ export function IconPicker({ value, onValueChange, placeholder = "Pick icon", cl
         render={(
           <Button
             variant="secondary"
-            className={cn(!value && "text-muted-foreground", className)}
+            className={cn(
+              !value && "text-muted-foreground",
+              value && "size-8 p-0",
+              className,
+            )}
           />
         )}
       >
         {value
-          ? (
-              <>
-                <DynamicIcon name={value} className="size-4" />
-                <span>{value.replace("Icon", "")}</span>
-              </>
-            )
+          ? <DynamicIcon name={value} className="size-4" />
           : placeholder}
       </PopoverTrigger>
 
@@ -121,8 +120,10 @@ export function IconPicker({ value, onValueChange, placeholder = "Pick icon", cl
                           setSearch("");
                         }}
                         className={cn(
-                          "size-8 rounded-(--radius-md) flex items-center justify-center hover:bg-muted transition-colors",
-                          value === name && "bg-primary text-primary-foreground ring-2 ring-ring/50",
+                          "size-8 rounded-(--radius-md) flex items-center justify-center transition-colors",
+                          value === name
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90 ring-2 ring-ring/50"
+                            : "hover:bg-muted",
                         )}
                       >
                         <Icon

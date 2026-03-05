@@ -26,18 +26,22 @@ import {
   SidebarMenuSkeleton,
 } from "@mint/ui/components/sidebar";
 import { toast } from "@mint/ui/components/sonner";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import GithubIcon from "@/assets/icons/socials/github.svg";
 import GoogleIcon from "@/assets/icons/socials/google.svg";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useSession, useSignIn, useSignInWithGithub, useSignOut } from "@/features/auth/api";
 import { getInitials } from "@/utils/format";
 
 export function SidebarAuth() {
   const { data, isPending } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
   const { mutate: signIn, isPending: isSigningIn, isSuccess: isSignedIn } = useSignIn();
   const { mutate: signInGithub, isPending: isSigningInGithub, isSuccess: isSignedInGithub } = useSignInWithGithub();
-  const { mutate: signOut } = useSignOut();
+  const { mutate: signOut } = useSignOut({
+    mutationConfig: { onSuccess: () => router.refresh() },
+  });
 
   const isGoogleLoading = isSigningIn || isSignedIn;
   const isGithubLoading = isSigningInGithub || isSignedInGithub;
@@ -123,9 +127,10 @@ export function SidebarAuth() {
               <AvatarImage src={user.image ?? undefined} alt={user.name ?? "User"} />
               <AvatarFallback>{initial}</AvatarFallback>
             </Avatar>
-            <span className="truncate text-sm">{user.name}</span>
+            <span className="truncate text-sm font-medium">{user.name}</span>
             <Icon icon={UnfoldMoreIcon} className="size-4 ml-auto shrink-0" />
           </DropdownMenuTrigger>
+
           <DropdownMenuContent side="top" className="w-56">
             <div className="flex items-center gap-2 p-1.5">
               <Avatar>
@@ -137,6 +142,13 @@ export function SidebarAuth() {
                 <span className="text-muted-foreground truncate text-xs">{user.email}</span>
               </div>
             </div>
+
+            <DropdownMenuSeparator />
+            <div className="flex items-center justify-between px-2 py-1.5">
+              <span className="text-sm">Appearance</span>
+              <ThemeToggle />
+            </div>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem variant="destructive" onClick={() => signOut(undefined, { onError: () => toast.error("Failed to sign out. Please try again.") })}>
               <Icon icon={Logout01Icon} />

@@ -3,7 +3,7 @@ import type { AppRouteHandler } from "@/lib/types";
 import { randomUUID } from "node:crypto";
 import { db } from "@mint/db";
 import { category } from "@mint/db/schema";
-import { eq, isNull, or } from "drizzle-orm";
+import { asc, eq, isNull, or, sql } from "drizzle-orm";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const user = c.var.user;
@@ -16,7 +16,11 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
         ? or(isNull(category.userId), eq(category.userId, user.id))
         : isNull(category.userId),
     )
-    .orderBy(category.type, category.name);
+    .orderBy(
+      category.type,
+      sql`${category.userId} is not null`,
+      asc(category.name),
+    );
 
   return c.json(
     categories.map(cat => ({

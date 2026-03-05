@@ -14,13 +14,14 @@ type UseSignOutOptions = {
 
 export function useSignOut({ mutationConfig }: UseSignOutOptions = {}) {
   const queryClient = useQueryClient();
+  const { onSuccess, ...restConfig } = mutationConfig ?? {};
 
   return useMutation({
     mutationFn: signOutUser,
     onSuccess: (...args) => {
-      queryClient.invalidateQueries({ queryKey: ["session"] });
-      mutationConfig?.onSuccess?.(...args);
+      queryClient.clear();
+      onSuccess?.(...args);
     },
-    ...mutationConfig,
+    ...restConfig,
   });
 }

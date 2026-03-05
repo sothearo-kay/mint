@@ -12,19 +12,22 @@
     "check-types": "next typegen && tsc --noEmit"
   },
   "dependencies": {
+    "@hookform/resolvers": "catalog:react",
     "@hugeicons/core-free-icons": "catalog:ui",
     "@hugeicons/react": "catalog:ui",
     "@mint/api-client": "workspace:*",
     "@mint/env": "workspace:*",
     "@mint/ui": "workspace:*",
     "better-auth": "catalog:db",
-    "geist": "catalog:ui",
-    "next": "catalog:dev",
     "date-fns": "catalog:ui",
+    "geist": "catalog:ui",
     "motion": "catalog:ui",
+    "next": "catalog:dev",
     "next-themes": "catalog:ui",
     "react": "catalog:react",
-    "react-dom": "catalog:react"
+    "react-dom": "catalog:react",
+    "react-hook-form": "catalog:react",
+    "zustand": "catalog:react"
   },
   "devDependencies": {
     "@mint/eslint-config": "workspace:*",

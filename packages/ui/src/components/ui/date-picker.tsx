@@ -1,6 +1,6 @@
 "use client";
 
-import { Calendar01Icon } from "@hugeicons/core-free-icons";
+import { Calendar03Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/ui/button";
 import { Calendar } from "@mint/ui/components/ui/calendar";
 import { Icon } from "@mint/ui/components/ui/icon";
@@ -32,7 +32,7 @@ function DatePicker({
           />
         )}
       >
-        <Icon icon={Calendar01Icon} className="size-3.5 opacity-70" />
+        <Icon icon={Calendar03Icon} className="size-4 opacity-70" />
         <span>{value ? format(value, "MMM d, yyyy") : placeholder}</span>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
