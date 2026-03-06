@@ -1,9 +1,9 @@
-import type { CreateRoute, ListRoute, RemoveRoute, ResetRoute } from "./categories.routes";
+import type { CreateRoute, ListRoute, RemoveRoute, ResetRoute, SummaryRoute } from "./categories.routes";
 import type { AppRouteHandler } from "@/lib/types";
 import { randomUUID } from "node:crypto";
 import { db } from "@mint/db";
-import { category } from "@mint/db/schema";
-import { asc, eq, isNull, or, sql } from "drizzle-orm";
+import { category, transaction } from "@mint/db/schema";
+import { and, asc, eq, gte, isNull, lt, or, sql, sum } from "drizzle-orm";
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const user = c.var.user;
@@ -72,4 +72,43 @@ export const reset: AppRouteHandler<ResetRoute> = async (c) => {
   await db.delete(category).where(eq(category.userId, user.id));
 
   return c.body(null, 204);
+};
+
+export const summary: AppRouteHandler<SummaryRoute> = async (c) => {
+  const user = c.var.user!;
+  const { from, to } = c.req.valid("query");
+
+  const conditions = [eq(transaction.userId, user.id)];
+  if (from)
+    conditions.push(gte(transaction.date, new Date(from)));
+  if (to)
+    conditions.push(lt(transaction.date, new Date(to)));
+
+  const rows = await db
+    .select({
+      id: category.id,
+      name: category.name,
+      icon: category.icon,
+      type: transaction.type,
+      total: sum(transaction.amount),
+    })
+    .from(transaction)
+    .innerJoin(category, eq(transaction.categoryId, category.id))
+    .where(and(...conditions))
+    .groupBy(category.id, category.name, category.icon, transaction.type);
+
+  const income = rows
+    .filter(r => r.type === "income")
+    .reduce((s, r) => s + Number.parseFloat(r.total ?? "0"), 0);
+
+  const expense = rows
+    .filter(r => r.type === "expense")
+    .reduce((s, r) => s + Number.parseFloat(r.total ?? "0"), 0);
+
+  const categories = rows
+    .filter(r => r.type === "expense")
+    .map(r => ({ id: r.id, name: r.name, icon: r.icon, amount: r.total ?? "0" }))
+    .sort((a, b) => Number.parseFloat(b.amount) - Number.parseFloat(a.amount));
+
+  return c.json({ income: String(income), expense: String(expense), categories }, 200);
 };

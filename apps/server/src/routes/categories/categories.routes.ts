@@ -98,7 +98,45 @@ export const reset = createRoute({
   },
 });
 
+export const summary = createRoute({
+  operationId: "categoriesSummary",
+  path: "/categories/summary",
+  method: "get",
+  middleware: [authMiddleware],
+  tags,
+  request: {
+    query: z.object({
+      from: z.iso.datetime().optional(),
+      to: z.iso.datetime().optional(),
+    }),
+  },
+  responses: {
+    200: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            income: z.string(),
+            expense: z.string(),
+            categories: z.array(z.object({
+              id: z.string(),
+              name: z.string(),
+              icon: z.string(),
+              amount: z.string(),
+            })),
+          }),
+        },
+      },
+      description: "Budget summary with income, expense and per-category breakdown",
+    },
+    401: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Unauthorized",
+    },
+  },
+});
+
 export type ListRoute = typeof list;
 export type CreateRoute = typeof create;
 export type RemoveRoute = typeof remove;
 export type ResetRoute = typeof reset;
+export type SummaryRoute = typeof summary;
