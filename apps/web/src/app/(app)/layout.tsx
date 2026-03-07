@@ -34,7 +34,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <SyncTransactionsDialog />
         <SidebarInset>
           <AppHeader />
-          <main className="px-4 py-6 w-full max-w-3xl mx-auto">
+          <main className="flex-1 relative px-4 py-6 w-full max-w-3xl mx-auto">
             {children}
           </main>
         </SidebarInset>

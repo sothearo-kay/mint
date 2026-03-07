@@ -30,3 +30,11 @@ export const useGuestTransactions = create<GuestTransactionsState>()(
     { name: "mint-guest-transactions" },
   ),
 );
+
+export function useFilteredGuestTransactions(from: string, to: string) {
+  const { transactions } = useGuestTransactions();
+  return transactions.filter((tx) => {
+    const date = new Date(tx.date);
+    return date >= new Date(from) && date <= new Date(to);
+  });
+}

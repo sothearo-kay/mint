@@ -1,5 +1,5 @@
 import type { QueryConfig } from "@/lib/react-query";
-import { queryOptions, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, queryOptions, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
 
 export type TransactionType = "income" | "expense";
@@ -50,6 +50,7 @@ type UseTransactionsOptions = {
 export function useTransactions({ params, queryConfig }: UseTransactionsOptions = {}) {
   return useQuery({
     ...getTransactionsQueryOptions(params),
+    placeholderData: keepPreviousData,
     ...queryConfig,
   });
 }
