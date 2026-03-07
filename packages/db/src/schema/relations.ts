@@ -4,15 +4,17 @@ import { account, session, user } from "./auth.schema";
 import { budget } from "./budget.schema";
 import { category } from "./category.schema";
 import { recurringTransaction } from "./recurring-transaction.schema";
+import { settings } from "./settings.schema";
 import { transaction } from "./transaction.schema";
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ one, many }) => ({
   sessions: many(session),
   accounts: many(account),
   categories: many(category),
   transactions: many(transaction),
   recurringTransactions: many(recurringTransaction),
   budgets: many(budget),
+  settings: one(settings, { fields: [user.id], references: [settings.userId] }),
 }));
 
 export const categoryRelations = relations(category, ({ one, many }) => ({
@@ -55,4 +57,8 @@ export const budgetRelations = relations(budget, ({ one }) => ({
     fields: [budget.categoryId],
     references: [category.id],
   }),
+}));
+
+export const settingsRelations = relations(settings, ({ one }) => ({
+  user: one(user, { fields: [settings.userId], references: [user.id] }),
 }));

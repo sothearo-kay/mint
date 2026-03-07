@@ -1,3 +1,5 @@
+import { InsightsDashboard } from "./_components/insights-dashboard";
+
 export default function InsightsPage() {
-  return <h1 className="font-heading text-2xl">Insights</h1>;
+  return <InsightsDashboard />;
 }
