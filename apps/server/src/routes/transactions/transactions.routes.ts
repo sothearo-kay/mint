@@ -21,6 +21,7 @@ const transactionSchema = z.object({
   date: z.string(),
   createdAt: z.string(),
   updatedAt: z.string(),
+  walletId: z.string().nullable(),
 });
 
 const transactionBodySchema = z.object({
@@ -31,6 +32,7 @@ const transactionBodySchema = z.object({
   categoryId: z.string(),
   note: z.string().nullable().optional(),
   date: z.iso.datetime(),
+  walletId: z.string().nullable().optional(),
 });
 
 export const list = createRoute({
@@ -45,6 +47,7 @@ export const list = createRoute({
       categoryId: z.string().optional(),
       from: z.iso.datetime().optional(),
       to: z.iso.datetime().optional(),
+      walletId: z.string().optional(),
     }),
   },
   responses: {

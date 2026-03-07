@@ -108,6 +108,7 @@ export const summary = createRoute({
     query: z.object({
       from: z.iso.datetime().optional(),
       to: z.iso.datetime().optional(),
+      currency: z.enum(["USD", "KHR"]).optional(),
     }),
   },
   responses: {

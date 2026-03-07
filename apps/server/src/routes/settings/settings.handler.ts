@@ -9,21 +9,30 @@ export const get: AppRouteHandler<GetRoute> = async (c) => {
   const row = await db.query.settings.findFirst({
     where: eq(settings.userId, user.id),
   });
-  return c.json({ budgetLimit: row?.budgetLimit ?? null }, 200);
+  return c.json({
+    budgetLimitUSD: row?.budgetLimitUSD ?? null,
+    budgetLimitKHR: row?.budgetLimitKHR ?? null,
+  }, 200);
 };
 
 export const update: AppRouteHandler<UpdateRoute> = async (c) => {
   const user = c.var.user!;
-  const { budgetLimit } = c.req.valid("json");
+  const { budgetLimitUSD, budgetLimitKHR } = c.req.valid("json");
 
   const [row] = await db
     .insert(settings)
-    .values({ userId: user.id, budgetLimit })
+    .values({ userId: user.id, budgetLimitUSD, budgetLimitKHR })
     .onConflictDoUpdate({
       target: settings.userId,
-      set: { budgetLimit },
+      set: {
+        ...(budgetLimitUSD !== undefined && { budgetLimitUSD }),
+        ...(budgetLimitKHR !== undefined && { budgetLimitKHR }),
+      },
     })
     .returning();
 
-  return c.json({ budgetLimit: row.budgetLimit ?? null }, 200);
+  return c.json({
+    budgetLimitUSD: row.budgetLimitUSD ?? null,
+    budgetLimitKHR: row.budgetLimitKHR ?? null,
+  }, 200);
 };

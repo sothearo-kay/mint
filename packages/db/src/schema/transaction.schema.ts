@@ -4,6 +4,7 @@ import { user } from "./auth.schema";
 import { currencyEnum, transactionTypeEnum } from "./enums";
 import { category } from "./category.schema";
 import { recurringTransaction } from "./recurring-transaction.schema";
+import { wallet } from "./wallet.schema";
 
 export const transaction = pgTable(
   "transaction",
@@ -12,6 +13,9 @@ export const transaction = pgTable(
     userId: text("user_id")
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
+    walletId: text("wallet_id").references(() => wallet.id, {
+      onDelete: "set null",
+    }),
     type: transactionTypeEnum("type").notNull(),
     amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
     currency: currencyEnum("currency").notNull(),
@@ -34,5 +38,6 @@ export const transaction = pgTable(
     index("transaction_userId_idx").on(table.userId),
     index("transaction_categoryId_idx").on(table.categoryId),
     index("transaction_date_idx").on(table.date),
+    index("transaction_walletId_idx").on(table.walletId),
   ],
 );

@@ -76,13 +76,15 @@ export const reset: AppRouteHandler<ResetRoute> = async (c) => {
 
 export const summary: AppRouteHandler<SummaryRoute> = async (c) => {
   const user = c.var.user!;
-  const { from, to } = c.req.valid("query");
+  const { from, to, currency } = c.req.valid("query");
 
   const conditions = [eq(transaction.userId, user.id)];
   if (from)
     conditions.push(gte(transaction.date, new Date(from)));
   if (to)
     conditions.push(lt(transaction.date, new Date(to)));
+  if (currency)
+    conditions.push(eq(transaction.currency, currency));
 
   const rows = await db
     .select({

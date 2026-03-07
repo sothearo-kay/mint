@@ -6,7 +6,7 @@ import { and, eq, gte, lt, sql, sum } from "drizzle-orm";
 
 export const get: AppRouteHandler<GetRoute> = async (c) => {
   const user = c.var.user!;
-  const { year = new Date().getFullYear() } = c.req.valid("query");
+  const { year = new Date().getFullYear(), currency } = c.req.valid("query");
 
   const from = new Date(year, 0, 1);
   const to = new Date(year + 1, 0, 1);
@@ -19,6 +19,7 @@ export const get: AppRouteHandler<GetRoute> = async (c) => {
         eq(transaction.userId, user.id),
         gte(transaction.date, from),
         lt(transaction.date, to),
+        currency ? eq(transaction.currency, currency) : undefined,
       ),
     );
 
@@ -38,7 +39,7 @@ export const get: AppRouteHandler<GetRoute> = async (c) => {
 
 export const breakdown: AppRouteHandler<BreakdownRoute> = async (c) => {
   const user = c.var.user!;
-  const { year = new Date().getFullYear() } = c.req.valid("query");
+  const { year = new Date().getFullYear(), currency } = c.req.valid("query");
 
   const from = new Date(year, 0, 1);
   const to = new Date(year + 1, 0, 1);
@@ -59,6 +60,7 @@ export const breakdown: AppRouteHandler<BreakdownRoute> = async (c) => {
         gte(transaction.date, from),
         lt(transaction.date, to),
         eq(transaction.type, "income"),
+        currency ? eq(transaction.currency, currency) : undefined,
       ),
     )
     .groupBy(

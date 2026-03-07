@@ -24,6 +24,7 @@ export const get = createRoute({
   request: {
     query: z.object({
       year: z.coerce.number().int().optional(),
+      currency: z.enum(["USD", "KHR"]).optional(),
     }),
   },
   responses: {
@@ -65,6 +66,7 @@ export const getBreakdown = createRoute({
   request: {
     query: z.object({
       year: z.coerce.number().int().optional(),
+      currency: z.enum(["USD", "KHR"]).optional(),
     }),
   },
   responses: {

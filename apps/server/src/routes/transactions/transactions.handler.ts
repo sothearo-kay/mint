@@ -3,7 +3,7 @@ import type { AppRouteHandler } from "@/lib/types";
 import { randomUUID } from "node:crypto";
 import { db } from "@mint/db";
 import { category, transaction } from "@mint/db/schema";
-import { and, desc, eq, gte, lte } from "drizzle-orm";
+import { and, desc, eq, gte, isNull, lte } from "drizzle-orm";
 
 function formatTransaction(
   tx: typeof transaction.$inferSelect,
@@ -18,6 +18,7 @@ function formatTransaction(
     date: tx.date.toISOString(),
     createdAt: tx.createdAt.toISOString(),
     updatedAt: tx.updatedAt.toISOString(),
+    walletId: tx.walletId,
     category: {
       id: cat.id,
       name: cat.name,
@@ -29,7 +30,7 @@ function formatTransaction(
 
 export const list: AppRouteHandler<ListRoute> = async (c) => {
   const user = c.var.user!;
-  const { type, categoryId, from, to } = c.req.valid("query");
+  const { type, categoryId, from, to, walletId } = c.req.valid("query");
 
   const rows = await db
     .select()
@@ -42,6 +43,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
         categoryId ? eq(transaction.categoryId, categoryId) : undefined,
         from ? gte(transaction.date, new Date(from)) : undefined,
         to ? lte(transaction.date, new Date(to)) : undefined,
+        walletId === "none" ? isNull(transaction.walletId) : walletId ? eq(transaction.walletId, walletId) : undefined,
       ),
     )
     .orderBy(desc(transaction.date));
@@ -64,6 +66,7 @@ export const create: AppRouteHandler<CreateRoute> = async (c) => {
       categoryId: body.categoryId,
       note: body.note ?? null,
       date: new Date(body.date),
+      walletId: body.walletId ?? null,
     })
     .returning();
 
@@ -92,6 +95,7 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
       ...(body.categoryId && { categoryId: body.categoryId }),
       ...(body.note !== undefined && { note: body.note }),
       ...(body.date && { date: new Date(body.date) }),
+      ...(body.walletId !== undefined && { walletId: body.walletId }),
     })
     .where(eq(transaction.id, id))
     .returning();

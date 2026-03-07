@@ -19,3 +19,5 @@ export const budgetPeriodEnum = pgEnum("budget_period", [
   "monthly",
   "yearly",
 ]);
+
+export const walletTypeEnum = pgEnum("wallet_type", ["cash", "bank", "savings"]);

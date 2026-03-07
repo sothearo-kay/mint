@@ -5,7 +5,8 @@ import { authMiddleware } from "@/middlewares";
 const tags = ["Settings"];
 
 const settingsSchema = z.object({
-  budgetLimit: z.string().nullable(),
+  budgetLimitUSD: z.string().nullable(),
+  budgetLimitKHR: z.string().nullable(),
 });
 
 export const get = createRoute({
@@ -37,7 +38,8 @@ export const update = createRoute({
       content: {
         "application/json": {
           schema: z.object({
-            budgetLimit: z.string().regex(/^\d+(\.\d{1,2})?$/).nullable(),
+            budgetLimitUSD: z.string().regex(/^\d+(\.\d{1,2})?$/).nullable().optional(),
+            budgetLimitKHR: z.string().regex(/^\d+(\.\d{1,2})?$/).nullable().optional(),
           }),
         },
       },
