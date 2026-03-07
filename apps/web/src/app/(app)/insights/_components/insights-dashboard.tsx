@@ -1,12 +1,14 @@
 "use client";
 
+import type { Currency } from "@/utils/constants";
 import { ArrowDownLeft01Icon, ArrowUpRight01Icon, Chart03Icon, Money01Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger } from "@mint/ui/components/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@mint/ui/components/select";
 import { MintAreaChart } from "@mint/ui/components/ui/area-chart";
 import { Shimmer } from "@mint/ui/components/ui/shimmer";
 import { endOfYear, startOfYear } from "date-fns";
 import { useState } from "react";
+import { CurrencyToggle } from "@/components/currency-toggle";
 import { ErrorState } from "@/components/error-state";
 import { useSession } from "@/features/auth/api";
 import { LoginDialog } from "@/features/auth/components/login-dialog";
@@ -21,16 +23,17 @@ import { TopCategoriesCard } from "./top-categories-card";
 
 export function InsightsDashboard() {
   const [year, setYear] = useState(CURRENT_YEAR);
+  const [currency, setCurrency] = useState<Currency>("USD");
   const { data: session } = useSession();
 
   const { data, isPending: isInsightsPending, isPlaceholderData, isError } = useInsights({
-    params: { year },
+    params: { year, currency },
     queryConfig: { enabled: !!session },
   });
   const isPending = !!session && isInsightsPending;
 
   const { data: breakdownData } = useBreakdown({
-    params: { year },
+    params: { year, currency },
     queryConfig: { enabled: !!session },
   });
 
@@ -71,11 +74,17 @@ export function InsightsDashboard() {
         </div>
       )}
 
-      <div className="flex justify-end">
-        <Select value={year.toString()} onValueChange={v => setYear(Number(v))}>
+      <div className="flex justify-end gap-2">
+        <CurrencyToggle value={currency} onChangeAction={setCurrency} />
+
+        <Select
+          value={year.toString()}
+          onValueChange={v => setYear(Number(v))}
+          items={YEARS.map(y => ({ value: y.toString(), label: y.toString() }))}
+        >
           <SelectTrigger className="relative h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
             <Shimmer isPending={!!session && isPlaceholderData} />
-            {year}
+            <SelectValue />
           </SelectTrigger>
           <SelectContent align="end" alignItemWithTrigger={false}>
             <SelectGroup>
@@ -97,6 +106,7 @@ export function InsightsDashboard() {
                   icon={Money01Icon}
                   values={monthly.map(m => m.balance)}
                   color="bg-blue-500 dark:bg-blue-500/80"
+                  currency={currency}
                   isPending={isPending}
                 />
                 <SummaryCard
@@ -104,6 +114,7 @@ export function InsightsDashboard() {
                   icon={ArrowDownLeft01Icon}
                   values={monthly.map(m => m.income)}
                   color="bg-primary dark:bg-primary/80"
+                  currency={currency}
                   isPending={isPending}
                 />
                 <SummaryCard
@@ -111,6 +122,7 @@ export function InsightsDashboard() {
                   icon={ArrowUpRight01Icon}
                   values={monthly.map(m => m.expense)}
                   color="bg-destructive dark:bg-destructive/80"
+                  currency={currency}
                   isPending={isPending}
                   invertChange
                 />
@@ -137,6 +149,7 @@ export function InsightsDashboard() {
                 <SavingsRateCard
                   monthly={monthly}
                   breakdown={breakdownData?.monthly ?? MONTHS.map((_, i) => ({ month: i + 1, incomeCategories: [] }))}
+                  currency={currency}
                   isPending={isPending}
                 />
                 <TopCategoriesCard

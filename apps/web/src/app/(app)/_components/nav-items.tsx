@@ -6,6 +6,7 @@ import {
   PieChart02Icon,
   Tag01Icon,
   TransactionIcon,
+  Wallet01Icon,
 } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import {
@@ -24,6 +25,7 @@ const navItems = [
   { label: "Transactions", icon: TransactionIcon, href: "/transactions" },
   { label: "Budget", icon: Coins01Icon, href: "/budget" },
   { label: "Insights", icon: PieChart02Icon, href: "/insights" },
+  { label: "Wallets", icon: Wallet01Icon, href: "/wallets" },
 ];
 
 const createItems = [

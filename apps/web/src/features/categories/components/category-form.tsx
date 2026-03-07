@@ -9,20 +9,14 @@ import { IconPicker } from "@mint/ui/components/icon-picker";
 import { Input } from "@mint/ui/components/input";
 import { toast } from "@mint/ui/components/sonner";
 import { TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
-import { cn } from "@mint/ui/lib/utils";
-import { motion } from "motion/react";
 import { Controller, useForm } from "react-hook-form";
+import { SegmentedControl } from "@/components/segmented-control";
 import { createCategorySchema, useCreateCategory } from "../api/create-category";
 
 type CategoryFormProps = {
   onCancelAction: () => void;
   onSuccessAction?: () => void;
 };
-
-const TYPE_OPTIONS = [
-  { value: "expense", label: "Expense" },
-  { value: "income", label: "Income" },
-] as const;
 
 export function CategoryForm({ onCancelAction, onSuccessAction }: CategoryFormProps) {
   const { control, handleSubmit, formState: { isValid } } = useForm<CreateCategoryInput>({
@@ -58,31 +52,14 @@ export function CategoryForm({ onCancelAction, onSuccessAction }: CategoryFormPr
           control={control}
           name="type"
           render={({ field }) => (
-            <div className="flex items-center bg-muted rounded-full p-0.5 self-start">
-              {TYPE_OPTIONS.map(opt => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  onClick={() => field.onChange(opt.value)}
-                  className="relative px-4 h-7 rounded-full text-xs font-medium"
-                >
-                  {field.value === opt.value && (
-                    <motion.span
-                      layoutId="category-type-indicator"
-                      className="absolute inset-0 rounded-full bg-foreground shadow-sm"
-                      transition={{ type: "spring", bounce: 0.15, duration: 0.35 }}
-                    />
-                  )}
-                  <span className={cn(
-                    "relative transition-colors duration-150",
-                    field.value === opt.value ? "text-background" : "text-muted-foreground",
-                  )}
-                  >
-                    {opt.label}
-                  </span>
-                </button>
-              ))}
-            </div>
+            <SegmentedControl
+              items={[
+                { value: "expense", label: "Expense" },
+                { value: "income", label: "Income" },
+              ]}
+              value={field.value}
+              onChangeAction={field.onChange}
+            />
           )}
         />
 

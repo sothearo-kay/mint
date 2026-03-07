@@ -1,7 +1,7 @@
 import type { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
-import { getTransactionsQueryOptions } from "./get-transactions";
+import { invalidateTransactionQueries } from "./invalidate-queries";
 
 export async function deleteTransaction(id: string) {
   const res = await client.api.transactions[":id"].$delete({ param: { id } });
@@ -19,9 +19,7 @@ export function useDeleteTransaction({ mutationConfig }: UseDeleteTransactionOpt
 
   return useMutation({
     onSuccess: (...args) => {
-      queryClient.invalidateQueries({
-        queryKey: getTransactionsQueryOptions().queryKey,
-      });
+      invalidateTransactionQueries(queryClient);
       onSuccess?.(...args);
     },
     ...restConfig,

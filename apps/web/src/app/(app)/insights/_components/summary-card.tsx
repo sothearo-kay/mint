@@ -1,9 +1,10 @@
 "use client";
 
 import type { IconSvgElement } from "@hugeicons/react";
+import type { Currency } from "@/utils/constants";
 import { Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
-import { formatCurrency } from "@/utils/format";
+import { formatBalanceAmount } from "@/utils/format";
 import { InsightCard } from "./insight-card";
 import { MonthlyBars, useMonthlyDisplay, ValueSkeleton } from "./monthly-bars";
 
@@ -12,11 +13,20 @@ type SummaryCardProps = {
   icon: IconSvgElement;
   values: number[];
   color: string;
+  currency: Currency;
   isPending?: boolean;
   invertChange?: boolean;
 };
 
-export function SummaryCard({ title, icon, values, color, isPending, invertChange = false }: SummaryCardProps) {
+export function SummaryCard({
+  title,
+  icon,
+  values,
+  color,
+  currency,
+  isPending,
+  invertChange = false,
+}: SummaryCardProps) {
   const { currentMonth, displayIndex, onHover, onLeave } = useMonthlyDisplay();
 
   const displayValue = values[displayIndex] ?? 0;
@@ -38,7 +48,7 @@ export function SummaryCard({ title, icon, values, color, isPending, invertChang
             ? <ValueSkeleton />
             : (
                 <>
-                  <p className="text-2xl font-bold tabular-nums">{formatCurrency(displayValue)}</p>
+                  <p className="text-2xl font-bold tabular-nums">{formatBalanceAmount(displayValue, currency)}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
                     <span className={cn((invertChange ? change <= 0 : change >= 0) ? "text-primary" : "text-destructive")}>
                       {change >= 0 ? "+" : ""}

@@ -4,7 +4,8 @@ import { client } from "@/lib/api-client";
 import { getSettingsQueryOptions } from "./get-settings";
 
 export type UpdateSettingsInput = {
-  budgetLimit: string | null;
+  budgetLimitUSD?: string | null;
+  budgetLimitKHR?: string | null;
 };
 
 export async function updateSettings(body: UpdateSettingsInput) {

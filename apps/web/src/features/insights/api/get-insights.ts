@@ -1,4 +1,5 @@
 import type { QueryConfig } from "@/lib/react-query";
+import type { Currency } from "@/utils/constants";
 import { keepPreviousData, queryOptions, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
 
@@ -11,11 +12,12 @@ export type MonthlyInsight = {
 
 type GetInsightsParams = {
   year?: number;
+  currency?: Currency;
 };
 
 export async function getInsights(params: GetInsightsParams = {}): Promise<{ monthly: MonthlyInsight[] }> {
   const res = await client.api.insights.$get({
-    query: { year: params.year ? String(params.year) : undefined },
+    query: { year: params.year ? String(params.year) : undefined, currency: params.currency },
   });
   if (!res.ok)
     throw new Error("Failed to fetch insights");
@@ -24,7 +26,7 @@ export async function getInsights(params: GetInsightsParams = {}): Promise<{ mon
 
 export function getInsightsQueryOptions(params: GetInsightsParams = {}) {
   return queryOptions({
-    queryKey: ["insights", params],
+    queryKey: ["insights", ...(params && Object.keys(params).length ? [params] : [])],
     queryFn: () => getInsights(params),
   });
 }

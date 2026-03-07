@@ -2,11 +2,13 @@
 
 import type { CreateTransactionInput } from "../api/create-transaction";
 import type { Transaction, TransactionType } from "../api/get-transactions";
+import type { Currency } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Loading03Icon,
   MoneyReceiveFlow01Icon,
   MoneySendFlow01Icon,
+  Wallet01Icon,
 } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { DatePicker } from "@mint/ui/components/date-picker";
@@ -22,13 +24,24 @@ import { toast } from "@mint/ui/components/sonner";
 import { Textarea } from "@mint/ui/components/textarea";
 import { TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
 import { cn } from "@mint/ui/lib/utils";
+import Link from "next/link";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { SegmentedControl } from "@/components/segmented-control";
 import { useSession } from "@/features/auth/api";
+import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useGuestTransactions } from "@/store/guest-transactions";
 import { createTransactionSchema, useCreateTransaction } from "../api/create-transaction";
 import { useCategories } from "../api/get-categories";
 import { useUpdateTransaction } from "../api/update-transaction";
+
+function formatAmountDisplay(raw: string): string {
+  if (!raw)
+    return "";
+  const [intPart, decPart] = raw.split(".");
+  const formattedInt = Number.parseInt(intPart || "0", 10).toLocaleString();
+  return decPart !== undefined ? `${formattedInt}.${decPart}` : formattedInt;
+}
 
 const TYPE_CONFIG = {
   expense: {
@@ -44,32 +57,50 @@ const TYPE_CONFIG = {
 } as const;
 
 export type TransactionFormProps = {
-  type: TransactionType;
+  type?: TransactionType;
   transaction?: Transaction;
+  defaultWalletId?: string | null;
+  defaultCurrency?: Currency;
   onCancelAction: () => void;
+  onBackAction?: () => void;
   onSuccessAction?: () => void;
 };
 
-export function TransactionForm({ type, transaction, onCancelAction, onSuccessAction }: TransactionFormProps) {
+export function TransactionForm({
+  type: initialType = "expense",
+  transaction,
+  defaultWalletId,
+  defaultCurrency,
+  onCancelAction,
+  onBackAction,
+  onSuccessAction,
+}: TransactionFormProps) {
   const isEditing = !!transaction;
   const { data: session } = useSession();
   const guestStore = useGuestTransactions();
   const { data: allCategories = [] } = useCategories();
-  const categories = allCategories.filter(c => c.type === type);
+  const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
 
   const { control, handleSubmit, setValue, watch, formState: { isValid } } = useForm<CreateTransactionInput>({
     resolver: zodResolver(createTransactionSchema),
     defaultValues: {
-      type,
-      currency: "USD",
+      type: transaction?.type ?? initialType,
+      currency: transaction?.currency ?? defaultCurrency ?? "USD",
       amount: transaction?.amount ?? "",
       categoryId: transaction?.category.id ?? "",
       note: transaction?.note ?? "",
       date: transaction?.date ?? new Date().toISOString(),
+      walletId: transaction?.walletId ?? defaultWalletId ?? null,
     },
   });
 
+  const type = watch("type");
   const categoryId = watch("categoryId");
+  const categories = allCategories.filter(c => c.type === type);
+
+  const currency = watch("currency");
+  const currencySymbol = currency === "KHR" ? "៛" : "$";
+
   useEffect(() => {
     if (!isEditing && categories.length > 0 && !categories.some(c => c.id === categoryId)) {
       setValue("categoryId", categories[0].id);
@@ -102,9 +133,7 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
 
   const isPending = isCreating || isUpdating;
   const config = TYPE_CONFIG[type];
-  const title = isEditing
-    ? `Edit ${type}`
-    : `Add ${type}`;
+  const title = isEditing ? `Edit ${type}` : "New transaction";
   const selectedCategory = categories.find(c => c.id === categoryId);
 
   function onSubmit(data: CreateTransactionInput) {
@@ -129,6 +158,7 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
           createdAt: now,
           updatedAt: now,
           category: selectedCategory!,
+          walletId: data.walletId ?? null,
         });
         toast.success(`${type === "expense" ? "Expense" : "Income"} added to transactions`);
       }
@@ -156,6 +186,23 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
       </TrayHeader>
 
       <form id="transaction-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        {!isEditing && (
+          <Controller
+            control={control}
+            name="type"
+            render={({ field }) => (
+              <SegmentedControl
+                items={[
+                  { value: "expense", label: "Expense" },
+                  { value: "income", label: "Income" },
+                ]}
+                value={field.value}
+                onChangeAction={field.onChange}
+              />
+            )}
+          />
+        )}
+
         <div className="flex gap-2">
           <Controller
             control={control}
@@ -199,7 +246,7 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
 
         <div className="flex items-baseline justify-center gap-1 py-4">
           <span className="text-2xl font-medium text-muted-foreground/30 leading-none self-start mt-2">
-            $
+            {currencySymbol}
           </span>
           <Controller
             control={control}
@@ -208,7 +255,7 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
               <input
                 type="text"
                 inputMode="decimal"
-                value={field.value}
+                value={formatAmountDisplay(field.value)}
                 onChange={e => field.onChange(e.target.value.replace(/[^0-9.]/g, ""))}
                 placeholder="0.00"
                 autoFocus
@@ -220,6 +267,66 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
             )}
           />
         </div>
+
+        {session && !onBackAction && (
+          <Controller
+            control={control}
+            name="walletId"
+            render={({ field }) => (
+              wallets.length === 0
+                ? (
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Icon icon={Wallet01Icon} className="size-4 shrink-0" />
+                      <span>
+                        No wallets yet.
+                        {" "}
+                        <Link href="/wallets?create=true" className="underline underline-offset-2 hover:text-foreground transition-colors">
+                          Create one
+                        </Link>
+                        {" "}
+                        to track accounts.
+                      </span>
+                    </div>
+                  )
+                : (
+                    <Select
+                      value={field.value ?? ""}
+                      onValueChange={(v) => {
+                        field.onChange(v || null);
+                        const wallet = wallets.find(w => w.id === v);
+                        setValue("currency", wallet?.currency ?? "USD");
+                      }}
+                    >
+                      <SelectTrigger>
+                        {field.value
+                          ? (
+                              <div className="flex items-center gap-2">
+                                <Icon icon={Wallet01Icon} className="size-4 text-muted-foreground" />
+                                <span>{wallets.find(w => w.id === field.value)?.name ?? "Wallet"}</span>
+                              </div>
+                            )
+                          : (
+                              <div className="flex items-center gap-2 text-muted-foreground/60">
+                                <Icon icon={Wallet01Icon} className="size-4" />
+                                <span>Select wallet (optional)</span>
+                              </div>
+                            )}
+                      </SelectTrigger>
+                      <SelectContent align="start" alignItemWithTrigger={false}>
+                        <SelectGroup>
+                          {wallets.map(w => (
+                            <SelectItem key={w.id} value={w.id}>
+                              <Icon icon={Wallet01Icon} className="size-4" />
+                              {w.name}
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )
+            )}
+          />
+        )}
 
         <Controller
           control={control}
@@ -236,8 +343,13 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
       </form>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCancelAction}>
-          Cancel
+        <Button
+          type="button"
+          variant="secondary"
+          className="sm:flex-1"
+          onClick={onBackAction ?? onCancelAction}
+        >
+          {onBackAction ? "Back" : "Cancel"}
         </Button>
         <Button
           type="submit"
@@ -247,7 +359,7 @@ export function TransactionForm({ type, transaction, onCancelAction, onSuccessAc
           disabled={!isValid || isPending}
         >
           <Icon icon={isPending ? Loading03Icon : config.icon} className={isPending ? "animate-spin" : undefined} />
-          <span className="capitalize">{title}</span>
+          <span className="capitalize">{isEditing ? `Save ${type}` : "Add"}</span>
         </Button>
       </TrayFooter>
     </>

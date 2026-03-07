@@ -1,12 +1,14 @@
 "use client";
 
 import type { TransactionType } from "../api/get-transactions";
+import type { Wallet } from "@/features/wallets/api/get-wallets";
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
   SelectTrigger,
+  SelectValue,
 } from "@mint/ui/components/select";
 import { Shimmer } from "@mint/ui/components/ui/shimmer";
 import { cn } from "@mint/ui/lib/utils";
@@ -19,6 +21,7 @@ export type FilterValue = {
   type?: TransactionType;
   from: string;
   to: string;
+  walletId?: string;
 };
 
 const now = new Date();
@@ -30,49 +33,59 @@ export const DEFAULT_FILTERS: FilterValue = {
 
 type TransactionFiltersProps = {
   showType?: boolean;
+  wallets?: Wallet[];
   isFetching?: boolean;
   onChangeAction: (value: FilterValue) => void;
 };
 
-export function TransactionFilters({ showType = true, isFetching, onChangeAction }: TransactionFiltersProps) {
+export function TransactionFilters({ showType = true, wallets, isFetching, onChangeAction }: TransactionFiltersProps) {
   const [activeType, setTransactionType] = useState<TransactionType>("expense");
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
-  const [changingKey, setChangingKey] = useState<"type" | "month" | "year" | null>(null);
+  const [selectedWalletId, setSelectedWalletId] = useState<string>("");
+  const [changingKey, setChangingKey] = useState<"type" | "month" | "year" | "wallet" | null>(null);
 
   useEffect(() => {
     if (!isFetching)
       setChangingKey(null);
   }, [isFetching]);
 
-  function notify(type: TransactionType, month: number, year: number) {
+  function notify(type: TransactionType, month: number, year: number, walletId: string) {
     onChangeAction({
       ...(showType && { type }),
       from: startOfMonth(new Date(year, month)).toISOString(),
       to: endOfMonth(new Date(year, month)).toISOString(),
+      walletId: walletId || undefined,
     });
   }
 
   function handleTypeChange(type: TransactionType) {
     setTransactionType(type);
     setChangingKey("type");
-    notify(type, selectedMonth, selectedYear);
+    notify(type, selectedMonth, selectedYear, selectedWalletId);
   }
 
   function handleMonthChange(month: number) {
     setSelectedMonth(month);
     setChangingKey("month");
-    notify(activeType, month, selectedYear);
+    notify(activeType, month, selectedYear, selectedWalletId);
   }
 
   function handleYearChange(year: number) {
     setSelectedYear(year);
     setChangingKey("year");
-    notify(activeType, selectedMonth, year);
+    notify(activeType, selectedMonth, year, selectedWalletId);
+  }
+
+  function handleWalletChange(walletId: string | null) {
+    const id = walletId ?? "";
+    setSelectedWalletId(id);
+    setChangingKey("wallet");
+    notify(activeType, selectedMonth, selectedYear, id);
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-wrap">
       {showType && (
         <div className="flex items-center bg-muted rounded-full p-0.5">
           {(["expense", "income"] as const).map(type => (
@@ -102,13 +115,39 @@ export function TransactionFilters({ showType = true, isFetching, onChangeAction
       )}
 
       <div className="ml-auto flex items-center gap-1.5">
+        {wallets && wallets.length > 0 && (
+          <Select
+            value={selectedWalletId}
+            onValueChange={handleWalletChange}
+            items={[
+              { value: "none", label: "No account" },
+              ...wallets.map(w => ({ value: w.id, label: w.name })),
+            ]}
+          >
+            <SelectTrigger className="relative h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
+              <Shimmer isPending={isFetching && changingKey === "wallet"} />
+              <SelectValue placeholder="All accounts" />
+            </SelectTrigger>
+            <SelectContent align="start" alignItemWithTrigger={false}>
+              <SelectGroup>
+                <SelectItem value="">All accounts</SelectItem>
+                <SelectItem value="none">No account</SelectItem>
+                {wallets.map(w => (
+                  <SelectItem key={w.id} value={w.id}>{w.name}</SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+
         <Select
           value={selectedMonth.toString()}
           onValueChange={v => handleMonthChange(Number(v))}
+          items={MONTHS.map((label, i) => ({ value: i.toString(), label }))}
         >
           <SelectTrigger className="relative h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
             <Shimmer isPending={isFetching && changingKey === "month"} />
-            {MONTHS[selectedMonth]}
+            <SelectValue />
           </SelectTrigger>
           <SelectContent align="start" alignItemWithTrigger={false}>
             <SelectGroup>
@@ -122,10 +161,11 @@ export function TransactionFilters({ showType = true, isFetching, onChangeAction
         <Select
           value={selectedYear.toString()}
           onValueChange={v => handleYearChange(Number(v))}
+          items={YEARS.map(y => ({ value: y.toString(), label: y.toString() }))}
         >
           <SelectTrigger className="relative h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
             <Shimmer isPending={isFetching && changingKey === "year"} />
-            {selectedYear}
+            <SelectValue />
           </SelectTrigger>
           <SelectContent align="start" alignItemWithTrigger={false}>
             <SelectGroup>

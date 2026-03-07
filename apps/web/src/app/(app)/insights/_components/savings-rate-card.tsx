@@ -2,21 +2,23 @@
 
 import type { MonthlyBreakdown } from "@/features/insights/api/get-breakdown";
 import type { MonthlyInsight } from "@/features/insights/api/get-insights";
+import type { Currency } from "@/utils/constants";
 import { PiggyBankIcon } from "@hugeicons/core-free-icons";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
 import { MONTHS } from "@/utils/constants";
-import { formatCurrency } from "@/utils/format";
+import { formatBalanceAmount } from "@/utils/format";
 import { InsightCard } from "./insight-card";
 import { MonthlyBars, useMonthlyDisplay, ValueSkeleton } from "./monthly-bars";
 
 type SavingsRateCardProps = {
   monthly: MonthlyInsight[];
   breakdown: MonthlyBreakdown[];
+  currency: Currency;
   isPending?: boolean;
 };
 
-export function SavingsRateCard({ monthly, breakdown, isPending }: SavingsRateCardProps) {
+export function SavingsRateCard({ monthly, breakdown, currency, isPending }: SavingsRateCardProps) {
   const { currentMonth, displayIndex, onHover, onLeave } = useMonthlyDisplay();
 
   const m = monthly[displayIndex];
@@ -51,7 +53,7 @@ export function SavingsRateCard({ monthly, breakdown, isPending }: SavingsRateCa
                       %
                     </p>
                     <p className="text-sm text-muted-foreground tabular-nums">
-                      {formatCurrency(savings)}
+                      {formatBalanceAmount(savings, currency)}
                       {" "}
                       saved
                     </p>
@@ -80,7 +82,8 @@ export function SavingsRateCard({ monthly, breakdown, isPending }: SavingsRateCa
           <div className="flex flex-col gap-1.5">
             <p className="text-xs text-muted-foreground font-medium">
               Income
-              <span className="inline-block mx-1">{" · "}</span>
+              {" "}
+              <span className="inline-block mx-0.5">{" · "}</span>
               {" "}
               {MONTHS[displayIndex]}
             </p>
@@ -99,7 +102,7 @@ export function SavingsRateCard({ monthly, breakdown, isPending }: SavingsRateCa
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2 mb-0.5">
                           <p className="text-xs font-medium truncate">{cat.name}</p>
-                          <span className="text-xs tabular-nums text-muted-foreground shrink-0">{formatCurrency(amount)}</span>
+                          <span className="text-xs tabular-nums text-muted-foreground shrink-0">{formatBalanceAmount(amount, currency)}</span>
                         </div>
                         <div className="h-1 rounded-full bg-muted overflow-hidden">
                           <div

@@ -12,7 +12,7 @@ import {
 } from "@mint/ui/components/dropdown-menu";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
-import { formatNumber } from "@/utils/format";
+import { formatAmountByCurrency } from "@/utils/format";
 
 type TransactionRowProps = {
   tx: Transaction;
@@ -61,7 +61,7 @@ export function TransactionRow({ tx, onEditAction, onDeleteAction }: Transaction
         )}
         >
           {Number.parseFloat(tx.amount) !== 0 ? (tx.type === "income" ? "+" : "-") : ""}
-          {formatNumber(Number.parseFloat(tx.amount), { style: "currency", currency: "USD" })}
+          {formatAmountByCurrency(Number.parseFloat(tx.amount), tx.currency)}
         </span>
       </div>
     </div>

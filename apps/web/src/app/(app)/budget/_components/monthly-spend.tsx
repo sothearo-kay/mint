@@ -1,5 +1,6 @@
 "use client";
 
+import type { Currency } from "@/utils/constants";
 import { Cancel01Icon, PencilEdit02Icon, Tick02Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
@@ -8,7 +9,7 @@ import { Separator } from "@mint/ui/components/ui/separator";
 import { cn } from "@mint/ui/lib/utils";
 import { useRef, useState } from "react";
 import { useUpdateSettings } from "@/features/settings/api/update-settings";
-import { formatCurrency } from "@/utils/format";
+import { formatBalanceAmount } from "@/utils/format";
 
 type MonthlySpendProps = {
   isPending: boolean;
@@ -17,10 +18,11 @@ type MonthlySpendProps = {
   totalExpense: number;
   effectiveLimit: number;
   limit: number | null;
+  currency: Currency;
   canEdit: boolean;
 };
 
-export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effectiveLimit, limit, canEdit }: MonthlySpendProps) {
+export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effectiveLimit, limit, currency, canEdit }: MonthlySpendProps) {
   const [editing, setEditing] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,7 +38,8 @@ export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effec
   function saveLimit() {
     const val = Number.parseFloat(inputValue);
     const newLimit = inputValue === "" || Number.isNaN(val) ? null : val;
-    updateSettings({ budgetLimit: newLimit !== null ? String(newLimit) : null });
+    const limitStr = newLimit !== null ? String(newLimit) : null;
+    updateSettings(currency === "USD" ? { budgetLimitUSD: limitStr } : { budgetLimitKHR: limitStr });
     setEditing(false);
   }
 
@@ -46,6 +49,8 @@ export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effec
     if (e.key === "Escape")
       setEditing(false);
   }
+
+  const symbol = currency === "KHR" ? "៛" : "$";
 
   if (isPending)
     return <SummarySkeleton />;
@@ -79,7 +84,7 @@ export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effec
               <>
                 <InputGroup className="w-32 rounded-full border-0 bg-muted has-[[data-slot=input-group-control]:focus-visible]:ring-0 has-[[data-slot=input-group-control]:focus-visible]:border-transparent">
                   <InputGroupAddon>
-                    <InputGroupText>$</InputGroupText>
+                    <InputGroupText>{symbol}</InputGroupText>
                   </InputGroupAddon>
                   <InputGroupInput
                     ref={inputRef}
@@ -103,9 +108,9 @@ export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effec
           : (
               <>
                 <p className={cn("text-xs text-muted-foreground", isOverBudget && "text-destructive")}>
-                  {formatCurrency(totalExpense)}
+                  {formatBalanceAmount(totalExpense, currency)}
                   {" out of "}
-                  {formatCurrency(effectiveLimit)}
+                  {formatBalanceAmount(effectiveLimit, currency)}
                   {" "}
                   {limit ? "limit" : "earned"}
                 </p>

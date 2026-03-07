@@ -9,6 +9,7 @@ const pathTitles: Record<string, string> = {
   "/transactions": "Transactions",
   "/budget": "Budget",
   "/insights": "Insights",
+  "/wallets": "Wallets",
   "/categories": "Categories",
 };
 

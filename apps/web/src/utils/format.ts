@@ -1,5 +1,25 @@
+import type { Currency } from "@/utils/constants";
+
 export function formatCurrency(amount: number): string {
   return formatNumber(Math.abs(amount), { style: "currency", currency: "USD" });
+}
+
+// Large balance display — symbol prefix: $0.00 / ៛400,000
+export function formatBalanceAmount(amount: number, currency: Currency): string {
+  const abs = Math.abs(amount);
+  if (currency === "KHR") {
+    return `៛${abs.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  }
+  return formatNumber(abs, { style: "currency", currency: "USD" });
+}
+
+// Inline amounts (rows, lists) — symbol after: 400,000.00$ / 400,000៛
+export function formatAmountByCurrency(amount: number, currency: Currency): string {
+  const abs = Math.abs(amount);
+  if (currency === "KHR") {
+    return `${abs.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}៛`;
+  }
+  return `${abs.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}$`;
 }
 
 export function getInitials(name: string): string {

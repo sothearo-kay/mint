@@ -1,4 +1,5 @@
 import type { QueryConfig } from "@/lib/react-query";
+import type { Currency } from "@/utils/constants";
 import { keepPreviousData, queryOptions, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
 
@@ -9,20 +10,21 @@ export type MonthlyBreakdown = {
 
 type GetBreakdownParams = {
   year?: number;
+  currency?: Currency;
 };
 
 async function getBreakdown(params: GetBreakdownParams = {}): Promise<{ monthly: MonthlyBreakdown[] }> {
   const res = await client.api.insights.breakdown.$get({
-    query: { year: params.year ? String(params.year) : undefined },
+    query: { year: params.year ? String(params.year) : undefined, currency: params.currency },
   });
   if (!res.ok)
     throw new Error("Failed to fetch insights breakdown");
   return res.json();
 }
 
-function getBreakdownQueryOptions(params: GetBreakdownParams = {}) {
+export function getBreakdownQueryOptions(params: GetBreakdownParams = {}) {
   return queryOptions({
-    queryKey: ["insights-breakdown", params],
+    queryKey: ["insights-breakdown", ...(params && Object.keys(params).length ? [params] : [])],
     queryFn: () => getBreakdown(params),
   });
 }

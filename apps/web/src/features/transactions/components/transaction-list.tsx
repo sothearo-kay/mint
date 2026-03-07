@@ -6,11 +6,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Fab } from "@/components/fab";
 import { useSession } from "@/features/auth/api";
+import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useFilteredGuestTransactions } from "@/store/guest-transactions";
-import { sumByType } from "@/utils/transactions";
+import { sumByCurrency } from "@/utils/transactions";
 import { useTransactions } from "../api/get-transactions";
-import { Balance } from "./balance-section";
 import { TransactionActionTray } from "./transaction-action-tray";
+import { TransactionBalance } from "./transaction-balance";
 import { DEFAULT_FILTERS, TransactionFilters } from "./transaction-filters";
 import { TransactionList } from "./transaction-list-view";
 
@@ -21,18 +22,17 @@ export function Transactions() {
   const [actionMode, setActionMode] = useState<"edit" | "delete" | null>(null);
 
   const { data: session } = useSession();
+  const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
   const guestTransactions = useFilteredGuestTransactions(filters.from, filters.to);
 
   const { data: apiTransactions = [], isPending: isPendingApi, isPlaceholderData, isError } = useTransactions({
-    params: { from: filters.from, to: filters.to },
+    params: { from: filters.from, to: filters.to, walletId: filters.walletId },
     queryConfig: { enabled: !!session },
   });
 
   const transactions = session ? apiTransactions : guestTransactions;
   const isPending = !!session && isPendingApi;
-
-  const { income: totalIncome, expense: totalExpense } = sumByType(transactions);
-  const balance = totalIncome - totalExpense;
+  const currencies = sumByCurrency(transactions);
 
   function openEdit(tx: Transaction) {
     setSelectedTx(tx);
@@ -53,14 +53,17 @@ export function Transactions() {
     <div className="flex flex-col gap-4 mb-14">
       <Fab onClickAction={() => router.push("?new=true")} />
       <TransactionActionTray transaction={selectedTx} mode={actionMode} onCloseAction={closeAction} />
-      <TransactionFilters showType={false} isFetching={!!session && isPlaceholderData} onChangeAction={setFilters} />
+      <TransactionFilters
+        showType={false}
+        wallets={session ? wallets : undefined}
+        isFetching={!!session && isPlaceholderData}
+        onChangeAction={setFilters}
+      />
 
       <div className="flex flex-col gap-6">
-        <Balance
+        <TransactionBalance
           isPending={isPending}
-          balance={balance}
-          totalIncome={totalIncome}
-          totalExpense={totalExpense}
+          currencies={currencies}
           from={filters.from}
         />
         <TransactionList

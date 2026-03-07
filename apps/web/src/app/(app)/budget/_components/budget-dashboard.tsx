@@ -1,7 +1,9 @@
 "use client";
 
 import type { FilterValue } from "@/features/transactions/components/transaction-filters";
+import type { Currency } from "@/utils/constants";
 import { useState } from "react";
+import { CurrencyToggle } from "@/components/currency-toggle";
 import { ErrorState } from "@/components/error-state";
 import { useSession } from "@/features/auth/api";
 import { useCategorySummary } from "@/features/categories/api/get-summary";
@@ -18,12 +20,14 @@ export function BudgetDashboard() {
     from: DEFAULT_FILTERS.from,
     to: DEFAULT_FILTERS.to,
   });
+  const [currency, setCurrency] = useState<Currency>("USD");
 
   const { data: settingsData } = useSettings({ queryConfig: { enabled: !!session } });
-  const limit = settingsData?.budgetLimit ? Number.parseFloat(settingsData.budgetLimit) : null;
+  const rawLimit = currency === "USD" ? settingsData?.budgetLimitUSD : settingsData?.budgetLimitKHR;
+  const limit = rawLimit ? Number.parseFloat(rawLimit) : null;
 
   const { data: summaryData, isPending: isSummaryPending, isPlaceholderData, isError } = useCategorySummary({
-    params: { from: filters.from, to: filters.to },
+    params: { from: filters.from, to: filters.to, currency },
     queryConfig: { enabled: !!session },
   });
   const isPending = !!session && isSummaryPending;
@@ -52,7 +56,8 @@ export function BudgetDashboard() {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-end">
+      <div className="flex items-center justify-end gap-2">
+        <CurrencyToggle value={currency} onChangeAction={setCurrency} />
         <TransactionFilters showType={false} isFetching={!!session && isPlaceholderData} onChangeAction={setFilters} />
       </div>
 
@@ -67,6 +72,7 @@ export function BudgetDashboard() {
                 totalExpense={totalExpense}
                 effectiveLimit={effectiveLimit}
                 limit={limit}
+                currency={currency}
                 canEdit={!!session}
               />
               <CategoryBreakdown

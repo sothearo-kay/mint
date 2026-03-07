@@ -1,4 +1,5 @@
 import type { QueryConfig } from "@/lib/react-query";
+import type { Currency } from "@/utils/constants";
 import { keepPreviousData, queryOptions, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
 
@@ -18,6 +19,7 @@ export type CategorySummary = {
 type GetSummaryParams = {
   from?: string;
   to?: string;
+  currency?: Currency;
 };
 
 export async function getCategorySummary(params: GetSummaryParams = {}): Promise<CategorySummary> {
@@ -29,7 +31,7 @@ export async function getCategorySummary(params: GetSummaryParams = {}): Promise
 
 export function getCategorySummaryQueryOptions(params: GetSummaryParams = {}) {
   return queryOptions({
-    queryKey: ["categories", "summary", params],
+    queryKey: ["categories", "summary", ...(params && Object.keys(params).length ? [params] : [])],
     queryFn: () => getCategorySummary(params),
   });
 }

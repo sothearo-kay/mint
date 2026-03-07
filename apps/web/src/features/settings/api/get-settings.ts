@@ -3,7 +3,8 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
 
 export type Settings = {
-  budgetLimit: string | null;
+  budgetLimitUSD: string | null;
+  budgetLimitKHR: string | null;
 };
 
 export async function getSettings(): Promise<Settings> {

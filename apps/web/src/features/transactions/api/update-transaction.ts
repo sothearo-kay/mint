@@ -3,7 +3,7 @@ import type { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
 import { createTransactionSchema } from "./create-transaction";
-import { getTransactionsQueryOptions } from "./get-transactions";
+import { invalidateTransactionQueries } from "./invalidate-queries";
 
 export const updateTransactionSchema = createTransactionSchema.partial();
 export type UpdateTransactionInput = z.infer<typeof updateTransactionSchema>;
@@ -25,9 +25,7 @@ export function useUpdateTransaction({ mutationConfig }: UseUpdateTransactionOpt
 
   return useMutation({
     onSuccess: (...args) => {
-      queryClient.invalidateQueries({
-        queryKey: getTransactionsQueryOptions().queryKey,
-      });
+      invalidateTransactionQueries(queryClient);
       onSuccess?.(...args);
     },
     ...restConfig,

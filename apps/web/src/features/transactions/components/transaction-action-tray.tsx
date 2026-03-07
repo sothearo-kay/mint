@@ -9,6 +9,7 @@ import { toast } from "@mint/ui/components/sonner";
 import { Tray, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
 import { useSession } from "@/features/auth/api";
 import { useGuestTransactions } from "@/store/guest-transactions";
+import { formatCurrency } from "@/utils/format";
 import { useDeleteTransaction } from "../api/delete-transaction";
 import { TransactionForm } from "./transaction-form";
 
@@ -97,8 +98,7 @@ function DeleteView({ transaction, onCloseAction }: { transaction: Transaction; 
           )}
         </div>
         <p className="text-2xl font-bold tabular-nums tracking-tight text-foreground">
-          $
-          {Number.parseFloat(transaction.amount).toFixed(2)}
+          {formatCurrency(Number.parseFloat(transaction.amount))}
         </p>
       </div>
 

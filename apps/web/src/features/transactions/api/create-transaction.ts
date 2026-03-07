@@ -2,7 +2,7 @@ import type { MutationConfig } from "@/lib/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import { client } from "@/lib/api-client";
-import { getTransactionsQueryOptions } from "./get-transactions";
+import { invalidateTransactionQueries } from "./invalidate-queries";
 
 export const createTransactionSchema = z.object({
   type: z.enum(["income", "expense"]),
@@ -11,6 +11,7 @@ export const createTransactionSchema = z.object({
   categoryId: z.string().min(1, "Category is required"),
   note: z.string().optional().nullable(),
   date: z.string(),
+  walletId: z.string().nullable().optional(),
 });
 
 export type CreateTransactionInput = z.infer<typeof createTransactionSchema>;
@@ -32,9 +33,7 @@ export function useCreateTransaction({ mutationConfig }: UseCreateTransactionOpt
 
   return useMutation({
     onSuccess: (...args) => {
-      queryClient.invalidateQueries({
-        queryKey: getTransactionsQueryOptions().queryKey,
-      });
+      invalidateTransactionQueries(queryClient);
       onSuccess?.(...args);
     },
     ...restConfig,

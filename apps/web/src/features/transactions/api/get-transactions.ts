@@ -1,4 +1,5 @@
 import type { QueryConfig } from "@/lib/react-query";
+import type { Currency } from "@/utils/constants";
 import { keepPreviousData, queryOptions, useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/api-client";
 
@@ -8,7 +9,7 @@ export type Transaction = {
   id: string;
   type: TransactionType;
   amount: string;
-  currency: "USD" | "KHR";
+  currency: Currency;
   note: string | null;
   date: string;
   createdAt: string;
@@ -19,6 +20,7 @@ export type Transaction = {
     icon: string;
     type: TransactionType;
   };
+  walletId: string | null;
 };
 
 type GetTransactionsParams = {
@@ -26,6 +28,7 @@ type GetTransactionsParams = {
   categoryId?: string;
   from?: string;
   to?: string;
+  walletId?: string;
 };
 
 export async function getTransactions(params: GetTransactionsParams = {}): Promise<Transaction[]> {
@@ -37,7 +40,7 @@ export async function getTransactions(params: GetTransactionsParams = {}): Promi
 
 export function getTransactionsQueryOptions(params: GetTransactionsParams = {}) {
   return queryOptions({
-    queryKey: ["transactions", params],
+    queryKey: ["transactions", ...(params && Object.keys(params).length ? [params] : [])],
     queryFn: () => getTransactions(params),
   });
 }
