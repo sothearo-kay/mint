@@ -28,6 +28,7 @@
     "motion": "catalog:ui",
     "next-themes": "catalog:ui",
     "react-day-picker": "catalog:ui",
+    "recharts": "2.15.4",
     "shadcn": "catalog:ui",
     "sonner": "catalog:ui",
     "tailwind-merge": "catalog:ui",

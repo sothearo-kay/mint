@@ -56,7 +56,7 @@ export function TransactionRow({ tx, onEditAction, onDeleteAction }: Transaction
           </DropdownMenu>
         </div>
         <span className={cn(
-          "text-sm font-semibold tabular-nums",
+          "text-sm font-medium tabular-nums",
           tx.type === "income" ? "text-primary" : "text-destructive",
         )}
         >

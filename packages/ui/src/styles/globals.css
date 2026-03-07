@@ -5,6 +5,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+  --animate-shimmer: shimmer 1.3s infinite;
+  --animate-shimmer-long: shimmer 1.5s infinite 1.5s;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -112,4 +117,13 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+@keyframes shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
 }

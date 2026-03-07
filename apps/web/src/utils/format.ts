@@ -1,3 +1,7 @@
+export function formatCurrency(amount: number): string {
+  return formatNumber(Math.abs(amount), { style: "currency", currency: "USD" });
+}
+
 export function getInitials(name: string): string {
   return name
     .split(" ")

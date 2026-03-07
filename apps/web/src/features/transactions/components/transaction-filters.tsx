@@ -8,34 +8,18 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@mint/ui/components/select";
+import { Shimmer } from "@mint/ui/components/ui/shimmer";
 import { cn } from "@mint/ui/lib/utils";
 import { endOfMonth, startOfMonth } from "date-fns";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { MONTHS, YEARS } from "@/utils/constants";
 
 export type FilterValue = {
   type?: TransactionType;
   from: string;
   to: string;
 };
-
-const MONTHS = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
-const CURRENT_YEAR = new Date().getFullYear();
-const YEARS = [CURRENT_YEAR, CURRENT_YEAR - 1, CURRENT_YEAR - 2];
 
 const now = new Date();
 
@@ -46,13 +30,20 @@ export const DEFAULT_FILTERS: FilterValue = {
 
 type TransactionFiltersProps = {
   showType?: boolean;
+  isFetching?: boolean;
   onChangeAction: (value: FilterValue) => void;
 };
 
-export function TransactionFilters({ showType = true, onChangeAction }: TransactionFiltersProps) {
+export function TransactionFilters({ showType = true, isFetching, onChangeAction }: TransactionFiltersProps) {
   const [activeType, setTransactionType] = useState<TransactionType>("expense");
   const [selectedMonth, setSelectedMonth] = useState(now.getMonth());
   const [selectedYear, setSelectedYear] = useState(now.getFullYear());
+  const [changingKey, setChangingKey] = useState<"type" | "month" | "year" | null>(null);
+
+  useEffect(() => {
+    if (!isFetching)
+      setChangingKey(null);
+  }, [isFetching]);
 
   function notify(type: TransactionType, month: number, year: number) {
     onChangeAction({
@@ -64,16 +55,19 @@ export function TransactionFilters({ showType = true, onChangeAction }: Transact
 
   function handleTypeChange(type: TransactionType) {
     setTransactionType(type);
+    setChangingKey("type");
     notify(type, selectedMonth, selectedYear);
   }
 
   function handleMonthChange(month: number) {
     setSelectedMonth(month);
+    setChangingKey("month");
     notify(activeType, month, selectedYear);
   }
 
   function handleYearChange(year: number) {
     setSelectedYear(year);
+    setChangingKey("year");
     notify(activeType, selectedMonth, year);
   }
 
@@ -112,7 +106,8 @@ export function TransactionFilters({ showType = true, onChangeAction }: Transact
           value={selectedMonth.toString()}
           onValueChange={v => handleMonthChange(Number(v))}
         >
-          <SelectTrigger className="h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
+          <SelectTrigger className="relative h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
+            <Shimmer isPending={isFetching && changingKey === "month"} />
             {MONTHS[selectedMonth]}
           </SelectTrigger>
           <SelectContent align="start" alignItemWithTrigger={false}>
@@ -128,7 +123,8 @@ export function TransactionFilters({ showType = true, onChangeAction }: Transact
           value={selectedYear.toString()}
           onValueChange={v => handleYearChange(Number(v))}
         >
-          <SelectTrigger className="h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
+          <SelectTrigger className="relative h-9 rounded-full bg-muted border-0 shadow-none px-4 text-sm w-auto gap-1.5 [&_svg]:size-3.5">
+            <Shimmer isPending={isFetching && changingKey === "year"} />
             {selectedYear}
           </SelectTrigger>
           <SelectContent align="start" alignItemWithTrigger={false}>
