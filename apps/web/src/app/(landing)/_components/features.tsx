@@ -2,7 +2,7 @@ const features = [
   {
     title: "Track",
     description:
-      "Log every expense the moment it happens. No categories to wrestle with, no setup required — just capture it and move on.",
+      "Log every expense the moment it happens. Organize by category, add notes, and track across multiple wallets — all in seconds.",
   },
   {
     title: "Budget",
