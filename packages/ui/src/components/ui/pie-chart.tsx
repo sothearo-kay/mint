@@ -25,19 +25,30 @@ type MintPieChartProps = {
   showLegend?: boolean;
   showLabels?: boolean;
   hideTooltip?: boolean;
+  colors?: string[];
+  tooltipContent?: React.ReactElement;
 };
 
-function MintPieChart({ data, className, showLegend = true, showLabels = true, hideTooltip = false }: MintPieChartProps) {
+function MintPieChart({
+  data,
+  className,
+  showLegend = true,
+  showLabels = true,
+  hideTooltip = false,
+  colors,
+  tooltipContent,
+}: MintPieChartProps) {
   const total = data.reduce((s, d) => s + d.value, 0);
+  const resolvedColors = colors ?? CHART_COLORS;
   const chartData = data.map((d, i) => ({
     ...d,
-    fill: CHART_COLORS[i % CHART_COLORS.length],
+    fill: resolvedColors[i % resolvedColors.length],
   }));
 
   const chartConfig = {
     value: { label: "Amount" },
     ...Object.fromEntries(
-      data.map((d, i) => [d.id, { label: d.name, color: CHART_COLORS[i % CHART_COLORS.length] }]),
+      data.map((d, i) => [d.id, { label: d.name, color: resolvedColors[i % resolvedColors.length] }]),
     ),
   } satisfies ChartConfig;
 
@@ -45,7 +56,7 @@ function MintPieChart({ data, className, showLegend = true, showLabels = true, h
     <div className="flex flex-col gap-3">
       <ChartContainer config={chartConfig} className={cn("[&_.recharts-text]:fill-background", className)}>
         <PieChart>
-          {!hideTooltip && <ChartTooltip content={<ChartTooltipContent nameKey="name" hideLabel />} />}
+          {!hideTooltip && <ChartTooltip content={tooltipContent ?? <ChartTooltipContent nameKey="name" hideLabel />} />}
           <Pie
             data={chartData}
             dataKey="value"

@@ -60,7 +60,7 @@ export function Transactions() {
         onChangeAction={setFilters}
       />
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <TransactionBalance
           isPending={isPending}
           currencies={currencies}
