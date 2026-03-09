@@ -24,7 +24,7 @@ export function BalanceDisplay({
   showChart = true,
 }: BalanceDisplayProps) {
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-6 max-sm:justify-between">
       {showChart && (
         <MintPieChart
           data={chartData}
@@ -33,7 +33,7 @@ export function BalanceDisplay({
           showLabels={false}
           hideTooltip={hideTooltip}
           tooltipContent={tooltipContent}
-          className="size-36 shrink-0"
+          className="size-40 shrink-0"
         />
       )}
       <div className="flex flex-col min-w-0 divide-y divide-dashed text-right">
@@ -51,9 +51,9 @@ export function BalanceDisplay({
 
 export function BalanceDisplaySkeleton({ label }: { label?: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-6">
-      <div className="size-36 flex items-center justify-center shrink-0">
-        <Skeleton className="size-28 rounded-full" />
+    <div className="flex items-center gap-6 max-sm:justify-between">
+      <div className="size-40 flex items-center justify-center shrink-0">
+        <Skeleton className="size-30 rounded-full" />
       </div>
       <div className="flex flex-col min-w-0 items-end divide-y divide-dashed divide-muted-foreground/30">
         <div className="flex flex-col items-end gap-1 pb-2 w-full">

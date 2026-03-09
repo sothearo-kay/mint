@@ -66,7 +66,7 @@ export function InsightsDashboard() {
         <div className="absolute inset-0 z-10 rounded-xl overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/70 to-background" />
           <div className="absolute inset-0 mask-[linear-gradient(to_bottom,transparent_20%,black_60%)] backdrop-blur-sm" />
-          <div className="absolute bottom-1/3 left-0 right-0 flex flex-col items-center gap-2 text-center pb-16">
+          <div className="absolute left-0 right-0 flex flex-col items-center gap-2 text-center pb-16 max-sm:top-1/3 sm:bottom-1/3">
             <p className="text-sm font-semibold">Sign in to view insights</p>
             <p className="text-xs text-muted-foreground max-w-56">Your financial insights are only available when signed in.</p>
             <LoginDialog triggerProps={{ size: "sm", className: "rounded-full mt-1" }} />

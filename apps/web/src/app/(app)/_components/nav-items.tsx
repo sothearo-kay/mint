@@ -19,8 +19,9 @@ import {
   useSidebar,
 } from "@mint/ui/components/sidebar";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useSession } from "@/features/auth/api";
+import { useTransactionTray } from "@/store/transaction-tray";
 
 const navItems: { label: string; icon: typeof TransactionIcon; href: Route }[] = [
   { label: "Transactions", icon: TransactionIcon, href: "/transactions" },
@@ -64,8 +65,8 @@ export function NavItems() {
 }
 
 export function CreateItems() {
-  const router = useRouter();
   const { setOpenMobile } = useSidebar();
+  const { open } = useTransactionTray();
 
   return (
     <SidebarMenu className="gap-0.5">
@@ -75,7 +76,7 @@ export function CreateItems() {
             tooltip={label}
             onClick={() => {
               setOpenMobile(false);
-              router.push("?new=true");
+              open();
             }}
           >
             <Icon icon={NavIcon} />

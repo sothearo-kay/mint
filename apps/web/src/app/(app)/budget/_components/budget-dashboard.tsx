@@ -26,13 +26,13 @@ export function BudgetDashboard() {
   const rawLimit = currency === "USD" ? settingsData?.budgetLimitUSD : settingsData?.budgetLimitKHR;
   const limit = rawLimit ? Number.parseFloat(rawLimit) : null;
 
+  const { transactions: guestTxs, hasHydrated } = useFilteredGuestTransactions(filters.from, filters.to, currency);
+
   const { data: summaryData, isPending: isSummaryPending, isPlaceholderData, isError } = useCategorySummary({
     params: { from: filters.from, to: filters.to, currency },
     queryConfig: { enabled: !!session },
   });
-  const isPending = !!session && isSummaryPending;
-
-  const guestTxs = useFilteredGuestTransactions(filters.from, filters.to);
+  const isPending = session ? isSummaryPending : !hasHydrated;
 
   const { income: guestIncome, expense: guestExpense } = sumByType(guestTxs);
   const totalIncome = session ? Number.parseFloat(summaryData?.income ?? "0") : guestIncome;

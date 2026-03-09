@@ -6,13 +6,12 @@ import { Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
 import { Tray, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
 import { CHART_COLORS } from "@mint/ui/components/ui/pie-chart";
-import type { Route } from "next";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "@/features/auth/api";
 import { TransactionForm } from "@/features/transactions/components/transaction-form";
 import { useWallets } from "@/features/wallets/api/get-wallets";
 import { WALLET_ICONS } from "@/features/wallets/utils";
+import { useTransactionTray } from "@/store/transaction-tray";
 import { formatAmountByCurrency } from "@/utils/format";
 
 function SelectAccountView({ wallets, onSelectAction }: {
@@ -80,10 +79,8 @@ function SelectAccountView({ wallets, onSelectAction }: {
 }
 
 export function TransactionTray() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
   const { open: sidebarOpen, isMobile } = useSidebar();
+  const { isOpen, close: storeClose } = useTransactionTray();
 
   const [step, setStep] = useState<"select-account" | "form">("select-account");
   const [selectedWalletId, setSelectedWalletId] = useState<string | null>(null);
@@ -91,9 +88,7 @@ export function TransactionTray() {
   const { data: session } = useSession();
   const { data: wallets = [], isPending: walletsLoading } = useWallets({ queryConfig: { enabled: !!session } });
 
-  const isOpen = searchParams.get("new") === "true";
-
-  // Once wallets are loaded and tray is open, skip to form if user has no wallets
+  // Skip to form if user has no wallets
   useEffect(() => {
     if (isOpen && !!session && !walletsLoading && wallets.length === 0) {
       setStep("form");
@@ -101,12 +96,12 @@ export function TransactionTray() {
   }, [isOpen, session, walletsLoading, wallets.length]);
 
   const close = useCallback(() => {
-    router.replace(pathname as Route);
+    storeClose();
     setTimeout(() => {
       setStep("select-account");
       setSelectedWalletId(null);
     }, 300);
-  }, [router, pathname]);
+  }, [storeClose]);
 
   function handleWalletSelect(walletId: string | null) {
     setSelectedWalletId(walletId);

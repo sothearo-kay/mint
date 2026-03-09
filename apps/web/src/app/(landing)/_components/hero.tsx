@@ -1,10 +1,16 @@
+"use client";
+
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import GithubIcon from "@/assets/icons/socials/github.svg";
+import { useTransactionTray } from "@/store/transaction-tray";
 
 export function Hero() {
+  const router = useRouter();
+  const { open } = useTransactionTray();
+
   return (
     <section className="flex h-(--hero-height) flex-col items-center justify-center gap-6 px-4 text-center">
       <h1 className="font-heading text-7xl tracking-tight">Mint</h1>
@@ -14,8 +20,10 @@ export function Hero() {
       <div className="flex items-center gap-3">
         <Button
           variant="raise-default"
-          nativeButton={false}
-          render={<Link href="/transactions?new=true" />}
+          onClick={() => {
+            open();
+            router.push("/transactions");
+          }}
         >
           Get Started
           <div className="flex justify-center items-center size-4 bg-primary-foreground/20 rounded-full">

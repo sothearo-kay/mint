@@ -1,17 +1,25 @@
+"use client";
+
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useTransactionTray } from "@/store/transaction-tray";
 
 export function Header() {
+  const router = useRouter();
+  const { open } = useTransactionTray();
+
   return (
     <header className="sticky top-2 flex h-(--header-height) items-center border-b bg-background px-4 before:absolute before:content-[''] before:-inset-x-px before:-top-2 before:h-2 before:bg-background before:border-b before:border-border">
       <div className="flex w-full items-center justify-between">
         <span className="font-heading text-xl">Mint</span>
         <Button
           variant="raise-secondary"
-          nativeButton={false}
-          render={<Link href="/transactions?new=true" />}
+          onClick={() => {
+            open();
+            router.push("/transactions");
+          }}
         >
           Track It
           <div className="flex justify-center items-center size-4 bg-foreground/20 rounded-full">

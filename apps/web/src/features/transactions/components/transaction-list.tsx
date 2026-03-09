@@ -2,12 +2,12 @@
 
 import type { Transaction } from "../api/get-transactions";
 import type { FilterValue } from "./transaction-filters";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Fab } from "@/components/fab";
 import { useSession } from "@/features/auth/api";
 import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useFilteredGuestTransactions } from "@/store/guest-transactions";
+import { useTransactionTray } from "@/store/transaction-tray";
 import { sumByCurrency } from "@/utils/transactions";
 import { useTransactions } from "../api/get-transactions";
 import { TransactionActionTray } from "./transaction-action-tray";
@@ -16,14 +16,14 @@ import { DEFAULT_FILTERS, TransactionFilters } from "./transaction-filters";
 import { TransactionList } from "./transaction-list-view";
 
 export function Transactions() {
-  const router = useRouter();
+  const { open } = useTransactionTray();
   const [filters, setFilters] = useState<FilterValue>(DEFAULT_FILTERS);
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [actionMode, setActionMode] = useState<"edit" | "delete" | null>(null);
 
   const { data: session } = useSession();
   const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
-  const guestTransactions = useFilteredGuestTransactions(filters.from, filters.to);
+  const { transactions: guestTransactions, hasHydrated } = useFilteredGuestTransactions(filters.from, filters.to);
 
   const { data: apiTransactions = [], isPending: isPendingApi, isPlaceholderData, isError } = useTransactions({
     params: { from: filters.from, to: filters.to, walletId: filters.walletId },
@@ -31,7 +31,7 @@ export function Transactions() {
   });
 
   const transactions = session ? apiTransactions : guestTransactions;
-  const isPending = !!session && isPendingApi;
+  const isPending = session ? isPendingApi : !hasHydrated;
   const currencies = sumByCurrency(transactions);
 
   function openEdit(tx: Transaction) {
@@ -51,7 +51,7 @@ export function Transactions() {
 
   return (
     <div className="flex flex-col gap-4 mb-14">
-      <Fab onClickAction={() => router.push("?new=true")} />
+      <Fab onClickAction={open} />
       <TransactionActionTray transaction={selectedTx} mode={actionMode} onCloseAction={closeAction} />
       <TransactionFilters
         showType={false}

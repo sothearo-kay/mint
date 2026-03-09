@@ -4,7 +4,6 @@ import {
 } from "@mint/ui/components/sidebar";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { headers } from "next/headers";
-import { Suspense } from "react";
 import { getSessionQueryOptions } from "@/features/auth/api";
 import { SyncTransactionsDialog } from "@/features/transactions/components/sync-dialog";
 import { authClient } from "@/lib/auth-client";
@@ -31,9 +30,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <SidebarProvider>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <AppSidebar />
-        <Suspense>
-          <TransactionTray />
-        </Suspense>
+        <TransactionTray />
         <SyncTransactionsDialog />
         <SidebarInset>
           <AppHeader />

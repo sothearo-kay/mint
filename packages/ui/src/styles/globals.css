@@ -83,6 +83,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.92 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --income: oklch(0.62 0.16 162);
+  --expense: oklch(0.62 0.22 27);
 }
 
 .dark {
@@ -117,6 +119,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 14%);
   --sidebar-ring: oklch(0.556 0 0);
+  --income: color-mix(in oklch, var(--primary) 90%, transparent);
+  --expense: color-mix(in oklch, var(--destructive) 90%, transparent);
 }
 
 @keyframes shimmer {

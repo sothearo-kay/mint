@@ -25,19 +25,19 @@ export function WalletBalance({ wallets }: { wallets: Wallet[] }) {
 
   const labelMap = Object.fromEntries(chartData.map(d => [d.name, [d.label]]));
 
-  const items = khrWallets.length > 0
-    ? [formatBalanceAmount(usd, "USD"), formatBalanceAmount(khr, "KHR")]
-    : [formatBalanceAmount(usd, "USD")];
+  const hasBalance = totalUSD > 0;
+  const items = [formatBalanceAmount(usd, "USD"), formatBalanceAmount(khr, "KHR")];
+  const finalChartData = hasBalance ? chartData : [{ id: "empty", name: "", value: 1 }];
 
   return (
     <BalanceDisplay
       label="Available balance"
       items={items}
-      chartData={chartData}
-      chartColors={totalUSD > 0 ? undefined : ["var(--border)"]}
-      hideTooltip={totalUSD === 0}
+      chartData={finalChartData}
+      chartColors={hasBalance ? undefined : ["var(--border)"]}
+      hideTooltip={!hasBalance}
       tooltipContent={<PieTooltip labelMap={labelMap} />}
-      showChart={wallets.length > 1}
+      showChart
     />
   );
 }

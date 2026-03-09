@@ -33,7 +33,7 @@ export function TopCategoriesCard({ categories, isPending }: TopCategoriesCardPr
           )
         : top.length === 0
           ? (
-              <div className="flex-1 flex items-center justify-center">
+              <div className="flex-1 flex items-center justify-center py-14">
                 <p className="text-sm text-muted-foreground">No spending data</p>
               </div>
             )

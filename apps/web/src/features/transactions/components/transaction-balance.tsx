@@ -20,7 +20,7 @@ type TransactionBalanceProps = {
   from: string;
 };
 
-const DONUT_COLORS = ["var(--chart-2)", "var(--chart-5)"];
+const DONUT_COLORS = ["var(--income)", "var(--expense)"];
 
 export function TransactionBalance({ isPending, currencies, from }: TransactionBalanceProps) {
   const formattedDate = format(new Date(from), "MMMM yyyy");
@@ -37,8 +37,8 @@ export function TransactionBalance({ isPending, currencies, from }: TransactionB
     : [{ id: "empty", name: "", value: 1 }];
 
   const labelMap: Record<string, string[]> = {
-    Income: currencies.map(c => formatBalanceAmount(c.income, c.currency)),
-    Expense: currencies.map(c => formatBalanceAmount(c.expense, c.currency)),
+    Income: currencies.filter(c => c.income > 0).map(c => formatBalanceAmount(c.income, c.currency)),
+    Expense: currencies.filter(c => c.expense > 0).map(c => formatBalanceAmount(c.expense, c.currency)),
   };
 
   const label = (

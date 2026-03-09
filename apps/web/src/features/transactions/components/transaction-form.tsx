@@ -24,13 +24,14 @@ import { toast } from "@mint/ui/components/sonner";
 import { Textarea } from "@mint/ui/components/textarea";
 import { TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
 import { cn } from "@mint/ui/lib/utils";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { SegmentedControl } from "@/components/segmented-control";
 import { useSession } from "@/features/auth/api";
 import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useGuestTransactions } from "@/store/guest-transactions";
+import { useWalletTray } from "@/store/wallet-tray";
 import { createTransactionSchema, useCreateTransaction } from "../api/create-transaction";
 import { useCategories } from "../api/get-categories";
 import { useUpdateTransaction } from "../api/update-transaction";
@@ -76,8 +77,10 @@ export function TransactionForm({
   onSuccessAction,
 }: TransactionFormProps) {
   const isEditing = !!transaction;
+  const router = useRouter();
   const { data: session } = useSession();
   const guestStore = useGuestTransactions();
+  const { openCreate: openCreateWallet } = useWalletTray();
   const { data: allCategories = [] } = useCategories();
   const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
 
@@ -280,9 +283,17 @@ export function TransactionForm({
                       <span>
                         No wallets yet.
                         {" "}
-                        <Link href="/wallets?create=true" className="underline underline-offset-2 hover:text-foreground transition-colors">
+                        <button
+                          type="button"
+                          className="underline underline-offset-2 hover:text-foreground transition-colors"
+                          onClick={() => {
+                            onCancelAction?.();
+                            openCreateWallet();
+                            router.push("/wallets");
+                          }}
+                        >
                           Create one
-                        </Link>
+                        </button>
                         {" "}
                         to track accounts.
                       </span>
