@@ -143,13 +143,13 @@ export function WalletForm({ wallet, onCancelAction, onSuccessAction }: WalletFo
       </form>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="flex-1" onClick={onCancelAction}>
+        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCancelAction}>
           Cancel
         </Button>
         <Button
           type="submit"
           form="wallet-form"
-          className="flex-1"
+          className="sm:flex-1"
           disabled={!isValid || isPending}
         >
           <Icon icon={isPending ? Loading03Icon : FloppyDiskIcon} className={isPending ? "animate-spin" : undefined} />
