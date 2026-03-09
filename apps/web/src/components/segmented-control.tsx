@@ -10,7 +10,7 @@ type SegmentItem<T extends string> = {
 };
 
 type SegmentedControlProps<T extends string> = {
-  items: SegmentItem<T>[];
+  items: readonly SegmentItem<T>[];
   value: T | undefined;
   onChangeAction: (value: T) => void;
   className?: string;

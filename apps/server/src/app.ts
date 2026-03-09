@@ -1,6 +1,7 @@
+import { env } from "@mint/env/server";
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
 
+import { logger } from "hono/logger";
 import { auth } from "@/lib/auth";
 import configureOpenAPI from "@/lib/configure-openapi";
 import createApp from "@/lib/create-app";
@@ -9,10 +10,13 @@ import router from "./routes";
 const app = createApp();
 
 app.use("*", logger());
+
+const allowedOrigin = env.BETTER_AUTH_TRUSTED_ORIGIN ?? "http://localhost:3000";
+
 app.use(
   "*",
   cors({
-    origin: "http://localhost:3000",
+    origin: allowedOrigin,
     credentials: true,
   }),
 );
@@ -20,7 +24,7 @@ app.use(
 app.use(
   "/api/auth/*",
   cors({
-    origin: "http://localhost:3000",
+    origin: allowedOrigin,
     credentials: true,
     allowHeaders: ["Content-Type", "Authorization"],
   }),

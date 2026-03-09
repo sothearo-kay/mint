@@ -2,7 +2,10 @@
   "name": "server",
   "type": "module",
   "exports": {
-    "./routes": "./src/routes/index.ts"
+    "./routes": {
+      "types": "./dist/routes/index.d.ts",
+      "default": "./src/routes/index.ts"
+    }
   },
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",

@@ -36,7 +36,7 @@ export function BalanceDisplay({
           className="size-36 shrink-0"
         />
       )}
-      <div className="flex flex-col min-w-0 divide-y divide-dashed divide-muted-foreground/30 text-right">
+      <div className="flex flex-col min-w-0 divide-y divide-dashed text-right">
         <div className="flex flex-col gap-1 pb-2">
           <p className="text-xs text-muted-foreground">{label}</p>
           <p className="text-3xl font-bold tabular-nums tracking-tight">{items[0]}</p>

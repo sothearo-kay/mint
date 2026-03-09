@@ -6,6 +6,7 @@ import { Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
 import { Tray, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
 import { CHART_COLORS } from "@mint/ui/components/ui/pie-chart";
+import type { Route } from "next";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "@/features/auth/api";
@@ -100,7 +101,7 @@ export function TransactionTray() {
   }, [isOpen, session, walletsLoading, wallets.length]);
 
   const close = useCallback(() => {
-    router.replace(pathname);
+    router.replace(pathname as Route);
     setTimeout(() => {
       setStep("select-account");
       setSelectedWalletId(null);

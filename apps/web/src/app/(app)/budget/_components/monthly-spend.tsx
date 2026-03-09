@@ -56,7 +56,7 @@ export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effec
     return <SummarySkeleton />;
 
   return (
-    <div className="space-y-3 pb-6 border-b-2 border-border/60 border-dashed">
+    <div className="space-y-3 pb-6 border-b border-dashed">
       <div className="flex items-center justify-between">
         <p className="text-sm font-semibold">Monthly Spend</p>
         <span className="text-xs font-medium tabular-nums text-muted-foreground">

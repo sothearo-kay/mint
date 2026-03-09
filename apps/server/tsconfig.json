@@ -4,6 +4,7 @@
     "types": ["node"],
     "composite": true,
     "declarationMap": true,
+    "rootDir": "src",
     "outDir": "dist",
     "paths": {
       "@/*": [

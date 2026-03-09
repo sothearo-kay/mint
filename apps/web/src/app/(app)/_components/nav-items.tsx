@@ -1,5 +1,6 @@
 "use client";
 
+import type { Route } from "next";
 import {
   Coins01Icon,
   MoneyAdd01Icon,
@@ -21,7 +22,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "@/features/auth/api";
 
-const navItems = [
+const navItems: { label: string; icon: typeof TransactionIcon; href: Route }[] = [
   { label: "Transactions", icon: TransactionIcon, href: "/transactions" },
   { label: "Budget", icon: Coins01Icon, href: "/budget" },
   { label: "Insights", icon: PieChart02Icon, href: "/insights" },
@@ -32,7 +33,7 @@ const createItems = [
   { label: "New Transaction", icon: MoneyAdd01Icon, href: "/transactions/new" },
 ];
 
-const settingsItems = [
+const settingsItems: { label: string; icon: typeof Tag01Icon; href: Route }[] = [
   { label: "Categories", icon: Tag01Icon, href: "/categories" },
 ];
 

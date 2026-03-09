@@ -5,7 +5,6 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarRail,
 } from "@mint/ui/components/sidebar";
 import Link from "next/link";
 import { CreateItems, NavItems, SettingsItems } from "./nav-items";
@@ -13,8 +12,8 @@ import { SidebarAuth } from "./sidebar-auth";
 
 export function AppSidebar() {
   return (
-    <Sidebar>
-      <SidebarHeader>
+    <Sidebar className="border-dashed">
+      <SidebarHeader className="border-b border-dashed">
         <Link href="/">
           <span className="font-heading px-2 py-1 text-xl">Mint</span>
         </Link>
@@ -37,7 +36,6 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarAuth />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
