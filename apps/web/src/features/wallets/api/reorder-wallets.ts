@@ -1,4 +1,3 @@
-import type { Wallet } from "./get-wallets";
 import type { MutationConfig } from "@/lib/react-query";
 import { toast } from "@mint/ui/components/sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -19,25 +18,12 @@ type UseReorderWalletsOptions = {
 
 export function useReorderWallets({ mutationConfig }: UseReorderWalletsOptions = {}) {
   const queryClient = useQueryClient();
-  const { onSuccess, onMutate: _onMutate, ...restConfig } = mutationConfig ?? {};
+  const { onSuccess, ...restConfig } = mutationConfig ?? {};
 
-  return useMutation<void, Error, ReorderItem[], { previous: Wallet[] | undefined }>({
+  return useMutation({
     mutationFn: reorderWallets,
-    onMutate: async (order) => {
-      await queryClient.cancelQueries({ queryKey: getWalletsQueryOptions().queryKey });
-      const previous = queryClient.getQueryData<Wallet[]>(getWalletsQueryOptions().queryKey);
-      if (previous) {
-        const reordered = order
-          .sort((a, b) => a.position - b.position)
-          .map(({ id }) => previous.find(w => w.id === id)!)
-          .filter(Boolean);
-        queryClient.setQueryData(getWalletsQueryOptions().queryKey, reordered);
-      }
-      return { previous };
-    },
-    onError: (_err, _order, context) => {
-      if (context?.previous)
-        queryClient.setQueryData(getWalletsQueryOptions().queryKey, context.previous);
+    onError: () => {
+      queryClient.invalidateQueries({ queryKey: getWalletsQueryOptions().queryKey });
       toast.error("Failed to reorder wallets. Please try again.");
     },
     onSuccess: (...args) => {

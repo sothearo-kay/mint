@@ -11,12 +11,14 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import {
+  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CHART_COLORS } from "@mint/ui/components/ui/pie-chart";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
+import { useEffect, useState } from "react";
 import { useReorderWallets } from "../api/reorder-wallets";
 import { WalletItem } from "./wallet-item";
 
@@ -27,7 +29,12 @@ type WalletListProps = {
 };
 
 export function WalletList({ wallets, onEditAction, onDeleteAction }: WalletListProps) {
+  const [items, setItems] = useState(wallets);
   const { mutate: reorder } = useReorderWallets();
+
+  useEffect(() => {
+    setItems(wallets);
+  }, [wallets]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -39,14 +46,13 @@ export function WalletList({ wallets, onEditAction, onDeleteAction }: WalletList
     if (!over || active.id === over.id)
       return;
 
-    const oldIndex = wallets.findIndex(w => w.id === active.id);
-    const newIndex = wallets.findIndex(w => w.id === over.id);
+    const oldIndex = items.findIndex(w => w.id === active.id);
+    const newIndex = items.findIndex(w => w.id === over.id);
     if (oldIndex === -1 || newIndex === -1)
       return;
 
-    const reordered = [...wallets];
-    const [moved] = reordered.splice(oldIndex, 1);
-    reordered.splice(newIndex, 0, moved);
+    const reordered = arrayMove(items, oldIndex, newIndex);
+    setItems(reordered);
     reorder(reordered.map((w, i) => ({ id: w.id, position: i })));
   }
 
@@ -56,11 +62,11 @@ export function WalletList({ wallets, onEditAction, onDeleteAction }: WalletList
       collisionDetection={closestCenter}
       onDragEnd={handleDragEnd}
     >
-      <SortableContext items={wallets.map(w => w.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext items={items.map(w => w.id)} strategy={verticalListSortingStrategy}>
         <div className="relative">
           {/* Static divider layer — not affected by drag transforms */}
           <div className="absolute inset-0 pointer-events-none">
-            {wallets.slice(1).map((_, i) => (
+            {items.slice(1).map((_, i) => (
               <div
                 key={i}
                 className="absolute left-10 right-0 border-t border-dashed border-border"
@@ -70,7 +76,7 @@ export function WalletList({ wallets, onEditAction, onDeleteAction }: WalletList
           </div>
 
           <div className="flex flex-col">
-            {wallets.map((wallet, i) => (
+            {items.map((wallet, i) => (
               <WalletItem
                 key={wallet.id}
                 wallet={wallet}
