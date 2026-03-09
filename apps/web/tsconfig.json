@@ -1,17 +1,18 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "@mint/typescript-config/nextjs",
   "compilerOptions": {
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     },
     "strictNullChecks": true
   },
-  "references": [{ "path": "../../packages/api-client" }],
+  "references": [
+    {
+      "path": "../../packages/api-client"
+    }
+  ],
   "include": [
     "**/*.ts",
     "**/*.tsx",
@@ -19,5 +20,7 @@
     "next.config.js",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@mint/eslint-config": "workspace:*",
+    "@mint/typescript-config": "workspace:*",
     "@next/eslint-plugin-next": "catalog:dev",
     "@svgr/webpack": "catalog:dev",
     "@tailwindcss/postcss": "catalog:ui",

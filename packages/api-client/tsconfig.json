@@ -1,11 +1,19 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "@mint/typescript-config/base",
   "compilerOptions": {
     "composite": true,
     "declarationMap": true,
     "outDir": "dist"
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"],
-  "references": [{ "path": "../../apps/server" }]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "references": [
+    {
+      "path": "../../apps/server"
+    }
+  ]
 }

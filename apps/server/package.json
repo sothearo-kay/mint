@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "tsx watch --env-file=.env src/index.ts",
     "build": "tsdown",
-    "start": "node --env-file=.env dist/index.js",
+    "vercel-build": "pnpm --filter @mint/db db:migrate && tsdown",
+    "start": "node --env-file=.env dist/app.js",
     "lint": "eslint --max-warnings 0",
     "lint:fix": "eslint --fix",
     "check-types": "tsc --noEmit"
@@ -24,7 +25,9 @@
     "zod": "catalog:server"
   },
   "devDependencies": {
+    "@types/node": "catalog:dev",
     "@mint/eslint-config": "workspace:*",
+    "@mint/typescript-config": "workspace:*",
     "eslint": "catalog:dev",
     "tsdown": "catalog:dev",
     "tsx": "catalog:dev",

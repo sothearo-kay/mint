@@ -203,6 +203,12 @@ importers:
       '@mint/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@mint/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
+      '@types/node':
+        specifier: catalog:dev
+        version: 22.15.3
       eslint:
         specifier: catalog:dev
         version: 9.39.3(jiti@2.6.1)
@@ -279,6 +285,9 @@ importers:
       '@mint/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
+      '@mint/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@next/eslint-plugin-next':
         specifier: catalog:dev
         version: 16.1.6
@@ -322,6 +331,9 @@ importers:
         specifier: catalog:server
         version: 4.12.3
     devDependencies:
+      '@mint/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       server:
         specifier: workspace:*
         version: link:../../apps/server
@@ -341,6 +353,12 @@ importers:
         specifier: catalog:db
         version: 8.19.0
     devDependencies:
+      '@mint/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: catalog:dev
+        version: 22.15.3
       '@types/pg':
         specifier: catalog:db
         version: 8.18.0
@@ -369,6 +387,9 @@ importers:
       '@mint/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@mint/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@types/node':
         specifier: catalog:dev
         version: 22.15.3
@@ -390,6 +411,8 @@ importers:
       eslint-plugin-format:
         specifier: ^2.0.1
         version: 2.0.1(eslint@9.39.3(jiti@2.6.1))
+
+  packages/typescript-config: {}
 
   packages/ui:
     dependencies:
@@ -448,6 +471,9 @@ importers:
       '@mint/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
+      '@mint/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@types/react':
         specifier: catalog:react
         version: 19.2.2

@@ -18,9 +18,11 @@
     "pg": "catalog:db"
   },
   "devDependencies": {
+    "@types/node": "catalog:dev",
     "@types/pg": "catalog:db",
     "drizzle-kit": "catalog:dev",
     "tsx": "catalog:dev",
+    "@mint/typescript-config": "workspace:*",
     "typescript": "catalog:dev"
   }
 }

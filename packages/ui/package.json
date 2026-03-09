@@ -37,6 +37,7 @@
   "devDependencies": {
     "@eslint-react/eslint-plugin": "catalog:dev",
     "@mint/eslint-config": "workspace:*",
+    "@mint/typescript-config": "workspace:*",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "eslint": "catalog:dev",
