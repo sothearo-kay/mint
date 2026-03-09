@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="60" height="60">
+  <!-- Stem -->
+  <line x1="30" y1="54" x2="30" y2="28" stroke="#0d9668" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Left leaf -->
+  <path d="M30 42 C18 36 10 20 20 10 C26 18 28 30 30 42Z" fill="#0d9668" opacity="0.35"/>
+  <!-- Right leaf (main) -->
+  <path d="M30 34 C42 26 52 10 40 4 C32 12 30 24 30 34Z" fill="#0d9668"/>
+  <!-- Sparkle dot -->
+  <circle cx="43" cy="6" r="2" fill="#0d9668" opacity="0.5"/>
+</svg>

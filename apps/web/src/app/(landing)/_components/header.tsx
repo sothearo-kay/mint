@@ -3,11 +3,10 @@
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useTransactionTray } from "@/store/transaction-tray";
 
 export function Header() {
-  const router = useRouter();
   const { open } = useTransactionTray();
 
   return (
@@ -16,10 +15,9 @@ export function Header() {
         <span className="font-heading text-xl">Mint</span>
         <Button
           variant="raise-secondary"
-          onClick={() => {
-            open();
-            router.push("/transactions");
-          }}
+          nativeButton={false}
+          render={<Link href="/transactions" />}
+          onClick={() => open()}
         >
           Track It
           <div className="flex justify-center items-center size-4 bg-foreground/20 rounded-full">

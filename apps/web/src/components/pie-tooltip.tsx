@@ -18,8 +18,10 @@ export function PieTooltip({ active, payload, labelMap }: PieTooltipProps) {
   return (
     <div className="rounded-lg border bg-background px-3 py-2 shadow-sm">
       <div className="flex items-start gap-2 text-xs">
-        <div className="size-2.5 rounded-xs shrink-0 mt-0.75" style={{ background: fill }} />
-        <span className="text-muted-foreground whitespace-nowrap">{name}</span>
+        <div className="flex items-center gap-2">
+          <div className="size-2.5 rounded-xs shrink-0" style={{ background: fill }} />
+          <span className="text-muted-foreground whitespace-nowrap">{name}</span>
+        </div>
         <div className="flex flex-col items-end font-medium tabular-nums">
           {lines.map((line, i) => <span key={i}>{line}</span>)}
         </div>

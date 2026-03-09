@@ -3,12 +3,11 @@
 import { ArrowUpRight01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import GithubIcon from "@/assets/icons/socials/github.svg";
 import { useTransactionTray } from "@/store/transaction-tray";
 
 export function Hero() {
-  const router = useRouter();
   const { open } = useTransactionTray();
 
   return (
@@ -20,10 +19,9 @@ export function Hero() {
       <div className="flex items-center gap-3">
         <Button
           variant="raise-default"
-          onClick={() => {
-            open();
-            router.push("/transactions");
-          }}
+          nativeButton={false}
+          render={<Link href="/transactions" />}
+          onClick={() => open()}
         >
           Get Started
           <div className="flex justify-center items-center size-4 bg-primary-foreground/20 rounded-full">
