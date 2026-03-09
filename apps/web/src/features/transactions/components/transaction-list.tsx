@@ -21,7 +21,7 @@ export function Transactions() {
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [actionMode, setActionMode] = useState<"edit" | "delete" | null>(null);
 
-  const { data: session } = useSession();
+  const { data: session, isPending: isSessionPending } = useSession();
   const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
   const { transactions: guestTransactions, hasHydrated } = useFilteredGuestTransactions(filters.from, filters.to);
 
@@ -31,7 +31,7 @@ export function Transactions() {
   });
 
   const transactions = session ? apiTransactions : guestTransactions;
-  const isPending = session ? isPendingApi : !hasHydrated;
+  const isPending = isSessionPending || (session ? isPendingApi : !hasHydrated);
   const currencies = sumByCurrency(transactions);
 
   function openEdit(tx: Transaction) {

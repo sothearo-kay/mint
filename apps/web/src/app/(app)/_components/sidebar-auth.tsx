@@ -10,11 +10,11 @@ import {
   DropdownMenuTrigger,
 } from "@mint/ui/components/dropdown-menu";
 import { Icon } from "@mint/ui/components/icon";
+import { Skeleton } from "@mint/ui/components/skeleton";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSkeleton,
 } from "@mint/ui/components/sidebar";
 import { toast } from "@mint/ui/components/sonner";
 import { useRouter } from "next/navigation";
@@ -34,7 +34,11 @@ export function SidebarAuth() {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuSkeleton />
+          <div className="flex h-auto items-center gap-2 rounded-md px-2 py-1.5">
+            <Skeleton className="size-8 rounded-full shrink-0" />
+            <Skeleton className="h-3.5 w-24 rounded-md" />
+            <Skeleton className="size-4 rounded-md ml-auto shrink-0" />
+          </div>
         </SidebarMenuItem>
       </SidebarMenu>
     );

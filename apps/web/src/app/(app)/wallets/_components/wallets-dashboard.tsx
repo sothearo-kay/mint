@@ -14,12 +14,12 @@ import { WalletList, WalletListSkeleton } from "@/features/wallets/components/wa
 import { useWalletTray } from "@/store/wallet-tray";
 
 export function WalletsDashboard() {
-  const { data: session } = useSession();
+  const { data: session, isPending: isSessionPending } = useSession();
   const { data: rawWallets = [], isPending: isQueryPending } = useWallets({
     queryConfig: { enabled: !!session },
   });
 
-  const isPending = !!session && isQueryPending;
+  const isPending = isSessionPending || (!!session && isQueryPending);
   const wallets = session ? rawWallets : [];
 
   const { mode, wallet: selectedWallet, openCreate, openEdit, openDelete, close } = useWalletTray();
@@ -34,7 +34,7 @@ export function WalletsDashboard() {
       {session && <Fab onClickAction={openCreate} />}
       <WalletActionTray wallet={selectedWallet} mode={mode} onCloseAction={closeAction} />
 
-      {!session
+      {!isSessionPending && !session
         ? (
             <EmptyState
               icon={Wallet01Icon}

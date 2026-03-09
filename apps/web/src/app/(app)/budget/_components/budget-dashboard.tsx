@@ -15,7 +15,7 @@ import { CategoryBreakdown } from "./category-breakdown";
 import { MonthlySpend } from "./monthly-spend";
 
 export function BudgetDashboard() {
-  const { data: session } = useSession();
+  const { data: session, isPending: isSessionPending } = useSession();
   const [filters, setFilters] = useState<FilterValue>({
     from: DEFAULT_FILTERS.from,
     to: DEFAULT_FILTERS.to,
@@ -32,7 +32,7 @@ export function BudgetDashboard() {
     params: { from: filters.from, to: filters.to, currency },
     queryConfig: { enabled: !!session },
   });
-  const isPending = session ? isSummaryPending : !hasHydrated;
+  const isPending = isSessionPending || (session ? isSummaryPending : !hasHydrated);
 
   const { income: guestIncome, expense: guestExpense } = sumByType(guestTxs);
   const totalIncome = session ? Number.parseFloat(summaryData?.income ?? "0") : guestIncome;
