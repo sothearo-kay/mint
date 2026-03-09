@@ -33,7 +33,7 @@ export function BalanceDisplay({
           showLabels={false}
           hideTooltip={hideTooltip}
           tooltipContent={tooltipContent}
-          className="size-40 shrink-0"
+          className="-ml-5 size-40 shrink-0"
         />
       )}
       <div className="flex flex-col min-w-0 divide-y divide-dashed text-right">
@@ -52,7 +52,7 @@ export function BalanceDisplay({
 export function BalanceDisplaySkeleton({ label }: { label?: React.ReactNode }) {
   return (
     <div className="flex items-center gap-6 max-sm:justify-between">
-      <div className="size-40 flex items-center justify-center shrink-0">
+      <div className="-ml-5 size-40 flex items-center justify-center shrink-0">
         <Skeleton className="size-30 rounded-full" />
       </div>
       <div className="flex flex-col min-w-0 items-end divide-y divide-dashed divide-muted-foreground/30">

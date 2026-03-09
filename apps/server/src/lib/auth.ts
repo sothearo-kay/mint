@@ -9,6 +9,14 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   trustedOrigins: [env.BETTER_AUTH_TRUSTED_ORIGIN],
+  advanced: {
+    ...(env.COOKIE_DOMAIN && {
+      crossSubDomainCookies: {
+        enabled: true,
+        domain: env.COOKIE_DOMAIN,
+      },
+    }),
+  },
   socialProviders: {
     google: {
       clientId: env.GOOGLE_CLIENT_ID,
