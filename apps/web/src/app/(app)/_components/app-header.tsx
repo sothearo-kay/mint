@@ -11,6 +11,7 @@ import { AnimatedContent } from "./animated-content";
 const pathTitles: Record<string, string> = {
   "/transactions": "Transactions",
   "/budget": "Budget",
+  "/recurring": "Recurring Transactions",
   "/insights": "Insights",
   "/wallets": "Wallets",
   "/categories": "Categories",
