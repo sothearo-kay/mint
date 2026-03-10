@@ -6,12 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FloppyDiskIcon, Loading03Icon, Wallet01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
+import { Input } from "@mint/ui/components/input";
 import { toast } from "@mint/ui/components/sonner";
-import { TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
-import { Input } from "@mint/ui/components/ui/input";
-import { Label } from "@mint/ui/components/ui/label";
+import { TrayBody, TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
 import { Controller, useForm } from "react-hook-form";
-import { SegmentedControl } from "@/components/segmented-control";
+import { ToggleGroup } from "@/components/toggle-group";
 import { createWalletSchema, useCreateWallet } from "../api/create-wallet";
 import { useUpdateWallet } from "../api/update-wallet";
 
@@ -91,56 +90,49 @@ export function WalletForm({ wallet, onCancelAction, onSuccessAction }: WalletFo
         </div>
       </TrayHeader>
 
-      <form id="wallet-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <Controller
-          control={control}
-          name="name"
-          render={({ field, fieldState }) => (
-            <div className="flex flex-col gap-1.5">
-              <Label>Name</Label>
+      <TrayBody>
+        <form id="wallet-form" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
+          <Controller
+            control={control}
+            name="name"
+            render={({ field, fieldState }) => (
               <Input
                 {...field}
                 placeholder="e.g. Main Account"
                 autoFocus
                 aria-invalid={!!fieldState.error}
-                className="bg-muted border-transparent shadow-none focus-visible:border-transparent focus-visible:ring-0"
+                className="h-9 bg-muted border-transparent shadow-none focus-visible:border-transparent focus-visible:ring-0"
               />
-            </div>
-          )}
-        />
+            )}
+          />
 
-        {!isEditing && (
-          <Controller
-            control={control}
-            name="currency"
-            render={({ field }) => (
-              <div className="flex flex-col gap-1.5">
-                <Label>Currency</Label>
-                <SegmentedControl
+          {!isEditing && (
+            <Controller
+              control={control}
+              name="currency"
+              render={({ field }) => (
+                <ToggleGroup
                   items={CURRENCY_ITEMS}
                   value={field.value}
                   onChangeAction={field.onChange}
                 />
-              </div>
-            )}
-          />
-        )}
+              )}
+            />
+          )}
 
-        <Controller
-          control={control}
-          name="type"
-          render={({ field }) => (
-            <div className="flex flex-col gap-1.5">
-              <Label>Type</Label>
-              <SegmentedControl
+          <Controller
+            control={control}
+            name="type"
+            render={({ field }) => (
+              <ToggleGroup
                 items={TYPE_ITEMS}
                 value={field.value}
                 onChangeAction={field.onChange}
               />
-            </div>
-          )}
-        />
-      </form>
+            )}
+          />
+        </form>
+      </TrayBody>
 
       <TrayFooter>
         <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCancelAction}>

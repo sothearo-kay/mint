@@ -5,6 +5,7 @@ import type { FilterValue } from "./transaction-filters";
 import { useState } from "react";
 import { Fab } from "@/components/fab";
 import { useSession } from "@/features/auth/api";
+import { useRecurring } from "@/features/recurring/api/get-recurring";
 import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useFilteredGuestTransactions } from "@/store/guest-transactions";
 import { useTransactionTray } from "@/store/transaction-tray";
@@ -24,6 +25,8 @@ export function Transactions() {
   const { data: session, isPending: isSessionPending } = useSession();
   const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
   const { transactions: guestTransactions, hasHydrated } = useFilteredGuestTransactions(filters.from, filters.to);
+
+  useRecurring({ queryConfig: { enabled: !!session } }); // triggers processOverdue as side effect
 
   const { data: apiTransactions = [], isPending: isPendingApi, isPlaceholderData, isError } = useTransactions({
     params: { from: filters.from, to: filters.to, walletId: filters.walletId },

@@ -22,6 +22,11 @@ const transactionSchema = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   walletId: z.string().nullable(),
+  recurring: z.object({
+    id: z.string(),
+    name: z.string(),
+    logo: z.string().nullable(),
+  }).nullable(),
 });
 
 const transactionBodySchema = z.object({

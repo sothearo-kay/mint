@@ -5,11 +5,8 @@ import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
 import Link from "next/link";
 import GithubIcon from "@/assets/icons/socials/github.svg";
-import { useTransactionTray } from "@/store/transaction-tray";
 
 export function Hero() {
-  const { open } = useTransactionTray();
-
   return (
     <section className="flex h-(--hero-height) flex-col items-center justify-center gap-6 px-4 text-center">
       <h1 className="font-heading text-7xl tracking-tight">Mint</h1>
@@ -21,7 +18,6 @@ export function Hero() {
           variant="raise-default"
           nativeButton={false}
           render={<Link href="/transactions" />}
-          onClick={() => open()}
         >
           Get Started
           <div className="flex justify-center items-center size-4 bg-primary-foreground/20 rounded-full">

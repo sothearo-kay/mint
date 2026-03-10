@@ -21,6 +21,11 @@ export type Transaction = {
     type: TransactionType;
   };
   walletId: string | null;
+  recurring: {
+    id: string;
+    name: string;
+    logo: string | null;
+  } | null;
 };
 
 type GetTransactionsParams = {

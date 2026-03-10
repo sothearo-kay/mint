@@ -5,6 +5,7 @@ import {
   Coins01Icon,
   MoneyAdd01Icon,
   PieChart02Icon,
+  Refresh01Icon,
   Tag01Icon,
   TransactionIcon,
   Wallet01Icon,
@@ -26,6 +27,7 @@ import { useTransactionTray } from "@/store/transaction-tray";
 const navItems: { label: string; icon: typeof TransactionIcon; href: Route }[] = [
   { label: "Transactions", icon: TransactionIcon, href: "/transactions" },
   { label: "Budget", icon: Coins01Icon, href: "/budget" },
+  { label: "Recurring", icon: Refresh01Icon, href: "/recurring" },
   { label: "Insights", icon: PieChart02Icon, href: "/insights" },
   { label: "Wallets", icon: Wallet01Icon, href: "/wallets" },
 ];

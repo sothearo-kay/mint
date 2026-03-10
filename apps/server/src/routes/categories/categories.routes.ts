@@ -136,8 +136,35 @@ export const summary = createRoute({
   },
 });
 
+export const reorder = createRoute({
+  operationId: "reorderCategories",
+  path: "/categories/reorder",
+  method: "patch",
+  middleware: [authMiddleware],
+  tags,
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            order: z.array(z.object({ id: z.string(), position: z.number() })),
+          }),
+        },
+      },
+    },
+  },
+  responses: {
+    204: { description: "Reordered" },
+    401: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Unauthorized",
+    },
+  },
+});
+
 export type ListRoute = typeof list;
 export type CreateRoute = typeof create;
 export type RemoveRoute = typeof remove;
 export type ResetRoute = typeof reset;
 export type SummaryRoute = typeof summary;
+export type ReorderRoute = typeof reorder;

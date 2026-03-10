@@ -74,12 +74,7 @@ export function IconPicker({ value, onValueChange, placeholder = "Pick icon", cl
           : placeholder}
       </PopoverTrigger>
 
-      <PopoverContent
-        className="w-72 p-0 gap-0"
-        side="bottom"
-        align="start"
-        sideOffset={6}
-      >
+      <PopoverContent className="w-72 p-0 gap-0" side="bottom" align="start" sideOffset={6}>
         <div className="px-2 py-1 border-b border-border/60">
           <InputGroup className="border-0 shadow-none has-[[data-slot=input-group-control]:focus-visible]:ring-0 has-[[data-slot=input-group-control]:focus-visible]:border-0">
             <InputGroupAddon>

@@ -2,12 +2,13 @@ import type { CreateRoute, ListRoute, RemoveRoute, SyncRoute, UpdateRoute } from
 import type { AppRouteHandler } from "@/lib/types";
 import { randomUUID } from "node:crypto";
 import { db } from "@mint/db";
-import { category, transaction } from "@mint/db/schema";
+import { category, recurringTransaction, transaction } from "@mint/db/schema";
 import { and, desc, eq, gte, isNull, lte } from "drizzle-orm";
 
 function formatTransaction(
   tx: typeof transaction.$inferSelect,
   cat: typeof category.$inferSelect,
+  recurring: typeof recurringTransaction.$inferSelect | null = null,
 ) {
   return {
     id: tx.id,
@@ -25,6 +26,9 @@ function formatTransaction(
       icon: cat.icon,
       type: cat.type,
     },
+    recurring: recurring
+      ? { id: recurring.id, name: recurring.name, logo: recurring.logo }
+      : null,
   };
 }
 
@@ -36,6 +40,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     .select()
     .from(transaction)
     .innerJoin(category, eq(transaction.categoryId, category.id))
+    .leftJoin(recurringTransaction, eq(transaction.recurringId, recurringTransaction.id))
     .where(
       and(
         eq(transaction.userId, user.id),
@@ -48,7 +53,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     )
     .orderBy(desc(transaction.date));
 
-  return c.json(rows.map(r => formatTransaction(r.transaction, r.category)), 200);
+  return c.json(rows.map(r => formatTransaction(r.transaction, r.category, r.recurring_transaction)), 200);
 };
 
 export const create: AppRouteHandler<CreateRoute> = async (c) => {

@@ -54,7 +54,7 @@ export function TransactionBalance({ isPending, currencies, from }: TransactionB
     : ["$0.00"];
 
   return (
-    <div className="pb-1 border-b border-dashed">
+    <div className="-mt-5 pb-1 border-b border-dashed">
       {isPending
         ? <BalanceDisplaySkeleton label={label} />
         : (

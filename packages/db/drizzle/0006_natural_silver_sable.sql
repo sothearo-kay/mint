@@ -1,0 +1,1 @@
+ALTER TABLE "recurring_transaction" ADD COLUMN IF NOT EXISTS "name" text NOT NULL;

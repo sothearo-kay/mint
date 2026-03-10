@@ -115,13 +115,13 @@ function ListSkeleton() {
     <div className="flex flex-col gap-2.5">
       {[1, 2].map(g => (
         <div key={g} className="*:last:mb-2">
-          <Skeleton className="h-3.5 w-14 rounded-full mb-3" />
+          <Skeleton className="h-4 w-14 rounded-full mb-3" />
           <div>
             {SKELETON_ROWS.map((row, i) => (
               <div key={i} className="flex items-center gap-3 pb-3.5">
                 <div className="relative size-10 shrink-0">
                   <Skeleton className="size-10 rounded-2xl" />
-                  <Skeleton className="absolute -bottom-1 -right-2 size-4.5 rounded-full" />
+                  <Skeleton className="absolute bottom-0 -right-1 size-3.5 rounded-full" />
                 </div>
                 <div className="ml-2 flex-1 space-y-1.5">
                   <Skeleton className={cn("h-3.5 rounded-full", row.nameW)} />

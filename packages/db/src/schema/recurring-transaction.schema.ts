@@ -28,6 +28,7 @@ export const recurringTransaction = pgTable(
     categoryId: text("category_id")
       .notNull()
       .references(() => category.id),
+    name: text("name").notNull(),
     logo: text("logo"),
     note: text("note"),
     frequency: frequencyEnum("frequency").notNull(),

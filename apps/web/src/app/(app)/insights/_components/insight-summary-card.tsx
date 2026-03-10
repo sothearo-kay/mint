@@ -4,11 +4,11 @@ import type { IconSvgElement } from "@hugeicons/react";
 import type { Currency } from "@/utils/constants";
 import { Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
+import { MintCard } from "@/components/card";
 import { formatBalanceAmount } from "@/utils/format";
-import { InsightCard } from "./insight-card";
 import { MonthlyBars, useMonthlyDisplay, ValueSkeleton } from "./monthly-bars";
 
-type SummaryCardProps = {
+type InsightSummaryCardProps = {
   title: string;
   icon: IconSvgElement;
   values: number[];
@@ -18,7 +18,7 @@ type SummaryCardProps = {
   invertChange?: boolean;
 };
 
-export function SummaryCard({
+export function InsightSummaryCard({
   title,
   icon,
   values,
@@ -26,7 +26,7 @@ export function SummaryCard({
   currency,
   isPending,
   invertChange = false,
-}: SummaryCardProps) {
+}: InsightSummaryCardProps) {
   const { currentMonth, displayIndex, onHover, onLeave } = useMonthlyDisplay();
 
   const displayValue = values[displayIndex] ?? 0;
@@ -34,7 +34,7 @@ export function SummaryCard({
   const change = prevValue !== 0 ? ((displayValue - prevValue) / Math.abs(prevValue)) * 100 : 0;
 
   return (
-    <InsightCard
+    <MintCard
       title={(
         <>
           <Icon icon={icon} className="size-4 text-muted-foreground" />
@@ -70,6 +70,6 @@ export function SummaryCard({
           onLeaveAction={onLeave}
         />
       </div>
-    </InsightCard>
+    </MintCard>
   );
 }

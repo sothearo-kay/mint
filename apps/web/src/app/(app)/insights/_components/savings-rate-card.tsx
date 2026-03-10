@@ -6,9 +6,9 @@ import type { Currency } from "@/utils/constants";
 import { PiggyBankIcon } from "@hugeicons/core-free-icons";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
+import { MintCard } from "@/components/card";
 import { MONTHS } from "@/utils/constants";
 import { formatBalanceAmount } from "@/utils/format";
-import { InsightCard } from "./insight-card";
 import { MonthlyBars, useMonthlyDisplay, ValueSkeleton } from "./monthly-bars";
 
 type SavingsRateCardProps = {
@@ -34,7 +34,7 @@ export function SavingsRateCard({ monthly, breakdown, currency, isPending }: Sav
   const totalIncome = incomeCategories.reduce((s, c) => s + Number.parseFloat(c.amount), 0);
 
   return (
-    <InsightCard title={(
+    <MintCard title={(
       <>
         <Icon icon={PiggyBankIcon} className="size-4 text-muted-foreground" />
         <span className="text-sm font-medium text-muted-foreground">Savings Rate</span>
@@ -117,6 +117,6 @@ export function SavingsRateCard({ monthly, breakdown, currency, isPending }: Sav
           </div>
         )}
       </div>
-    </InsightCard>
+    </MintCard>
   );
 }
