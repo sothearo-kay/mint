@@ -49,7 +49,7 @@ export function InsightsDashboard() {
   const to = endOfYear(new Date(year, 0)).toISOString();
 
   const { data: summaryDataRaw, isPending: isSummaryPendingRaw } = useCategorySummary({
-    params: { from, to },
+    params: { from, to, currency },
     queryConfig: { enabled: !!session },
   });
   const isSummaryPending = isSessionPending || (!!session && isSummaryPendingRaw);
@@ -167,6 +167,7 @@ export function InsightsDashboard() {
                 <TopCategoriesCard
                   categories={summaryData?.categories ?? []}
                   isPending={isSummaryPending}
+                  currency={currency}
                 />
               </div>
             </>

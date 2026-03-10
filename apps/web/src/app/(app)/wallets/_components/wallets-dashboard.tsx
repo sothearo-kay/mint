@@ -46,7 +46,9 @@ export function WalletsDashboard() {
           )
         : (
             <>
-              {isPending ? <WalletBalanceSkeleton /> : <WalletBalance wallets={wallets} />}
+              <div className="-mt-5">
+                {isPending ? <WalletBalanceSkeleton /> : <WalletBalance wallets={wallets} />}
+              </div>
 
               <MintCard
                 title={(

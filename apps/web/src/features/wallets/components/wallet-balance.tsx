@@ -37,7 +37,6 @@ export function WalletBalance({ wallets }: { wallets: Wallet[] }) {
       chartColors={hasBalance ? undefined : ["var(--border)"]}
       hideTooltip={!hasBalance}
       tooltipContent={<PieTooltip labelMap={labelMap} />}
-      showChart
     />
   );
 }

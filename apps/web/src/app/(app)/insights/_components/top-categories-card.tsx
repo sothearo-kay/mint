@@ -1,5 +1,6 @@
 "use client";
 
+import type { Currency } from "@/utils/constants";
 import { PieChartIcon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import { MintPieChart } from "@mint/ui/components/ui/pie-chart";
@@ -9,9 +10,10 @@ import { MintCard } from "@/components/card";
 type TopCategoriesCardProps = {
   categories: { id: string; name: string; icon: string; amount: string }[];
   isPending?: boolean;
+  currency?: Currency;
 };
 
-export function TopCategoriesCard({ categories, isPending }: TopCategoriesCardProps) {
+export function TopCategoriesCard({ categories, isPending, currency = "USD" }: TopCategoriesCardProps) {
   const top = categories.slice(0, 5);
 
   const chartData = top.map(cat => ({
@@ -41,7 +43,8 @@ export function TopCategoriesCard({ categories, isPending }: TopCategoriesCardPr
           : (
               <MintPieChart
                 data={chartData}
-                className="h-56 w-full"
+                className="h-48 w-full"
+                currency={currency}
               />
             )}
     </MintCard>

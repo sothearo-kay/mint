@@ -27,6 +27,7 @@ type MintPieChartProps = {
   hideTooltip?: boolean;
   colors?: string[];
   tooltipContent?: React.ReactElement;
+  currency?: "USD" | "KHR";
 };
 
 function MintPieChart({
@@ -37,6 +38,7 @@ function MintPieChart({
   hideTooltip = false,
   colors,
   tooltipContent,
+  currency = "USD",
 }: MintPieChartProps) {
   const total = data.reduce((s, d) => s + d.value, 0);
   const resolvedColors = colors ?? CHART_COLORS;
@@ -54,7 +56,7 @@ function MintPieChart({
 
   return (
     <div className="flex flex-col gap-3">
-      <ChartContainer config={chartConfig} className={cn("[&_.recharts-text]:fill-background", className)}>
+      <ChartContainer config={chartConfig} className={cn("aspect-auto [&_.recharts-text]:fill-background", className)}>
         <PieChart>
           {!hideTooltip && <ChartTooltip content={tooltipContent ?? <ChartTooltipContent nameKey="name" hideLabel />} />}
           <Pie
@@ -71,10 +73,14 @@ function MintPieChart({
                 stroke="none"
                 fontSize={12}
                 fontWeight={500}
-                formatter={(value: number) =>
-                  total > 0 && (value / total) >= 0.08
-                    ? (value >= 1000 ? `$${(value / 1000).toFixed(1)}k` : `$${value}`)
-                    : ""}
+                formatter={(value: number) => {
+                  if (!(total > 0 && (value / total) >= 0.08))
+                    return "";
+                  const formatted = currency === "KHR"
+                    ? (value >= 1000 ? `${Math.round(value / 1000)}k` : `${Math.round(value)}`)
+                    : (value >= 1000 ? `${(value / 1000).toFixed(1)}k` : `${value}`);
+                  return currency === "KHR" ? `៛${formatted}` : `$${formatted}`;
+                }}
               />
             )}
           </Pie>
