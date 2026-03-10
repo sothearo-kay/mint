@@ -3,6 +3,7 @@
 import type { Transaction } from "../api/get-transactions";
 import { ArrowRight01Icon, MoneyNotFoundIcon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
+import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
 import { format, isToday, isYesterday } from "date-fns";
 import { useState } from "react";
@@ -58,7 +59,7 @@ export function TransactionList({ isError, isPending, transactions, from, onEdit
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2.5">
       {groups.map(([label, txs]) => {
         const isCollapsed = collapsed.has(label);
         return (
@@ -84,7 +85,7 @@ export function TransactionList({ isError, isPending, transactions, from, onEdit
               )}
             >
               <div className="overflow-hidden">
-                <div className="space-y-3.5">
+                <div>
                   {txs.map(tx => (
                     <TransactionRow
                       key={tx.id}
@@ -103,21 +104,30 @@ export function TransactionList({ isError, isPending, transactions, from, onEdit
   );
 }
 
+const SKELETON_ROWS = [
+  { nameW: "w-24", hasNote: false, amountW: "w-16" },
+  { nameW: "w-32", hasNote: true, amountW: "w-12" },
+  { nameW: "w-20", hasNote: false, amountW: "w-14" },
+];
+
 function ListSkeleton() {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2.5">
       {[1, 2].map(g => (
-        <div key={g} className="space-y-3 *:last:mb-2">
-          <div className="h-4 w-16 bg-muted rounded-full animate-pulse" />
-          <div className="space-y-3.5">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="flex items-center gap-3">
-                <div className="size-10 rounded-2xl bg-muted animate-pulse shrink-0" />
-                <div className="flex-1 space-y-1.5">
-                  <div className="h-3.5 w-28 bg-muted rounded-full animate-pulse" />
-                  <div className="h-3 w-16 bg-muted rounded-full animate-pulse" />
+        <div key={g} className="*:last:mb-2">
+          <Skeleton className="h-3.5 w-14 rounded-full mb-3" />
+          <div>
+            {SKELETON_ROWS.map((row, i) => (
+              <div key={i} className="flex items-center gap-3 pb-3.5">
+                <div className="relative size-10 shrink-0">
+                  <Skeleton className="size-10 rounded-2xl" />
+                  <Skeleton className="absolute -bottom-1 -right-2 size-4.5 rounded-full" />
                 </div>
-                <div className="h-3.5 w-14 bg-muted rounded-full animate-pulse" />
+                <div className="ml-2 flex-1 space-y-1.5">
+                  <Skeleton className={cn("h-3.5 rounded-full", row.nameW)} />
+                  {row.hasNote && <Skeleton className="h-3 w-20 rounded-full" />}
+                </div>
+                <Skeleton className={cn("h-3.5 rounded-full", row.amountW)} />
               </div>
             ))}
           </div>

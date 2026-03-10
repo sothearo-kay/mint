@@ -3,6 +3,7 @@
 import { Coins01Icon, MoneyNotFoundIcon } from "@hugeicons/core-free-icons";
 import { DynamicIcon } from "@mint/ui/components/icon";
 import { Progress } from "@mint/ui/components/ui/progress";
+import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { format } from "date-fns";
 import { EmptyState } from "@/components/empty-state";
 import { formatCurrency } from "@/utils/format";
@@ -80,17 +81,17 @@ export function CategoryBreakdown({ isPending, categories, totalExpense, totalIn
 function CategorySkeleton() {
   return (
     <div className="space-y-2">
-      <div className="h-4 w-36 bg-muted rounded-full animate-pulse mb-3" />
+      <Skeleton className="h-4 w-36 rounded-full mb-3" />
       <div className="space-y-3.5">
         {[1, 2, 3].map(i => (
           <div key={i} className="flex items-center gap-3">
-            <div className="size-10 rounded-2xl bg-muted animate-pulse shrink-0" />
+            <Skeleton className="size-10 rounded-2xl shrink-0" />
             <div className="flex-1 space-y-2">
               <div className="flex justify-between">
-                <div className="h-3.5 w-24 bg-muted rounded-full animate-pulse" />
-                <div className="h-3.5 w-14 bg-muted rounded-full animate-pulse" />
+                <Skeleton className="h-3.5 w-24 rounded-full" />
+                <Skeleton className="h-3.5 w-14 rounded-full" />
               </div>
-              <div className="h-1.5 w-full bg-muted rounded-full animate-pulse" />
+              <Skeleton className="h-1.5 w-full rounded-full" />
             </div>
           </div>
         ))}

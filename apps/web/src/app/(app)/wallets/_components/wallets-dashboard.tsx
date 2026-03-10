@@ -30,7 +30,7 @@ export function WalletsDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-4 mb-14">
+    <div className="flex flex-col gap-2 mb-14">
       {session && <Fab onClickAction={openCreate} />}
       <WalletActionTray wallet={selectedWallet} mode={mode} onCloseAction={closeAction} />
 

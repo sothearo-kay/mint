@@ -7,6 +7,7 @@ import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
 import { toast } from "@mint/ui/components/sonner";
 import { Tray, TrayView } from "@mint/ui/components/tray";
+import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
 import { useState } from "react";
 import { Fab } from "@/components/fab";
@@ -168,12 +169,12 @@ function CategorySkeleton() {
             i === 0 && "sm:border-r-2 sm:border-dashed sm:border-border/60 pb-6 border-b-2 border-dashed border-border/60 sm:pb-0 sm:border-b-0",
           )}
         >
-          <div className="h-4 w-14 bg-muted rounded-full animate-pulse mb-3" />
+          <Skeleton className="h-4 w-14 rounded-full mb-3" />
           <div className="flex flex-col gap-2">
             {Array.from({ length: count }).map((_, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="size-10 rounded-2xl bg-muted animate-pulse shrink-0" />
-                <div className="h-3.5 w-28 bg-muted rounded-full animate-pulse" />
+                <Skeleton className="size-10 rounded-2xl shrink-0" />
+                <Skeleton className="h-3.5 w-28 rounded-full" />
               </div>
             ))}
           </div>

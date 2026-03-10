@@ -50,7 +50,7 @@ export function Transactions() {
   }
 
   return (
-    <div className="flex flex-col gap-4 mb-14">
+    <div className="flex flex-col gap-4 mb-10.5">
       <Fab onClickAction={open} />
       <TransactionActionTray transaction={selectedTx} mode={actionMode} onCloseAction={closeAction} />
       <TransactionFilters
@@ -60,7 +60,7 @@ export function Transactions() {
         onChangeAction={setFilters}
       />
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <TransactionBalance
           isPending={isPending}
           currencies={currencies}

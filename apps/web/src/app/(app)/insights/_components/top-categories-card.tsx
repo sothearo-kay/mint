@@ -3,6 +3,7 @@
 import { PieChartIcon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import { MintPieChart } from "@mint/ui/components/ui/pie-chart";
+import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { InsightCard } from "./insight-card";
 
 type TopCategoriesCardProps = {
@@ -29,7 +30,7 @@ export function TopCategoriesCard({ categories, isPending }: TopCategoriesCardPr
     >
       {isPending
         ? (
-            <div className="h-40 bg-muted rounded-xl animate-pulse" />
+            <Skeleton className="h-40 rounded-xl" />
           )
         : top.length === 0
           ? (

@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
 import { useState } from "react";
 
@@ -55,8 +56,8 @@ export function MonthlyBars({ count, displayIndex, currentMonth, color = "bg-pri
 export function ValueSkeleton() {
   return (
     <>
-      <div className="h-8 w-28 bg-muted rounded-full animate-pulse" />
-      <div className="h-3 w-32 bg-muted rounded-full animate-pulse mt-1.5" />
+      <Skeleton className="h-8 w-28 rounded-full" />
+      <Skeleton className="h-3 w-32 rounded-full mt-1.5" />
     </>
   );
 }

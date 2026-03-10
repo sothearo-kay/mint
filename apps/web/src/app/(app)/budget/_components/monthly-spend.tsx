@@ -6,6 +6,7 @@ import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@mint/ui/components/input-group";
 import { Separator } from "@mint/ui/components/ui/separator";
+import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
 import { useRef, useState } from "react";
 import { useUpdateSettings } from "@/features/settings/api/update-settings";
@@ -130,11 +131,11 @@ function SummarySkeleton() {
   return (
     <div className="space-y-3 pb-5 border-b-2 border-dashed border-border/60">
       <div className="flex items-center justify-between">
-        <div className="h-5 w-28 bg-muted rounded-full animate-pulse" />
-        <div className="h-3 w-6 bg-muted rounded-full animate-pulse" />
+        <Skeleton className="h-5 w-28 rounded-full" />
+        <Skeleton className="h-3 w-6 rounded-full" />
       </div>
-      <div className="h-10 w-full bg-muted rounded-xl animate-pulse" />
-      <div className="h-5 w-44 bg-muted rounded-full animate-pulse ml-auto" />
+      <Skeleton className="h-10 w-full rounded-xl" />
+      <Skeleton className="h-5 w-44 rounded-full ml-auto" />
     </div>
   );
 }

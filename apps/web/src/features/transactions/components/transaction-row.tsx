@@ -1,7 +1,7 @@
 "use client";
 
 import type { Transaction } from "../api/get-transactions";
-import { Delete01Icon, MoreHorizontalIcon, PencilEdit02Icon } from "@hugeicons/core-free-icons";
+import { ArrowDownLeft01Icon, ArrowUpRight01Icon, Delete01Icon, MoreHorizontalIcon, PencilEdit02Icon } from "@hugeicons/core-free-icons";
 import { buttonVariants } from "@mint/ui/components/button";
 import {
   DropdownMenu,
@@ -22,11 +22,22 @@ type TransactionRowProps = {
 
 export function TransactionRow({ tx, onEditAction, onDeleteAction }: TransactionRowProps) {
   return (
-    <div className="group flex items-center gap-3">
-      <div className="size-10 rounded-2xl bg-muted flex items-center justify-center shrink-0">
+    <div className="group flex items-center gap-3 pb-3.5">
+      <div className="relative size-10 rounded-2xl bg-muted flex items-center justify-center shrink-0">
         <DynamicIcon name={tx.category.icon} className="size-5 text-muted-foreground" />
+        <span className={cn(
+          "absolute -bottom-1 -right-2 flex size-4.5 items-center justify-center rounded-full ring-1 ring-border",
+          tx.type === "income" ? "bg-income" : "bg-expense",
+        )}
+        >
+          <Icon
+            icon={tx.type === "income" ? ArrowDownLeft01Icon : ArrowUpRight01Icon}
+            strokeWidth={2.5}
+            className="size-3.5 text-white"
+          />
+        </span>
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="ml-2 flex-1 min-w-0">
         <p className="text-sm font-medium text-foreground truncate leading-snug">
           {tx.category.name}
         </p>
