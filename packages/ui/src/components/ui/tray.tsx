@@ -136,11 +136,22 @@ function TrayView({ children, viewKey, className }: TrayViewProps) {
         animate="animate"
         exit="exit"
         transition={{ duration: 0.15 }}
-        className={cn("flex flex-col gap-5 p-5", className)}
+        style={{ maxHeight: "calc(100vh - 2rem)" }}
+        className={cn("flex flex-col overflow-hidden", className)}
       >
         {children}
       </motion.div>
     </AnimatePresence>
+  );
+}
+
+function TrayBody({ className, ...props }: React.ComponentProps<"div">) {
+  return (
+    <div
+      data-slot="tray-body"
+      className={cn("flex-1 min-h-0 overflow-y-auto flex flex-col gap-5 px-5 py-0", className)}
+      {...props}
+    />
   );
 }
 
@@ -149,7 +160,7 @@ function TrayHeader({ className, children, ...props }: React.ComponentProps<"div
     <div
       data-slot="tray-header"
       className={cn(
-        "flex flex-col gap-2",
+        "flex flex-col gap-2 shrink-0 p-5",
         className,
       )}
       {...props}
@@ -184,7 +195,7 @@ function TrayFooter({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="tray-footer"
       className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end shrink-0 p-5",
         className,
       )}
       {...props}
@@ -192,4 +203,12 @@ function TrayFooter({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-export { Tray, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView };
+export {
+  Tray,
+  TrayBody,
+  TrayDescription,
+  TrayFooter,
+  TrayHeader,
+  TrayTitle,
+  TrayView,
+};

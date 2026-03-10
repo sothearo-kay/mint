@@ -2,6 +2,8 @@
 
 A minimalist expense tracker. Built with Next.js, Hono, and Turborepo.
 
+![preview](https://assets.sothearo.dev/images/projects/mint/preview.png)
+
 ## Stack
 
 - **Frontend** — Next.js 16, React 19, Tailwind CSS v4, next-themes

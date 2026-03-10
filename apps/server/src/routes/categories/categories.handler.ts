@@ -1,4 +1,4 @@
-import type { CreateRoute, ListRoute, RemoveRoute, ResetRoute, SummaryRoute } from "./categories.routes";
+import type { CreateRoute, ListRoute, RemoveRoute, ReorderRoute, ResetRoute, SummaryRoute } from "./categories.routes";
 import type { AppRouteHandler } from "@/lib/types";
 import { randomUUID } from "node:crypto";
 import { db } from "@mint/db";
@@ -19,6 +19,7 @@ export const list: AppRouteHandler<ListRoute> = async (c) => {
     .orderBy(
       category.type,
       sql`${category.userId} is not null`,
+      asc(category.position),
       asc(category.name),
     );
 
@@ -70,6 +71,22 @@ export const reset: AppRouteHandler<ResetRoute> = async (c) => {
   const user = c.var.user!;
 
   await db.delete(category).where(eq(category.userId, user.id));
+
+  return c.body(null, 204);
+};
+
+export const reorder: AppRouteHandler<ReorderRoute> = async (c) => {
+  const user = c.var.user!;
+  const { order } = c.req.valid("json");
+
+  await Promise.all(
+    order.map(({ id, position }) =>
+      db
+        .update(category)
+        .set({ position })
+        .where(and(eq(category.id, id), eq(category.userId, user.id))),
+    ),
+  );
 
   return c.body(null, 204);
 };

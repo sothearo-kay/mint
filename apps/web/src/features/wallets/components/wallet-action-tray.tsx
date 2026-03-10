@@ -6,7 +6,7 @@ import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
 import { toast } from "@mint/ui/components/sonner";
-import { Tray, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
+import { Tray, TrayBody, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
 import { useDeleteWallet } from "../api/delete-wallet";
 import { WalletForm } from "./wallet-form";
 
@@ -27,34 +27,16 @@ export function WalletActionTray({ wallet, mode, onCloseAction }: WalletActionTr
 
   const isOpen = mode === "create" || (!!wallet && (mode === "edit" || mode === "delete"));
 
+  const views: Record<Mode, React.ReactNode> = {
+    create: <WalletForm onCancelAction={onCloseAction} onSuccessAction={onCloseAction} />,
+    edit: wallet ? <WalletForm wallet={wallet} onCancelAction={onCloseAction} onSuccessAction={onCloseAction} /> : null,
+    delete: wallet ? <DeleteView wallet={wallet} onCloseAction={onCloseAction} /> : null,
+  };
+
   return (
-    <Tray
-      open={isOpen}
-      onClose={onCloseAction}
-      className="w-full max-w-sm"
-      containerStyle={containerStyle}
-    >
+    <Tray open={isOpen} onClose={onCloseAction} className="w-full max-w-sm" containerStyle={containerStyle}>
       <TrayView viewKey={`${mode}-${wallet?.id ?? "new"}`}>
-        {mode === "create"
-          ? (
-              <WalletForm
-                onCancelAction={onCloseAction}
-                onSuccessAction={onCloseAction}
-              />
-            )
-          : mode === "edit" && wallet
-            ? (
-                <WalletForm
-                  wallet={wallet}
-                  onCancelAction={onCloseAction}
-                  onSuccessAction={onCloseAction}
-                />
-              )
-            : mode === "delete" && wallet
-              ? (
-                  <DeleteView wallet={wallet} onCloseAction={onCloseAction} />
-                )
-              : null}
+        {mode ? views[mode] : null}
       </TrayView>
     </Tray>
   );
@@ -82,20 +64,22 @@ function DeleteView({ wallet, onCloseAction }: { wallet: Wallet; onCloseAction: 
         </TrayDescription>
       </TrayHeader>
 
-      <div className="flex flex-col items-center gap-2 rounded-2xl bg-muted py-5 px-4">
-        <p className="text-lg font-semibold text-foreground">{wallet.name}</p>
-        <p className="text-sm text-muted-foreground capitalize">
-          {wallet.type}
-          {" "}
-          <span className="inline-block mx-0.5">{" · "}</span>
-          {" "}
-          {wallet.currency}
-        </p>
-        <p className="text-2xl font-bold tabular-nums tracking-tight text-foreground mt-1">
-          {wallet.currency === "KHR" ? "៛" : "$"}
-          {Number.parseFloat(wallet.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-        </p>
-      </div>
+      <TrayBody>
+        <div className="flex flex-col items-center gap-2 rounded-2xl bg-muted py-5 px-4">
+          <p className="text-lg font-semibold text-foreground">{wallet.name}</p>
+          <p className="text-sm text-muted-foreground capitalize">
+            {wallet.type}
+            {" "}
+            <span className="inline-block mx-0.5">{" · "}</span>
+            {" "}
+            {wallet.currency}
+          </p>
+          <p className="text-2xl font-bold tabular-nums tracking-tight text-foreground mt-1">
+            {wallet.currency === "KHR" ? "៛" : "$"}
+            {Number.parseFloat(wallet.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+          </p>
+        </div>
+      </TrayBody>
 
       <TrayFooter>
         <Button type="button" variant="secondary" className="flex-1" onClick={onCloseAction}>

@@ -3,8 +3,8 @@
 import type { FilterValue } from "@/features/transactions/components/transaction-filters";
 import type { Currency } from "@/utils/constants";
 import { useState } from "react";
-import { CurrencyToggle } from "@/components/currency-toggle";
 import { ErrorState } from "@/components/error-state";
+import { ToggleGroup } from "@/components/toggle-group";
 import { useSession } from "@/features/auth/api";
 import { useCategorySummary } from "@/features/categories/api/get-summary";
 import { useSettings } from "@/features/settings/api/get-settings";
@@ -57,7 +57,17 @@ export function BudgetDashboard() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-end gap-2">
-        <CurrencyToggle value={currency} onChangeAction={setCurrency} />
+        <ToggleGroup
+          items={
+            [
+              { value: "USD", label: "USD" },
+              { value: "KHR", label: "KHR" },
+            ]
+          }
+          value={currency}
+          onChangeAction={setCurrency}
+          variant="pill"
+        />
         <TransactionFilters showType={false} isFetching={!!session && isPlaceholderData} onChangeAction={setFilters} />
       </div>
 

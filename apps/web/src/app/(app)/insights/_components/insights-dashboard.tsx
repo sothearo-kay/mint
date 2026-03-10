@@ -8,17 +8,18 @@ import { MintAreaChart } from "@mint/ui/components/ui/area-chart";
 import { Shimmer } from "@mint/ui/components/ui/shimmer";
 import { endOfYear, startOfYear } from "date-fns";
 import { useState } from "react";
-import { CurrencyToggle } from "@/components/currency-toggle";
+import { MintCard } from "@/components/card";
+import { EmptyState } from "@/components/empty-state";
 import { ErrorState } from "@/components/error-state";
+import { ToggleGroup } from "@/components/toggle-group";
 import { useSession } from "@/features/auth/api";
 import { LoginDialog } from "@/features/auth/components/login-dialog";
 import { useCategorySummary } from "@/features/categories/api/get-summary";
 import { useBreakdown } from "@/features/insights/api/get-breakdown";
 import { useInsights } from "@/features/insights/api/get-insights";
 import { CURRENT_YEAR, MONTHS, YEARS } from "@/utils/constants";
-import { InsightCard } from "./insight-card";
+import { InsightSummaryCard } from "./insight-summary-card";
 import { SavingsRateCard } from "./savings-rate-card";
-import { SummaryCard } from "./summary-card";
 import { TopCategoriesCard } from "./top-categories-card";
 
 export function InsightsDashboard() {
@@ -67,15 +68,26 @@ export function InsightsDashboard() {
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/70 to-background" />
           <div className="absolute inset-0 mask-[linear-gradient(to_bottom,transparent_20%,black_60%)] backdrop-blur-sm" />
           <div className="absolute left-0 right-0 flex flex-col items-center gap-2 text-center pb-16 max-sm:top-1/3 sm:bottom-1/3">
-            <p className="text-sm font-semibold">Sign in to view insights</p>
-            <p className="text-xs text-muted-foreground max-w-56">Your financial insights are only available when signed in.</p>
-            <LoginDialog triggerProps={{ size: "sm", className: "rounded-full mt-1" }} />
+            <EmptyState
+              title="Sign in to view insights"
+              description="Your financial insights are only available when signed in."
+            >
+              <LoginDialog triggerProps={{ size: "sm", className: "rounded-full mt-1" }} />
+            </EmptyState>
           </div>
         </div>
       )}
 
       <div className="flex justify-end gap-2">
-        <CurrencyToggle value={currency} onChangeAction={setCurrency} />
+        <ToggleGroup
+          items={[
+            { value: "USD", label: "USD" },
+            { value: "KHR", label: "KHR" },
+          ]}
+          value={currency}
+          onChangeAction={setCurrency}
+          variant="pill"
+        />
 
         <Select
           value={year.toString()}
@@ -101,7 +113,7 @@ export function InsightsDashboard() {
         : (
             <>
               <div className="grid sm:grid-cols-3 gap-x-3 gap-y-4">
-                <SummaryCard
+                <InsightSummaryCard
                   title="Total Balance"
                   icon={Money01Icon}
                   values={monthly.map(m => m.balance)}
@@ -109,7 +121,7 @@ export function InsightsDashboard() {
                   currency={currency}
                   isPending={isPending}
                 />
-                <SummaryCard
+                <InsightSummaryCard
                   title="Income"
                   icon={ArrowDownLeft01Icon}
                   values={monthly.map(m => m.income)}
@@ -117,7 +129,7 @@ export function InsightsDashboard() {
                   currency={currency}
                   isPending={isPending}
                 />
-                <SummaryCard
+                <InsightSummaryCard
                   title="Expense"
                   icon={ArrowUpRight01Icon}
                   values={monthly.map(m => m.expense)}
@@ -128,7 +140,7 @@ export function InsightsDashboard() {
                 />
               </div>
 
-              <InsightCard title={(
+              <MintCard title={(
                 <>
                   <Icon icon={Chart03Icon} className="size-4 text-muted-foreground" />
                   <span className="text-sm font-medium text-muted-foreground">Income vs Expenses</span>
@@ -143,7 +155,7 @@ export function InsightsDashboard() {
                   ]}
                   className="h-48 w-full"
                 />
-              </InsightCard>
+              </MintCard>
 
               <div className="grid sm:grid-cols-2 gap-x-3 gap-y-4">
                 <SavingsRateCard

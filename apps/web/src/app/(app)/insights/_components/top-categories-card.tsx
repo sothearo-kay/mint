@@ -4,7 +4,7 @@ import { PieChartIcon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import { MintPieChart } from "@mint/ui/components/ui/pie-chart";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
-import { InsightCard } from "./insight-card";
+import { MintCard } from "@/components/card";
 
 type TopCategoriesCardProps = {
   categories: { id: string; name: string; icon: string; amount: string }[];
@@ -21,7 +21,7 @@ export function TopCategoriesCard({ categories, isPending }: TopCategoriesCardPr
   }));
 
   return (
-    <InsightCard title={(
+    <MintCard title={(
       <>
         <Icon icon={PieChartIcon} className="size-4 text-muted-foreground" />
         <span className="text-sm font-medium text-muted-foreground">Top Spending</span>
@@ -44,6 +44,6 @@ export function TopCategoriesCard({ categories, isPending }: TopCategoriesCardPr
                 className="h-56 w-full"
               />
             )}
-    </InsightCard>
+    </MintCard>
   );
 }

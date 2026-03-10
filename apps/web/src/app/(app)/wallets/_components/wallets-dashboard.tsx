@@ -2,7 +2,7 @@
 
 import { Wallet01Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
-import { InsightCard } from "@/app/(app)/insights/_components/insight-card";
+import { MintCard } from "@/components/card";
 import { EmptyState } from "@/components/empty-state";
 import { Fab } from "@/components/fab";
 import { useSession } from "@/features/auth/api";
@@ -30,7 +30,7 @@ export function WalletsDashboard() {
   }
 
   return (
-    <div className="flex flex-col gap-2 mb-14">
+    <div className="flex flex-col gap-1 mb-14">
       {session && <Fab onClickAction={openCreate} />}
       <WalletActionTray wallet={selectedWallet} mode={mode} onCloseAction={closeAction} />
 
@@ -48,7 +48,7 @@ export function WalletsDashboard() {
             <>
               {isPending ? <WalletBalanceSkeleton /> : <WalletBalance wallets={wallets} />}
 
-              <InsightCard
+              <MintCard
                 title={(
                   <>
                     <Icon icon={Wallet01Icon} className="size-4 text-muted-foreground" />
@@ -74,7 +74,7 @@ export function WalletsDashboard() {
                           description="Tap + to create your first wallet."
                         />
                       )}
-              </InsightCard>
+              </MintCard>
             </>
           )}
     </div>

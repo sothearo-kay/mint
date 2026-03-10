@@ -61,7 +61,7 @@ export function WalletItem({ wallet, color, onEditAction, onDeleteAction }: Wall
         type="button"
         className={cn(
           buttonVariants({ variant: "ghost", size: "icon-sm" }),
-          "cursor-grab active:cursor-grabbing text-muted-foreground touch-none shrink-0",
+          "-ml-2 cursor-grab active:cursor-grabbing text-muted-foreground touch-none shrink-0",
         )}
         {...attributes}
         {...listeners}
@@ -88,7 +88,7 @@ export function WalletItem({ wallet, color, onEditAction, onDeleteAction }: Wall
       </div>
 
       <div className="flex items-center gap-1.5 shrink-0">
-        <div className="w-0 overflow-hidden group-hover:w-7 has-data-popup-open:w-7 transition-all duration-200">
+        <div className="w-0 overflow-hidden group-hover:w-7 has-data-popup-open:w-7 [@media(hover:none)]:w-7 transition-all duration-200">
           <DropdownMenu>
             <DropdownMenuTrigger
               className={cn(buttonVariants({ size: "icon-sm", variant: "ghost" }), "shrink-0")}

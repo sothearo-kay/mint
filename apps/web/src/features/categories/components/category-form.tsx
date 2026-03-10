@@ -8,9 +8,9 @@ import { Icon } from "@mint/ui/components/icon";
 import { IconPicker } from "@mint/ui/components/icon-picker";
 import { Input } from "@mint/ui/components/input";
 import { toast } from "@mint/ui/components/sonner";
-import { TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
+import { TrayBody, TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
 import { Controller, useForm } from "react-hook-form";
-import { SegmentedControl } from "@/components/segmented-control";
+import { ToggleGroup } from "@/components/toggle-group";
 import { createCategorySchema, useCreateCategory } from "../api/create-category";
 
 type CategoryFormProps = {
@@ -47,49 +47,52 @@ export function CategoryForm({ onCancelAction, onSuccessAction }: CategoryFormPr
         </div>
       </TrayHeader>
 
-      <form id="category-form" onSubmit={handleSubmit(data => mutate(data))} className="flex flex-col gap-4">
-        <Controller
-          control={control}
-          name="type"
-          render={({ field }) => (
-            <SegmentedControl
-              items={[
-                { value: "expense", label: "Expense" },
-                { value: "income", label: "Income" },
-              ]}
-              value={field.value}
-              onChangeAction={field.onChange}
-            />
-          )}
-        />
-
-        <div className="flex gap-2">
+      <TrayBody>
+        <form id="category-form" onSubmit={handleSubmit(data => mutate(data))} className="flex flex-col gap-3">
           <Controller
             control={control}
-            name="icon"
+            name="type"
             render={({ field }) => (
-              <IconPicker
+              <ToggleGroup
+                items={[
+                  { value: "expense", label: "Expense" },
+                  { value: "income", label: "Income" },
+                ]}
                 value={field.value}
-                onValueChange={field.onChange}
-                placeholder="Icon"
+                onChangeAction={field.onChange}
               />
             )}
           />
-          <Controller
-            control={control}
-            name="name"
-            render={({ field }) => (
-              <Input
-                {...field}
-                placeholder="Category name"
-                maxLength={50}
-                autoFocus
-                className="flex-1 bg-muted border-transparent shadow-none focus-visible:border-transparent focus-visible:ring-0"
-              />
-            )}
-          />
-        </div>
-      </form>
+
+          <div className="flex gap-2">
+            <Controller
+              control={control}
+              name="icon"
+              render={({ field }) => (
+                <IconPicker
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  placeholder="Icon"
+                  className="h-9"
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="name"
+              render={({ field }) => (
+                <Input
+                  {...field}
+                  placeholder="Category name"
+                  maxLength={50}
+                  autoFocus
+                  className="flex-1 h-9 bg-muted border-transparent shadow-none focus-visible:border-transparent focus-visible:ring-0"
+                />
+              )}
+            />
+          </div>
+        </form>
+      </TrayBody>
 
       <TrayFooter>
         <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCancelAction}>
