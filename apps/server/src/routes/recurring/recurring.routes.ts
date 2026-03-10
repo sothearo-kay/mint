@@ -1,64 +1,60 @@
 import { createRoute, z } from "@hono/zod-openapi";
+
 import { errorSchema, paramsSchema } from "@/lib/schemas";
 import { authMiddleware } from "@/middlewares";
 
-const tags = ["Transactions"];
+const tags = ["Recurring"];
 
-const categorySchema = z.object({
+export const recurringSchema = z.object({
   id: z.string(),
+  userId: z.string(),
+  walletId: z.string().nullable(),
+  categoryId: z.string(),
   name: z.string(),
-  icon: z.string(),
-  type: z.enum(["income", "expense"]),
-});
-
-const transactionSchema = z.object({
-  id: z.string(),
-  type: z.enum(["income", "expense"]),
   amount: z.string(),
+  type: z.enum(["income", "expense"]),
   currency: z.enum(["USD", "KHR"]),
-  category: categorySchema,
+  logo: z.string().nullable(),
   note: z.string().nullable(),
-  date: z.string(),
+  frequency: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  startDate: z.string(),
+  endDate: z.string().nullable(),
+  nextScheduledDate: z.string(),
+  isActive: z.boolean(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  walletId: z.string().nullable(),
-  recurring: z.object({
+  category: z.object({
     id: z.string(),
     name: z.string(),
-    logo: z.string().nullable(),
-  }).nullable(),
+    icon: z.string(),
+  }),
 });
 
-const transactionBodySchema = z.object({
-  id: z.string().optional(),
+const bodySchema = z.object({
+  name: z.string().min(1).max(100),
+  amount: z.string(),
   type: z.enum(["income", "expense"]),
-  amount: z.string().regex(/^\d+(\.\d{1,2})?$/),
   currency: z.enum(["USD", "KHR"]),
   categoryId: z.string(),
-  note: z.string().nullable().optional(),
-  date: z.iso.datetime(),
   walletId: z.string().nullable().optional(),
+  logo: z.string().nullable().optional(),
+  note: z.string().nullable().optional(),
+  frequency: z.enum(["daily", "weekly", "monthly", "yearly"]),
+  startDate: z.string(),
+  endDate: z.string().nullable().optional(),
+  isActive: z.boolean().default(true),
 });
 
 export const list = createRoute({
-  operationId: "listTransactions",
-  path: "/transactions",
+  operationId: "listRecurring",
+  path: "/recurring",
   method: "get",
   middleware: [authMiddleware],
   tags,
-  request: {
-    query: z.object({
-      type: z.enum(["income", "expense"]).optional(),
-      categoryId: z.string().optional(),
-      from: z.iso.datetime().optional(),
-      to: z.iso.datetime().optional(),
-      walletId: z.string().optional(),
-    }),
-  },
   responses: {
     200: {
-      content: { "application/json": { schema: z.array(transactionSchema) } },
-      description: "List of transactions",
+      content: { "application/json": { schema: z.array(recurringSchema) } },
+      description: "List of recurring transactions (with lazy processing applied)",
     },
     401: {
       content: { "application/json": { schema: errorSchema } },
@@ -68,20 +64,18 @@ export const list = createRoute({
 });
 
 export const create = createRoute({
-  operationId: "createTransaction",
-  path: "/transactions",
+  operationId: "createRecurring",
+  path: "/recurring",
   method: "post",
   middleware: [authMiddleware],
   tags,
   request: {
-    body: {
-      content: { "application/json": { schema: transactionBodySchema } },
-    },
+    body: { content: { "application/json": { schema: bodySchema } } },
   },
   responses: {
     201: {
-      content: { "application/json": { schema: transactionSchema } },
-      description: "Created transaction",
+      content: { "application/json": { schema: recurringSchema } },
+      description: "Created recurring transaction rule",
     },
     401: {
       content: { "application/json": { schema: errorSchema } },
@@ -91,21 +85,23 @@ export const create = createRoute({
 });
 
 export const update = createRoute({
-  operationId: "updateTransaction",
-  path: "/transactions/:id",
+  operationId: "updateRecurring",
+  path: "/recurring/{id}",
   method: "patch",
   middleware: [authMiddleware],
   tags,
   request: {
     params: paramsSchema,
     body: {
-      content: { "application/json": { schema: transactionBodySchema.partial() } },
+      content: {
+        "application/json": { schema: bodySchema.partial() },
+      },
     },
   },
   responses: {
     200: {
-      content: { "application/json": { schema: transactionSchema } },
-      description: "Updated transaction",
+      content: { "application/json": { schema: recurringSchema } },
+      description: "Updated recurring transaction rule",
     },
     401: {
       content: { "application/json": { schema: errorSchema } },
@@ -123,14 +119,14 @@ export const update = createRoute({
 });
 
 export const remove = createRoute({
-  operationId: "deleteTransaction",
-  path: "/transactions/:id",
+  operationId: "deleteRecurring",
+  path: "/recurring/{id}",
   method: "delete",
   middleware: [authMiddleware],
   tags,
   request: { params: paramsSchema },
   responses: {
-    204: { description: "Deleted" },
+    204: { description: "Deleted successfully" },
     401: {
       content: { "application/json": { schema: errorSchema } },
       description: "Unauthorized",
@@ -146,30 +142,7 @@ export const remove = createRoute({
   },
 });
 
-export const sync = createRoute({
-  operationId: "syncTransactions",
-  path: "/transactions/sync",
-  method: "post",
-  middleware: [authMiddleware],
-  tags,
-  request: {
-    body: {
-      content: {
-        "application/json": { schema: z.array(transactionBodySchema) },
-      },
-    },
-  },
-  responses: {
-    204: { description: "Synced" },
-    401: {
-      content: { "application/json": { schema: errorSchema } },
-      description: "Unauthorized",
-    },
-  },
-});
-
 export type ListRoute = typeof list;
 export type CreateRoute = typeof create;
 export type UpdateRoute = typeof update;
 export type RemoveRoute = typeof remove;
-export type SyncRoute = typeof sync;

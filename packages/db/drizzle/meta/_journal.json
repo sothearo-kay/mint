@@ -43,6 +43,13 @@
       "when": 1772896416992,
       "tag": "0005_demonic_saracen",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1773111381456,
+      "tag": "0006_natural_silver_sable",
+      "breakpoints": true
     }
   ]
 }
