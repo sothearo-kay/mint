@@ -1,8 +1,9 @@
 "use client";
 
 import type { MonthlyBreakdown } from "@/features/insights/api/get-breakdown";
-import type { MonthlyInsight } from "@/features/insights/api/get-insights";
+import type { MonthlyInsight, PrevDecember } from "@/features/insights/api/get-insights";
 import type { Currency } from "@/utils/constants";
+
 import { PiggyBankIcon } from "@hugeicons/core-free-icons";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
@@ -15,20 +16,30 @@ type SavingsRateCardProps = {
   monthly: MonthlyInsight[];
   breakdown: MonthlyBreakdown[];
   currency: Currency;
+  selectedYear: number;
+  prevDecember?: PrevDecember;
   isPending?: boolean;
 };
 
-export function SavingsRateCard({ monthly, breakdown, currency, isPending }: SavingsRateCardProps) {
-  const { currentMonth, displayIndex, onHover, onLeave } = useMonthlyDisplay();
+export function SavingsRateCard({
+  monthly,
+  breakdown,
+  currency,
+  selectedYear,
+  prevDecember,
+  isPending,
+}: SavingsRateCardProps) {
+  const { currentMonth, displayIndex, onHover, onLeave } = useMonthlyDisplay(selectedYear);
 
   const m = monthly[displayIndex];
-  const savings = (m?.income ?? 0) - (m?.expense ?? 0);
+  const savings = m?.balance ?? 0;
   const rate = (m?.income ?? 0) > 0 ? (savings / m!.income) * 100 : 0;
 
-  const prevM = monthly[Math.max(displayIndex - 1, 0)];
-  const prevSavings = (prevM?.income ?? 0) - (prevM?.expense ?? 0);
-  const prevRate = (prevM?.income ?? 0) > 0 ? (prevSavings / prevM!.income) * 100 : 0;
-  const change = prevRate !== 0 ? rate - prevRate : 0;
+  const prevM = displayIndex === 0 ? null : monthly[displayIndex - 1];
+  const prevSavings = displayIndex === 0 ? (prevDecember?.balance ?? null) : (prevM?.balance ?? null);
+  const prevIncome = displayIndex === 0 ? (prevDecember?.income ?? null) : (prevM?.income ?? null);
+  const prevRate = prevIncome != null && prevIncome > 0 && prevSavings != null ? (prevSavings / prevIncome) * 100 : null;
+  const change = prevRate != null && prevRate !== 0 ? rate - prevRate : null;
 
   const incomeCategories = breakdown[displayIndex]?.incomeCategories ?? [];
   const totalIncome = incomeCategories.reduce((s, c) => s + Number.parseFloat(c.amount), 0);
@@ -59,12 +70,18 @@ export function SavingsRateCard({ monthly, breakdown, currency, isPending }: Sav
                     </p>
                   </div>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    <span className={cn(change >= 0 ? "text-primary" : "text-destructive")}>
-                      {change >= 0 ? "+" : ""}
-                      {change.toFixed(1)}
-                      %
-                    </span>
-                    {" from last month"}
+                    {change != null
+                      ? (
+                          <>
+                            <span className={cn(change >= 0 ? "text-primary" : "text-destructive")}>
+                              {change >= 0 ? "+" : ""}
+                              {change.toFixed(1)}
+                              %
+                            </span>
+                            {" from last month"}
+                          </>
+                        )
+                      : "No previous data"}
                   </p>
                 </>
               )}
@@ -74,6 +91,7 @@ export function SavingsRateCard({ monthly, breakdown, currency, isPending }: Sav
           count={monthly.length}
           displayIndex={displayIndex}
           currentMonth={currentMonth}
+          selectedYear={selectedYear}
           onHoverAction={onHover}
           onLeaveAction={onLeave}
         />

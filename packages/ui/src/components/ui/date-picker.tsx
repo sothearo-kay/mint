@@ -14,6 +14,7 @@ type DatePickerProps = {
   onValueChange?: (date: Date | undefined) => void;
   placeholder?: string;
   className?: string;
+  disabled?: React.ComponentProps<typeof Calendar>["disabled"];
 };
 
 function DatePicker({
@@ -21,6 +22,7 @@ function DatePicker({
   onValueChange,
   placeholder = "Pick a date",
   className,
+  disabled,
 }: DatePickerProps) {
   return (
     <Popover>
@@ -42,6 +44,7 @@ function DatePicker({
           selected={value}
           onSelect={onValueChange}
           defaultMonth={value}
+          disabled={disabled}
         />
       </PopoverContent>
     </Popover>

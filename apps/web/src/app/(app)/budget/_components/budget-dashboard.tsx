@@ -1,7 +1,6 @@
 "use client";
 
 import type { FilterValue } from "@/features/transactions/components/transaction-filters";
-import type { Currency } from "@/utils/constants";
 import { useState } from "react";
 import { ErrorState } from "@/components/error-state";
 import { ToggleGroup } from "@/components/toggle-group";
@@ -9,6 +8,7 @@ import { useSession } from "@/features/auth/api";
 import { useCategorySummary } from "@/features/categories/api/get-summary";
 import { useSettings } from "@/features/settings/api/get-settings";
 import { DEFAULT_FILTERS, TransactionFilters } from "@/features/transactions/components/transaction-filters";
+import { useCurrencyStore } from "@/store/currency";
 import { useFilteredGuestTransactions } from "@/store/guest-transactions";
 import { sumByType } from "@/utils/transactions";
 import { CategoryBreakdown } from "./category-breakdown";
@@ -20,7 +20,7 @@ export function BudgetDashboard() {
     from: DEFAULT_FILTERS.from,
     to: DEFAULT_FILTERS.to,
   });
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const { currency, setCurrency } = useCurrencyStore();
 
   const { data: settingsData } = useSettings({ queryConfig: { enabled: !!session } });
   const rawLimit = currency === "USD" ? settingsData?.budgetLimitUSD : settingsData?.budgetLimitKHR;

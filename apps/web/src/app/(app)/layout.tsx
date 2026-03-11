@@ -14,10 +14,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <TransactionTray />
       <SyncTransactionsDialog />
       <SidebarInset>
-        <AppHeader />
-        <main className="flex-1 relative px-4 py-6 w-full max-w-3xl mx-auto">
-          {children}
-        </main>
+        <div className="h-dvh overflow-auto">
+          <AppHeader />
+          <main className="flex-1 relative px-4 py-8 w-full max-w-3xl mx-auto">
+            {children}
+          </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

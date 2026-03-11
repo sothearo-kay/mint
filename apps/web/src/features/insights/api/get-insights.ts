@@ -10,12 +10,18 @@ export type MonthlyInsight = {
   balance: number;
 };
 
+export type PrevDecember = {
+  income: number;
+  expense: number;
+  balance: number;
+};
+
 type GetInsightsParams = {
   year?: number;
   currency?: Currency;
 };
 
-export async function getInsights(params: GetInsightsParams = {}): Promise<{ monthly: MonthlyInsight[] }> {
+export async function getInsights(params: GetInsightsParams = {}): Promise<{ monthly: MonthlyInsight[]; prevDecember: PrevDecember }> {
   const res = await client.api.insights.$get({
     query: { year: params.year ? String(params.year) : undefined, currency: params.currency },
   });

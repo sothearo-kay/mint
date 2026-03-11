@@ -4,14 +4,18 @@ import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
 import { useState } from "react";
 
-export function useMonthlyDisplay() {
+const CURRENT_YEAR = new Date().getFullYear();
+
+export function useMonthlyDisplay(selectedYear: number) {
   const currentMonth = new Date().getMonth();
-  const [displayIndex, setDisplayIndex] = useState(currentMonth);
+  // For past years default to December — it's the most recent month with data
+  const defaultIndex = selectedYear < CURRENT_YEAR ? 11 : currentMonth;
+  const [displayIndex, setDisplayIndex] = useState(defaultIndex);
   return {
     currentMonth,
     displayIndex,
     onHover: (i: number) => setDisplayIndex(i),
-    onLeave: () => setDisplayIndex(currentMonth),
+    onLeave: () => setDisplayIndex(defaultIndex),
   };
 }
 
@@ -19,17 +23,19 @@ type MonthlyBarsProps = {
   count: number;
   displayIndex: number;
   currentMonth: number;
+  selectedYear: number;
   color?: string;
   onHoverAction: (i: number) => void;
   onLeaveAction: () => void;
 };
 
-export function MonthlyBars({ count, displayIndex, currentMonth, color = "bg-primary", onHoverAction, onLeaveAction }: MonthlyBarsProps) {
+export function MonthlyBars({ count, displayIndex, currentMonth, selectedYear, color = "bg-primary", onHoverAction, onLeaveAction }: MonthlyBarsProps) {
   return (
     <div className="flex items-end gap-1.5 h-10" onMouseLeave={onLeaveAction}>
       {Array.from({ length: count }, (_, i) => {
-        const isFuture = i > currentMonth;
-        const isPast = i < currentMonth;
+        // Past years: no month is "future". Current year: future = beyond current month.
+        const isFuture = selectedYear < CURRENT_YEAR ? false : i > currentMonth;
+        const isPast = selectedYear < CURRENT_YEAR ? true : i < currentMonth;
         const isActive = displayIndex === i;
         return (
           <div

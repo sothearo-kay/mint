@@ -14,6 +14,8 @@ type InsightSummaryCardProps = {
   values: number[];
   color: string;
   currency: Currency;
+  selectedYear: number;
+  prevDecemberValue?: number;
   isPending?: boolean;
   invertChange?: boolean;
 };
@@ -24,14 +26,20 @@ export function InsightSummaryCard({
   values,
   color,
   currency,
+  selectedYear,
+  prevDecemberValue,
   isPending,
   invertChange = false,
 }: InsightSummaryCardProps) {
-  const { currentMonth, displayIndex, onHover, onLeave } = useMonthlyDisplay();
+  const { currentMonth, displayIndex, onHover, onLeave } = useMonthlyDisplay(selectedYear);
 
   const displayValue = values[displayIndex] ?? 0;
-  const prevValue = values[Math.max(displayIndex - 1, 0)] ?? 0;
-  const change = prevValue !== 0 ? ((displayValue - prevValue) / Math.abs(prevValue)) * 100 : 0;
+  const prevValue = displayIndex === 0
+    ? (prevDecemberValue ?? null)
+    : (values[displayIndex - 1] ?? null);
+  const change = prevValue != null && prevValue !== 0
+    ? ((displayValue - prevValue) / Math.abs(prevValue)) * 100
+    : null;
 
   return (
     <MintCard
@@ -50,12 +58,18 @@ export function InsightSummaryCard({
                 <>
                   <p className="text-2xl font-bold tabular-nums">{formatBalanceAmount(displayValue, currency)}</p>
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    <span className={cn((invertChange ? change <= 0 : change >= 0) ? "text-primary" : "text-destructive")}>
-                      {change >= 0 ? "+" : ""}
-                      {change.toFixed(1)}
-                      %
-                    </span>
-                    {" from last month"}
+                    {change != null
+                      ? (
+                          <>
+                            <span className={cn((invertChange ? change <= 0 : change >= 0) ? "text-primary" : "text-destructive")}>
+                              {change >= 0 ? "+" : ""}
+                              {change.toFixed(1)}
+                              %
+                            </span>
+                            {" from last month"}
+                          </>
+                        )
+                      : "No previous data"}
                   </p>
                 </>
               )}
@@ -65,6 +79,7 @@ export function InsightSummaryCard({
           count={values.length}
           displayIndex={displayIndex}
           currentMonth={currentMonth}
+          selectedYear={selectedYear}
           color={color}
           onHoverAction={onHover}
           onLeaveAction={onLeave}

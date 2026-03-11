@@ -1,7 +1,6 @@
 "use client";
 
 import type { RecurringTransaction } from "@/features/recurring/api/get-recurring";
-import type { Currency } from "@/utils/constants";
 import {
   Select,
   SelectContent,
@@ -17,6 +16,7 @@ import { useSession } from "@/features/auth/api";
 import { useRecurring } from "@/features/recurring/api/get-recurring";
 import { RecurringActionTray } from "@/features/recurring/components/recurring-action-tray";
 import { RecurringList } from "@/features/recurring/components/recurring-list";
+import { useCurrencyStore } from "@/store/currency";
 import { useRecurringTray } from "@/store/recurring-tray";
 import { RecurringSummary } from "./recurring-summary";
 
@@ -32,7 +32,7 @@ const FREQUENCY_OPTIONS: { value: RecurringTransaction["frequency"]; label: stri
 export function RecurringDashboard() {
   const { openCreate } = useRecurringTray();
   const { data: session, isPending: isSessionPending } = useSession();
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const { currency, setCurrency } = useCurrencyStore();
   const [frequency, setFrequency] = useState<Frequency>("");
 
   const { data: allRecurring = [], isPending: isQueryPending } = useRecurring({

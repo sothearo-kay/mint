@@ -10,7 +10,7 @@ export function Header() {
   const { open } = useTransactionTray();
 
   return (
-    <header className="sticky top-2 flex h-(--header-height) items-center border-b bg-background px-4 before:absolute before:content-[''] before:-inset-x-px before:-top-2 before:h-2 before:bg-background before:border-b before:border-border">
+    <header className="sticky top-2 flex h-(--header-height) items-center border-b border-dashed bg-background px-4 before:absolute before:content-[''] before:-inset-x-px before:-top-2 before:h-2 before:bg-background before:border-b before:border-border before:border-dashed">
       <div className="flex w-full items-center justify-between">
         <span className="font-heading text-xl">Mint</span>
         <Button

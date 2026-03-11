@@ -1,6 +1,5 @@
 "use client";
 
-import type { Currency } from "@/utils/constants";
 import { ArrowDownLeft01Icon, ArrowUpRight01Icon, Chart03Icon, Money01Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@mint/ui/components/select";
@@ -17,6 +16,7 @@ import { LoginDialog } from "@/features/auth/components/login-dialog";
 import { useCategorySummary } from "@/features/categories/api/get-summary";
 import { useBreakdown } from "@/features/insights/api/get-breakdown";
 import { useInsights } from "@/features/insights/api/get-insights";
+import { useCurrencyStore } from "@/store/currency";
 import { CURRENT_YEAR, MONTHS, YEARS } from "@/utils/constants";
 import { InsightSummaryCard } from "./insight-summary-card";
 import { SavingsRateCard } from "./savings-rate-card";
@@ -24,7 +24,7 @@ import { TopCategoriesCard } from "./top-categories-card";
 
 export function InsightsDashboard() {
   const [year, setYear] = useState(CURRENT_YEAR);
-  const [currency, setCurrency] = useState<Currency>("USD");
+  const { currency, setCurrency } = useCurrencyStore();
   const { data: session, isPending: isSessionPending } = useSession();
 
   const { data, isPending: isInsightsPending, isPlaceholderData, isError } = useInsights({
@@ -44,6 +44,7 @@ export function InsightsDashboard() {
     expense: 0,
     balance: 0,
   }));
+  const prevDecember = session ? data?.prevDecember : undefined;
 
   const from = startOfYear(new Date(year, 0)).toISOString();
   const to = endOfYear(new Date(year, 0)).toISOString();
@@ -114,27 +115,36 @@ export function InsightsDashboard() {
             <>
               <div className="grid sm:grid-cols-3 gap-x-3 gap-y-4">
                 <InsightSummaryCard
+                  key={`balance-${year}`}
                   title="Total Balance"
                   icon={Money01Icon}
                   values={monthly.map(m => m.balance)}
                   color="bg-blue-500 dark:bg-blue-500/80"
                   currency={currency}
+                  selectedYear={year}
+                  prevDecemberValue={prevDecember?.balance}
                   isPending={isPending}
                 />
                 <InsightSummaryCard
+                  key={`income-${year}`}
                   title="Income"
                   icon={ArrowDownLeft01Icon}
                   values={monthly.map(m => m.income)}
                   color="bg-primary dark:bg-primary/80"
                   currency={currency}
+                  selectedYear={year}
+                  prevDecemberValue={prevDecember?.income}
                   isPending={isPending}
                 />
                 <InsightSummaryCard
+                  key={`expense-${year}`}
                   title="Expense"
                   icon={ArrowUpRight01Icon}
                   values={monthly.map(m => m.expense)}
                   color="bg-destructive dark:bg-destructive/80"
                   currency={currency}
+                  selectedYear={year}
+                  prevDecemberValue={prevDecember?.expense}
                   isPending={isPending}
                   invertChange
                 />
@@ -159,9 +169,12 @@ export function InsightsDashboard() {
 
               <div className="grid sm:grid-cols-2 gap-x-3 gap-y-4">
                 <SavingsRateCard
+                  key={`savings-${year}`}
                   monthly={monthly}
                   breakdown={breakdownData?.monthly ?? MONTHS.map((_, i) => ({ month: i + 1, incomeCategories: [] }))}
                   currency={currency}
+                  selectedYear={year}
+                  prevDecember={prevDecember}
                   isPending={isPending}
                 />
                 <TopCategoriesCard

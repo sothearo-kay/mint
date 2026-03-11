@@ -8,7 +8,8 @@ export const get: AppRouteHandler<GetRoute> = async (c) => {
   const user = c.var.user!;
   const { year = new Date().getFullYear(), currency } = c.req.valid("query");
 
-  const from = new Date(year, 0, 1);
+  // Fetch from Dec 1 of previous year to support Jan → Dec cross-year comparison
+  const from = new Date(year - 1, 11, 1);
   const to = new Date(year + 1, 0, 1);
 
   const rows = await db
@@ -24,17 +25,18 @@ export const get: AppRouteHandler<GetRoute> = async (c) => {
     );
 
   const monthly = Array.from({ length: 12 }, (_, i) => {
-    const monthTxs = rows.filter(tx => tx.date.getMonth() === i);
-    const income = monthTxs
-      .filter(tx => tx.type === "income")
-      .reduce((s, tx) => s + Number.parseFloat(tx.amount), 0);
-    const expense = monthTxs
-      .filter(tx => tx.type === "expense")
-      .reduce((s, tx) => s + Number.parseFloat(tx.amount), 0);
+    const monthTxs = rows.filter(tx => tx.date.getFullYear() === year && tx.date.getMonth() === i);
+    const income = monthTxs.filter(tx => tx.type === "income").reduce((s, tx) => s + Number.parseFloat(tx.amount), 0);
+    const expense = monthTxs.filter(tx => tx.type === "expense").reduce((s, tx) => s + Number.parseFloat(tx.amount), 0);
     return { month: i + 1, income, expense, balance: income - expense };
   });
 
-  return c.json({ monthly }, 200);
+  const prevDecTxs = rows.filter(tx => tx.date.getFullYear() === year - 1 && tx.date.getMonth() === 11);
+  const prevDecIncome = prevDecTxs.filter(tx => tx.type === "income").reduce((s, tx) => s + Number.parseFloat(tx.amount), 0);
+  const prevDecExpense = prevDecTxs.filter(tx => tx.type === "expense").reduce((s, tx) => s + Number.parseFloat(tx.amount), 0);
+  const prevDecember = { income: prevDecIncome, expense: prevDecExpense, balance: prevDecIncome - prevDecExpense };
+
+  return c.json({ monthly, prevDecember }, 200);
 };
 
 export const breakdown: AppRouteHandler<BreakdownRoute> = async (c) => {

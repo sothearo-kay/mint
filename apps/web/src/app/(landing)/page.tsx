@@ -5,11 +5,13 @@ import { Hero } from "./_components/hero";
 
 export default function Home() {
   return (
-    <div className="container my-2 flex min-h-[calc(100svh-1rem)] flex-col border border-t-0">
-      <Header />
-      <Hero />
-      <Features />
-      <Footer />
+    <div className="h-svh overflow-auto">
+      <div className="container my-2 flex min-h-[calc(100svh-1rem)] flex-col border border-t-0">
+        <Header />
+        <Hero />
+        <Features />
+        <Footer />
+      </div>
     </div>
   );
 }

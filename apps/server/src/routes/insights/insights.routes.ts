@@ -11,8 +11,15 @@ const monthlyInsightSchema = z.object({
   balance: z.number(),
 });
 
+const prevDecemberSchema = z.object({
+  income: z.number(),
+  expense: z.number(),
+  balance: z.number(),
+});
+
 const insightsSchema = z.object({
   monthly: z.array(monthlyInsightSchema),
+  prevDecember: prevDecemberSchema,
 });
 
 export const get = createRoute({
@@ -30,7 +37,7 @@ export const get = createRoute({
   responses: {
     200: {
       content: { "application/json": { schema: insightsSchema } },
-      description: "Monthly insights for the given year",
+      description: "Monthly insights for the given year, plus December of the previous year for January cross-year comparison",
     },
     401: {
       content: { "application/json": { schema: errorSchema } },
