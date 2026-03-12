@@ -12,8 +12,8 @@ import {
 } from "@mint/ui/components/dropdown-menu";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
-import Image from "next/image";
 import { formatAmountByCurrency } from "@/utils/format";
+import { LogoIcon } from "./logo-registry";
 
 const FREQUENCY_LABEL: Record<RecurringTransaction["frequency"], string> = {
   daily: "Daily",
@@ -54,15 +54,7 @@ export function RecurringRow({ recurring, onEditAction, onDeleteAction }: Recurr
     <div className="group flex items-center gap-3 pb-3.5">
       <div className="size-10 rounded-2xl bg-muted flex items-center justify-center shrink-0 overflow-hidden">
         {recurring.logo
-          ? (
-              <Image
-                src={recurring.logo}
-                alt={recurring.name}
-                width={20}
-                height={20}
-                className="size-5 object-contain"
-              />
-            )
+          ? <LogoIcon name={recurring.logo} className="size-5" />
           : <DynamicIcon name={recurring.category.icon} className="size-5 text-muted-foreground" />}
       </div>
 

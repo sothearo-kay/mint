@@ -21,6 +21,7 @@
     "@mint/api-client": "workspace:*",
     "@mint/env": "workspace:*",
     "@mint/ui": "workspace:*",
+    "@ridemountainpig/svgl-react": "^1.0.15",
     "better-auth": "catalog:db",
     "date-fns": "catalog:ui",
     "geist": "catalog:ui",
