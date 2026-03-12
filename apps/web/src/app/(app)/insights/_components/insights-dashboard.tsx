@@ -4,8 +4,8 @@ import { ArrowDownLeft01Icon, ArrowUpRight01Icon, Chart03Icon, Money01Icon } fro
 import { Icon } from "@mint/ui/components/icon";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@mint/ui/components/select";
 import { MintAreaChart } from "@mint/ui/components/ui/area-chart";
-import { formatBalanceAmount } from "@/utils/format";
 import { Shimmer } from "@mint/ui/components/ui/shimmer";
+import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { endOfYear, startOfYear } from "date-fns";
 import { useState } from "react";
 import { MintCard } from "@/components/card";
@@ -19,6 +19,7 @@ import { useBreakdown } from "@/features/insights/api/get-breakdown";
 import { useInsights } from "@/features/insights/api/get-insights";
 import { useCurrencyStore } from "@/store/currency";
 import { CURRENT_YEAR, MONTHS, YEARS } from "@/utils/constants";
+import { formatBalanceAmount } from "@/utils/format";
 import { InsightSummaryCard } from "./insight-summary-card";
 import { SavingsRateCard } from "./savings-rate-card";
 import { TopCategoriesCard } from "./top-categories-card";
@@ -56,6 +57,10 @@ export function InsightsDashboard() {
   });
   const isSummaryPending = isSessionPending || (!!session && isSummaryPendingRaw);
   const summaryData = session ? summaryDataRaw : undefined;
+
+  const totalIncome = monthly.reduce((sum, m) => sum + m.income, 0);
+  const totalExpense = monthly.reduce((sum, m) => sum + m.expense, 0);
+  const netCashFlow = totalIncome - totalExpense;
 
   const chartData = monthly.map(m => ({
     month: MONTHS[m.month - 1],
@@ -158,6 +163,27 @@ export function InsightsDashboard() {
                 </>
               )}
               >
+                {isPending
+                  ? <Skeleton className="h-4 w-40 mb-3 rounded-md" />
+                  : (
+                      <p className="text-xs text-muted-foreground mb-3">
+                        {netCashFlow !== 0
+                          ? (
+                              <>
+                                <span
+                                  className="size-1.5 rounded-full shrink-0 inline-block mr-1.5 -translate-y-px"
+                                  style={{ background: netCashFlow >= 0 ? "var(--primary)" : "var(--destructive)" }}
+                                />
+                                {netCashFlow >= 0 ? "Saved" : "Overspent by"}
+                                {" "}
+                                <span className="font-semibold text-foreground tabular-nums">{formatBalanceAmount(Math.abs(netCashFlow), currency)}</span>
+                                {" this year"}
+                              </>
+                            )
+                          : `No data yet for ${year}`}
+                      </p>
+                    )}
+
                 <MintAreaChart
                   data={chartData}
                   series={[

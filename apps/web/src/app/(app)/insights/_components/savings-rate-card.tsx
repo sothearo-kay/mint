@@ -3,7 +3,6 @@
 import type { MonthlyBreakdown } from "@/features/insights/api/get-breakdown";
 import type { MonthlyInsight, PrevDecember } from "@/features/insights/api/get-insights";
 import type { Currency } from "@/utils/constants";
-
 import { PiggyBankIcon } from "@hugeicons/core-free-icons";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
