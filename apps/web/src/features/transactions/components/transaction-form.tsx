@@ -24,25 +24,20 @@ import { toast } from "@mint/ui/components/sonner";
 import { Textarea } from "@mint/ui/components/textarea";
 import { TrayBody, TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
 import { cn } from "@mint/ui/lib/utils";
+import { useAnimate } from "motion/react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { AmountInput } from "@/components/amount-input";
 import { ToggleGroup } from "@/components/toggle-group";
 import { useSession } from "@/features/auth/api";
 import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useGuestTransactions } from "@/store/guest-transactions";
 import { useWalletTray } from "@/store/wallet-tray";
+import { formatBalanceAmount } from "@/utils/format";
 import { createTransactionSchema, useCreateTransaction } from "../api/create-transaction";
 import { useCategories } from "../api/get-categories";
 import { useUpdateTransaction } from "../api/update-transaction";
-
-function formatAmountDisplay(raw: string): string {
-  if (!raw)
-    return "";
-  const [intPart, decPart] = raw.split(".");
-  const formattedInt = Number.parseInt(intPart || "0", 10).toLocaleString();
-  return decPart !== undefined ? `${formattedInt}.${decPart}` : formattedInt;
-}
 
 const TYPE_CONFIG = {
   expense: {
@@ -102,11 +97,27 @@ export function TransactionForm({
   const categories = allCategories.filter(c => c.type === type);
 
   const currency = watch("currency");
-  const currencySymbol = currency === "KHR" ? "៛" : "$";
+
+  const walletId = watch("walletId");
+  const amount = watch("amount");
+  const selectedWallet = session ? (wallets.find(w => w.id === walletId) ?? null) : null;
+  const isBalanceExceeded = type === "expense"
+    && selectedWallet !== null
+    && Number.parseFloat(amount || "0") > Number.parseFloat(selectedWallet.balance);
+
+  const [amountScope, animateAmount] = useAnimate();
+  const prevBalanceExceeded = useRef(false);
+
+  useEffect(() => {
+    if (isBalanceExceeded && !prevBalanceExceeded.current) {
+      animateAmount(amountScope.current, { x: [0, 6, -6, 6, -6, 0] }, { duration: 0.35, ease: "easeInOut" });
+    }
+    prevBalanceExceeded.current = isBalanceExceeded;
+  }, [isBalanceExceeded]);
 
   useEffect(() => {
     if (!isEditing && categories.length > 0 && !categories.some(c => c.id === categoryId)) {
-      setValue("categoryId", categories[0].id);
+      setValue("categoryId", categories[0].id, { shouldValidate: true });
     }
   }, [categories, categoryId, setValue, isEditing]);
 
@@ -202,7 +213,13 @@ export function TransactionForm({
                     { value: "income", label: "Income" },
                   ]}
                   value={field.value}
-                  onChangeAction={field.onChange}
+                  onChangeAction={(v) => {
+                    field.onChange(v);
+                    const firstCat = allCategories.filter(c => c.type === v)[0];
+                    if (firstCat) {
+                      setValue("categoryId", firstCat.id, { shouldValidate: true });
+                    }
+                  }}
                 />
               )}
             />
@@ -217,6 +234,7 @@ export function TransactionForm({
                   value={field.value ? new Date(field.value) : undefined}
                   onValueChange={d => field.onChange(d?.toISOString() ?? new Date().toISOString())}
                   className="h-9"
+                  disabled={{ after: new Date() }}
                 />
               )}
             />
@@ -250,28 +268,29 @@ export function TransactionForm({
             />
           </div>
 
-          <div className="flex items-baseline justify-center gap-1 py-4">
-            <span className="text-2xl font-medium text-muted-foreground/30 leading-none self-start mt-2">
-              {currencySymbol}
-            </span>
+          <div ref={amountScope} className="flex flex-col items-center py-4">
             <Controller
               control={control}
               name="amount"
               render={({ field }) => (
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  value={formatAmountDisplay(field.value)}
-                  onChange={e => field.onChange(e.target.value.replace(/[^0-9.]/g, ""))}
-                  placeholder="0.00"
+                <AmountInput
+                  value={field.value}
+                  onChangeAction={field.onChange}
+                  type={type}
+                  currency={currency}
+                  onCurrencyChangeAction={walletId ? undefined : c => setValue("currency", c)}
+                  isBalanceExceeded={isBalanceExceeded}
                   autoFocus
-                  className={cn(
-                    "bg-transparent outline-none text-5xl font-semibold text-center placeholder:text-muted-foreground/20 field-sizing-content min-w-0",
-                    type === "income" ? "caret-primary" : "caret-destructive",
-                  )}
                 />
               )}
             />
+            {isBalanceExceeded && (
+              <p className="text-xs text-destructive mt-1">
+                Exceeds balance (
+                {formatBalanceAmount(Number.parseFloat(selectedWallet!.balance), currency)}
+                )
+              </p>
+            )}
           </div>
 
           {session && !onBackAction && (
@@ -326,7 +345,7 @@ export function TransactionForm({
                                 </div>
                               )}
                         </SelectTrigger>
-                        <SelectContent align="start" alignItemWithTrigger={false}>
+                        <SelectContent align="start" alignItemWithTrigger={false} className="min-w-max">
                           <SelectGroup>
                             {wallets.map(w => (
                               <SelectItem key={w.id} value={w.id}>
@@ -371,7 +390,7 @@ export function TransactionForm({
           form="transaction-form"
           variant="default"
           className="sm:flex-1"
-          disabled={!isValid || isPending}
+          disabled={!isValid || isPending || isBalanceExceeded}
         >
           <Icon icon={isPending ? Loading03Icon : config.icon} className={isPending ? "animate-spin" : undefined} />
           <span className="capitalize">{isEditing ? `Save ${type}` : "Add"}</span>

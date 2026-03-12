@@ -22,7 +22,7 @@ export function PieTooltip({ active, payload, labelMap }: PieTooltipProps) {
           <div className="size-2.5 rounded-xs shrink-0" style={{ background: fill }} />
           <span className="text-muted-foreground whitespace-nowrap">{name}</span>
         </div>
-        <div className="flex flex-col items-end font-medium tabular-nums">
+        <div className="flex flex-col items-end font-mono font-medium tabular-nums">
           {lines.map((line, i) => <span key={i}>{line}</span>)}
         </div>
       </div>

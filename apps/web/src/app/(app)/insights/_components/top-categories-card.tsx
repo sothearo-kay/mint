@@ -6,6 +6,7 @@ import { Icon } from "@mint/ui/components/icon";
 import { MintPieChart } from "@mint/ui/components/ui/pie-chart";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { MintCard } from "@/components/card";
+import { formatBalanceAmount } from "@/utils/format";
 
 type TopCategoriesCardProps = {
   categories: { id: string; name: string; icon: string; amount: string }[];
@@ -45,6 +46,7 @@ export function TopCategoriesCard({ categories, isPending, currency = "USD" }: T
                 data={chartData}
                 className="h-48 w-full"
                 currency={currency}
+                valueFormatter={v => formatBalanceAmount(Number(v), currency)}
               />
             )}
     </MintCard>

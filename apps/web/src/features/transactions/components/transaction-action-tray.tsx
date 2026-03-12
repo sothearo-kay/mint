@@ -10,7 +10,7 @@ import { Tray, TrayBody, TrayDescription, TrayFooter, TrayHeader, TrayTitle, Tra
 import Image from "next/image";
 import { useSession } from "@/features/auth/api";
 import { useGuestTransactions } from "@/store/guest-transactions";
-import { formatCurrency } from "@/utils/format";
+import { formatBalanceAmount } from "@/utils/format";
 import { useDeleteTransaction } from "../api/delete-transaction";
 import { TransactionForm } from "./transaction-form";
 
@@ -107,19 +107,19 @@ function DeleteView({ transaction, onCloseAction }: { transaction: Transaction; 
             )}
           </div>
           <p className="text-2xl font-bold tabular-nums tracking-tight text-foreground">
-            {formatCurrency(Number.parseFloat(transaction.amount))}
+            {formatBalanceAmount(Number.parseFloat(transaction.amount), transaction.currency)}
           </p>
         </div>
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="flex-1" onClick={onCloseAction}>
+        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCloseAction}>
           Cancel
         </Button>
         <Button
           type="button"
           variant="destructive"
-          className="flex-1"
+          className="sm:flex-1"
           disabled={isPending}
           onClick={handleDelete}
         >

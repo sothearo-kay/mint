@@ -20,21 +20,27 @@ export function TransactionTray() {
   const [selectedWalletId, setSelectedWalletId] = useState<string | null>(null);
 
   const { data: session, isPending: isSessionPending } = useSession();
-  const { data: wallets = [], isPending: walletsLoading } = useWallets({ queryConfig: { enabled: !!session } });
+  const { data: Rawwallets = [], isPending: isWalletsPending } = useWallets({ queryConfig: { enabled: !!session } });
+
+  const walletsLoading = !!session && isWalletsPending;
+  const wallets = session ? Rawwallets : [];
 
   useEffect(() => {
     if (!isOpen)
       return;
     if (isSessionPending || walletsLoading) {
       setView("loading");
+      return;
     }
-    else if (!session || wallets.length === 0) {
+    if (!session) {
       setView("form");
+      return;
     }
-    else {
-      setView("select-account");
-    }
-  }, [isOpen, session, isSessionPending, walletsLoading, wallets.length]);
+    // Only auto-advance from loading — don't override user navigation
+    if (view !== "loading")
+      return;
+    setView(wallets.length === 0 ? "form" : "select-account");
+  }, [isOpen, session, isSessionPending, walletsLoading, wallets.length, view]);
 
   const close = useCallback(() => {
     storeClose();

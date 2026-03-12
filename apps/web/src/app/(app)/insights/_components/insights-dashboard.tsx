@@ -4,6 +4,7 @@ import { ArrowDownLeft01Icon, ArrowUpRight01Icon, Chart03Icon, Money01Icon } fro
 import { Icon } from "@mint/ui/components/icon";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@mint/ui/components/select";
 import { MintAreaChart } from "@mint/ui/components/ui/area-chart";
+import { formatBalanceAmount } from "@/utils/format";
 import { Shimmer } from "@mint/ui/components/ui/shimmer";
 import { endOfYear, startOfYear } from "date-fns";
 import { useState } from "react";
@@ -164,6 +165,7 @@ export function InsightsDashboard() {
                     { key: "expense", label: "Expense", color: "var(--destructive)" },
                   ]}
                   className="h-48 w-full"
+                  valueFormatter={v => formatBalanceAmount(Number(v), currency)}
                 />
               </MintCard>
 

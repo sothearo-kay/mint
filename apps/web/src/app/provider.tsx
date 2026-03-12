@@ -24,7 +24,7 @@ export function AppProvider({
         disableTransitionOnChange
       >
         <TooltipProvider>
-          <Toaster position="top-center" />
+          <Toaster position="top-right" />
           {children}
         </TooltipProvider>
       </ThemeProvider>

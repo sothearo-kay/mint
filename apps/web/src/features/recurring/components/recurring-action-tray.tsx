@@ -22,7 +22,8 @@ export function RecurringActionTray() {
   const { mode, recurring, close: storeClose } = useRecurringTray();
   const { open: sidebarOpen, isMobile } = useSidebar();
   const { data: session } = useSession();
-  const { data: wallets = [], isPending: walletsLoading } = useWallets({ queryConfig: { enabled: !!session } });
+  const { data: wallets = [], isPending: isWalletsPending } = useWallets({ queryConfig: { enabled: !!session } });
+  const walletsLoading = !!session && isWalletsPending;
 
   const [view, setView] = useState<View>("select-account");
   const [selectedWalletId, setSelectedWalletId] = useState<string | null>(null);
@@ -34,12 +35,17 @@ export function RecurringActionTray() {
       return setView("edit");
     if (mode === "delete")
       return setView("delete");
-    // create
-    if (!!session && !walletsLoading && wallets.length === 0)
+    // create: only auto-advance from select-account (initial), not from user-navigated views
+    if (walletsLoading)
+      return;
+    if (!session) {
       setView("create");
-    else if (!walletsLoading)
-      setView("select-account");
-  }, [mode, session, walletsLoading, wallets.length]);
+      return;
+    }
+    if (view !== "select-account")
+      return;
+    setView(wallets.length === 0 ? "create" : "select-account");
+  }, [mode, session, walletsLoading, wallets.length, view]);
 
   const close = useCallback(() => {
     storeClose();
@@ -143,13 +149,13 @@ function DeleteView({ recurring, onCloseAction }: { recurring: RecurringTransact
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="flex-1" onClick={onCloseAction}>
+        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCloseAction}>
           Cancel
         </Button>
         <Button
           type="button"
           variant="destructive"
-          className="flex-1"
+          className="sm:flex-1"
           disabled={isPending}
           onClick={() => mutate(recurring.id)}
         >

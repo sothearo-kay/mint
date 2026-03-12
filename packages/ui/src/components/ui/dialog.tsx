@@ -79,7 +79,7 @@ function DialogOverlay({ className }: { className?: string }) {
           unmount();
       }}
       onClick={close}
-      className={cn("fixed inset-0 isolate z-50 bg-black/30", className)}
+      className={cn("fixed inset-0 isolate z-50 bg-black/10 supports-backdrop-filter:backdrop-blur-xs", className)}
     />
   );
 }

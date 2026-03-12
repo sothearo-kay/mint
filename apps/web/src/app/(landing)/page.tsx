@@ -6,7 +6,7 @@ import { Hero } from "./_components/hero";
 export default function Home() {
   return (
     <div className="h-svh overflow-auto">
-      <div className="container my-2 flex min-h-[calc(100svh-1rem)] flex-col border border-t-0">
+      <div className="container my-2 flex min-h-[calc(100svh-1rem)] flex-col border border-t-0 border-dashed">
         <Header />
         <Hero />
         <Features />

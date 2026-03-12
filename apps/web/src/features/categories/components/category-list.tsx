@@ -195,13 +195,13 @@ function DeleteView({ category, onCloseAction }: { category: Category; onCloseAc
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="flex-1" onClick={onCloseAction}>
+        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCloseAction}>
           Cancel
         </Button>
         <Button
           type="button"
           variant="destructive"
-          className="flex-1"
+          className="sm:flex-1"
           disabled={isPending}
           onClick={() => mutate(category.id)}
         >

@@ -14,7 +14,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <TransactionTray />
       <SyncTransactionsDialog />
       <SidebarInset>
-        <div className="h-dvh overflow-auto">
+        <div className="h-dvh flex flex-col overflow-auto">
           <AppHeader />
           <main className="flex-1 relative px-4 py-8 w-full max-w-3xl mx-auto">
             {children}

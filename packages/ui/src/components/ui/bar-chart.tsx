@@ -1,5 +1,6 @@
 "use client";
 
+import type * as React from "react";
 import type { ChartConfig } from "@mint/ui/components/ui/chart";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@mint/ui/components/ui/chart";
 import { Bar, BarChart, XAxis } from "recharts";
@@ -11,6 +12,7 @@ type MintBarChartProps = {
   label: string;
   xAxisKey?: string;
   className?: string;
+  valueFormatter?: (value: number | string) => React.ReactNode;
 };
 
 const CustomHatchedBar = (props: React.SVGProps<SVGRectElement> & { dataKey?: string; fill?: string }) => {
@@ -35,7 +37,7 @@ const DottedBackground = () => (
   </pattern>
 );
 
-function MintBarChart({ data, dataKey, color, label, xAxisKey = "month", className }: MintBarChartProps) {
+function MintBarChart({ data, dataKey, color, label, xAxisKey = "month", className, valueFormatter }: MintBarChartProps) {
   const chartConfig = {
     [dataKey]: { label, color },
   } satisfies ChartConfig;
@@ -54,7 +56,7 @@ function MintBarChart({ data, dataKey, color, label, xAxisKey = "month", classNa
           axisLine={false}
           tickFormatter={(value: string) => value.slice(0, 3)}
         />
-        <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel valueFormatter={valueFormatter} />} />
         <Bar
           dataKey={dataKey}
           // @ts-expect-error recharts custom shape

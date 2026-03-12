@@ -7,19 +7,21 @@ export function formatCurrency(amount: number): string {
 // Large balance display — symbol prefix: $0.00 / ៛400,000
 export function formatBalanceAmount(amount: number, currency: Currency): string {
   const abs = Math.abs(amount);
+  const sign = amount < 0 ? "-" : "";
   if (currency === "KHR") {
-    return `៛${abs.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    return `${sign}៛${abs.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
   }
-  return formatNumber(abs, { style: "currency", currency: "USD" });
+  return `${sign}${formatNumber(abs, { style: "currency", currency: "USD" })}`;
 }
 
 // Inline amounts (rows, lists) — symbol after: 400,000.00$ / 400,000៛
 export function formatAmountByCurrency(amount: number, currency: Currency): string {
   const abs = Math.abs(amount);
+  const sign = amount < 0 ? "-" : "";
   if (currency === "KHR") {
-    return `${abs.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}៛`;
+    return `${sign}${abs.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}៛`;
   }
-  return `${abs.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}$`;
+  return `${sign}${abs.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}$`;
 }
 
 export function getInitials(name: string): string {

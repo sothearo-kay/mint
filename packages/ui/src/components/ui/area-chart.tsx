@@ -1,5 +1,6 @@
 "use client";
 
+import type * as React from "react";
 import type { ChartConfig } from "@mint/ui/components/ui/chart";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@mint/ui/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
@@ -15,9 +16,10 @@ type MintAreaChartProps = {
   series: AreaChartSeries[];
   xAxisKey?: string;
   className?: string;
+  valueFormatter?: (value: number | string) => React.ReactNode;
 };
 
-function MintAreaChart({ data, series, xAxisKey = "month", className }: MintAreaChartProps) {
+function MintAreaChart({ data, series, xAxisKey = "month", className, valueFormatter }: MintAreaChartProps) {
   const chartConfig = Object.fromEntries(
     series.map(s => [s.key, { label: s.label, color: s.color }]),
   ) satisfies ChartConfig;
@@ -33,7 +35,7 @@ function MintAreaChart({ data, series, xAxisKey = "month", className }: MintArea
           tickMargin={8}
           tickFormatter={(value: string) => value.slice(0, 3)}
         />
-        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+        <ChartTooltip cursor={false} content={<ChartTooltipContent valueFormatter={valueFormatter} />} />
         <defs>
           {series.map(s => (
             <linearGradient key={s.key} id={`gradient-area-${s.key}`} x1="0" y1="0" x2="0" y2="1">

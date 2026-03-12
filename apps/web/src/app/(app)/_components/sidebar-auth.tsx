@@ -10,12 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@mint/ui/components/dropdown-menu";
 import { Icon } from "@mint/ui/components/icon";
-import { Skeleton } from "@mint/ui/components/skeleton";
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@mint/ui/components/sidebar";
+import { Skeleton } from "@mint/ui/components/skeleton";
 import { toast } from "@mint/ui/components/sonner";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";

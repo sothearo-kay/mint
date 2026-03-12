@@ -28,6 +28,7 @@ type MintPieChartProps = {
   colors?: string[];
   tooltipContent?: React.ReactElement;
   currency?: "USD" | "KHR";
+  valueFormatter?: (value: number | string) => React.ReactNode;
 };
 
 function MintPieChart({
@@ -39,6 +40,7 @@ function MintPieChart({
   colors,
   tooltipContent,
   currency = "USD",
+  valueFormatter,
 }: MintPieChartProps) {
   const total = data.reduce((s, d) => s + d.value, 0);
   const resolvedColors = colors ?? CHART_COLORS;
@@ -58,7 +60,7 @@ function MintPieChart({
     <div className="flex flex-col gap-3">
       <ChartContainer config={chartConfig} className={cn("aspect-auto [&_.recharts-text]:fill-background", className)}>
         <PieChart>
-          {!hideTooltip && <ChartTooltip content={tooltipContent ?? <ChartTooltipContent nameKey="name" hideLabel />} />}
+          {!hideTooltip && <ChartTooltip content={tooltipContent ?? <ChartTooltipContent nameKey="name" hideLabel valueFormatter={valueFormatter} />} />}
           <Pie
             data={chartData}
             dataKey="value"

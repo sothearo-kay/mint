@@ -14,9 +14,8 @@ export function WalletBalance({ wallets }: { wallets: Wallet[] }) {
   const khr = khrWallets.reduce((sum, w) => sum + Number.parseFloat(w.balance), 0);
 
   const totalUSD = wallets.reduce((s, w) => s + toUSD(Number.parseFloat(w.balance), w.currency), 0);
-  const sorted = [...wallets].sort((a, b) => toUSD(Number.parseFloat(b.balance), b.currency) - toUSD(Number.parseFloat(a.balance), a.currency));
-  const top = sorted.slice(0, 5);
-  const rest = sorted.slice(5);
+  const top = wallets.slice(0, 5);
+  const rest = wallets.slice(5);
 
   const topData = top.map((w) => {
     const balance = Number.parseFloat(w.balance);

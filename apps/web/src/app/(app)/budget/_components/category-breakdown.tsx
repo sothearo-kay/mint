@@ -6,7 +6,8 @@ import { Progress } from "@mint/ui/components/ui/progress";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { format } from "date-fns";
 import { EmptyState } from "@/components/empty-state";
-import { formatCurrency } from "@/utils/format";
+import { useCurrencyStore } from "@/store/currency";
+import { formatBalanceAmount } from "@/utils/format";
 
 type Category = {
   id: string;
@@ -47,6 +48,8 @@ export function CategoryBreakdown({ isPending, categories, totalExpense, totalIn
     );
   }
 
+  const { currency } = useCurrencyStore();
+
   return (
     <div>
       <p className="text-xs font-semibold text-muted-foreground px-0.5 mb-3">
@@ -65,7 +68,7 @@ export function CategoryBreakdown({ isPending, categories, totalExpense, totalIn
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-medium text-foreground truncate">{cat.name}</p>
                   <span className="text-sm font-medium tabular-nums text-foreground shrink-0">
-                    {formatCurrency(catAmount)}
+                    {formatBalanceAmount(Number.parseFloat(cat.amount), currency)}
                   </span>
                 </div>
                 <Progress value={catPct} className="**:data-[slot=progress-indicator]:dark:bg-primary/80" />

@@ -63,7 +63,7 @@ export function TransactionList({ isError, isPending, transactions, from, onEdit
       {groups.map(([label, txs]) => {
         const isCollapsed = collapsed.has(label);
         return (
-          <div key={label} className="*:last:mb-2">
+          <div key={label}>
             <button
               type="button"
               onClick={() => toggleGroup(label)}
@@ -85,7 +85,7 @@ export function TransactionList({ isError, isPending, transactions, from, onEdit
               )}
             >
               <div className="overflow-hidden">
-                <div>
+                <div className="*:last:mb-1">
                   {txs.map(tx => (
                     <TransactionRow
                       key={tx.id}
@@ -114,9 +114,9 @@ function ListSkeleton() {
   return (
     <div className="flex flex-col gap-2.5">
       {[1, 2].map(g => (
-        <div key={g} className="*:last:mb-2">
+        <div key={g}>
           <Skeleton className="h-4 w-14 rounded-full mb-3" />
-          <div>
+          <div className="*:last:mb-1">
             {SKELETON_ROWS.map((row, i) => (
               <div key={i} className="flex items-center gap-3 pb-3.5">
                 <div className="relative size-10 shrink-0">

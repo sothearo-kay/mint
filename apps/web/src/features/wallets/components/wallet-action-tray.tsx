@@ -7,6 +7,7 @@ import { Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
 import { toast } from "@mint/ui/components/sonner";
 import { Tray, TrayBody, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
+import { formatBalanceAmount } from "@/utils/format";
 import { useDeleteWallet } from "../api/delete-wallet";
 import { WalletForm } from "./wallet-form";
 
@@ -75,20 +76,19 @@ function DeleteView({ wallet, onCloseAction }: { wallet: Wallet; onCloseAction: 
             {wallet.currency}
           </p>
           <p className="text-2xl font-bold tabular-nums tracking-tight text-foreground mt-1">
-            {wallet.currency === "KHR" ? "៛" : "$"}
-            {Number.parseFloat(wallet.balance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            {formatBalanceAmount(Number.parseFloat(wallet.balance), wallet.currency)}
           </p>
         </div>
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="flex-1" onClick={onCloseAction}>
+        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCloseAction}>
           Cancel
         </Button>
         <Button
           type="button"
           variant="destructive"
-          className="flex-1"
+          className="sm:flex-1"
           disabled={isPending}
           onClick={() => mutate(wallet.id)}
         >
