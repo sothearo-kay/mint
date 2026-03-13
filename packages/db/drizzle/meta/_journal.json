@@ -57,6 +57,13 @@
       "when": 1773131449099,
       "tag": "0007_red_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1773369673056,
+      "tag": "0008_mushy_ozymandias",
+      "breakpoints": true
     }
   ]
 }

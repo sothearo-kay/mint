@@ -7,6 +7,7 @@ import { recurringTransaction } from "./recurring-transaction.schema";
 import { settings } from "./settings.schema";
 import { transaction } from "./transaction.schema";
 import { wallet } from "./wallet.schema";
+import { walletTransfer } from "./wallet-transfer.schema";
 
 export const userRelations = relations(user, ({ one, many }) => ({
   sessions: many(session),
@@ -23,6 +24,22 @@ export const walletRelations = relations(wallet, ({ one, many }) => ({
   user: one(user, { fields: [wallet.userId], references: [user.id] }),
   transactions: many(transaction),
   recurringTransactions: many(recurringTransaction),
+  transfersFrom: many(walletTransfer, { relationName: "fromWallet" }),
+  transfersTo: many(walletTransfer, { relationName: "toWallet" }),
+}));
+
+export const walletTransferRelations = relations(walletTransfer, ({ one }) => ({
+  user: one(user, { fields: [walletTransfer.userId], references: [user.id] }),
+  fromWallet: one(wallet, {
+    fields: [walletTransfer.fromWalletId],
+    references: [wallet.id],
+    relationName: "fromWallet",
+  }),
+  toWallet: one(wallet, {
+    fields: [walletTransfer.toWalletId],
+    references: [wallet.id],
+    relationName: "toWallet",
+  }),
 }));
 
 export const categoryRelations = relations(category, ({ one, many }) => ({
