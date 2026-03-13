@@ -3,7 +3,7 @@
 import type { Wallet } from "../api/get-wallets";
 import type { TransferWalletInput } from "../api/transfer-wallet";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight01Icon, Loading03Icon, RepeatIcon } from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, Loading03Icon, MoneyExchange01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
 import {
@@ -94,7 +94,7 @@ export function WalletTransferForm({ wallet, wallets, onCancelAction, onSuccessA
       <TrayHeader>
         <div className="flex items-center gap-3">
           <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-            <Icon icon={RepeatIcon} className="size-5 text-primary" />
+            <Icon icon={MoneyExchange01Icon} className="size-5 text-primary" />
           </div>
           <TrayTitle className="font-semibold">Transfer</TrayTitle>
         </div>
@@ -188,7 +188,7 @@ export function WalletTransferForm({ wallet, wallets, onCancelAction, onSuccessA
           className="sm:flex-1"
           disabled={!isValid || isPending}
         >
-          <Icon icon={isPending ? Loading03Icon : RepeatIcon} className={isPending ? "animate-spin" : undefined} />
+          <Icon icon={isPending ? Loading03Icon : MoneyExchange01Icon} className={isPending ? "animate-spin" : undefined} />
           Transfer
         </Button>
       </TrayFooter>

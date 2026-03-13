@@ -21,7 +21,7 @@ type UseUpdateSettingsOptions = {
 
 export function useUpdateSettings({ mutationConfig }: UseUpdateSettingsOptions = {}) {
   const queryClient = useQueryClient();
-  const { onSuccess, ...restConfig } = mutationConfig || {};
+  const { onSuccess, ...restConfig } = mutationConfig ?? {};
 
   return useMutation({
     onSuccess: (...args) => {

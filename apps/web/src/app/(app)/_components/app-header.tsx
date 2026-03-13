@@ -34,7 +34,7 @@ export function AppHeader() {
           </Link>
           {walletName && (
             <>
-              <Separator orientation="vertical" className="data-vertical:self-auto data-vertical:h-4 rotate-15" />
+              <Separator orientation="vertical" className="bg-foreground/25 data-vertical:self-auto data-vertical:h-4 rotate-15" />
               <span className="truncate">{walletName}</span>
             </>
           )}
@@ -45,7 +45,7 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-20 bg-background border-b border-dashed flex items-center gap-4 px-4 py-2.5">
       <SidebarTrigger className="-ml-1.5" />
-      <Separator orientation="vertical" className="-ml-1 data-vertical:self-auto data-vertical:h-4 rotate-15" />
+      <Separator orientation="vertical" className="-ml-1 bg-foreground/25 data-vertical:self-auto data-vertical:h-4 rotate-15" />
       <AnimatedContent>
         {title}
       </AnimatedContent>

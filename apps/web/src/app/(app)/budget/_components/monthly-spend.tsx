@@ -70,7 +70,7 @@ export function MonthlySpend({ isPending, pct, isOverBudget, totalExpense, effec
         {pct > 0 && (
           <div
             className="h-full rounded-xl bg-primary dark:bg-primary/80 bg-stripe shrink-0 transition-all duration-500"
-            style={{ width: `${pct}%` }}
+            style={{ width: `${Math.min(pct, 100)}%` }}
           />
         )}
         {pct > 0 && pct < 100 && (

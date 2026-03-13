@@ -7,13 +7,14 @@ import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
 import { toast } from "@mint/ui/components/sonner";
 import { Tray, TrayBody, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
-import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import { SelectAccountView } from "@/components/select-account-view";
 import { useSession } from "@/features/auth/api";
 import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useRecurringTray } from "@/store/recurring-tray";
+import { formatBalanceAmount } from "@/utils/format";
 import { useDeleteRecurring } from "../api/delete-recurring";
+import { LogoIcon } from "./logo-registry";
 import { RecurringForm } from "./recurring-form";
 
 type View = "select-account" | "create" | "edit" | "delete";
@@ -127,13 +128,7 @@ function DeleteView({ recurring, onCloseAction }: { recurring: RecurringTransact
           <div className="size-12 rounded-2xl bg-background flex items-center justify-center overflow-hidden">
             {recurring.logo
               ? (
-                  <Image
-                    src={recurring.logo}
-                    alt={recurring.name}
-                    width={20}
-                    height={20}
-                    className="size-5 object-contain"
-                  />
+                  <LogoIcon name={recurring.logo} className="size-5" />
                 )
               : <DynamicIcon name={recurring.category.icon} className="size-5 text-muted-foreground" />}
           </div>
@@ -142,8 +137,7 @@ function DeleteView({ recurring, onCloseAction }: { recurring: RecurringTransact
             <p className="text-xs text-muted-foreground mt-0.5 capitalize">{recurring.frequency}</p>
           </div>
           <p className="text-2xl font-bold tabular-nums tracking-tight text-foreground">
-            {recurring.currency === "KHR" ? "៛" : "$"}
-            {Number.parseFloat(recurring.amount).toLocaleString()}
+            {formatBalanceAmount(Number.parseFloat(recurring.amount), recurring.currency)}
           </p>
         </div>
       </TrayBody>

@@ -3,50 +3,24 @@
 import type { Transaction } from "@/features/transactions/api/get-transactions";
 import type { WalletTransfer } from "@/features/wallets/api/get-wallet-transfers";
 import {
-  ArrowDownLeft01Icon,
   ArrowRight01Icon,
-  ArrowUpRight01Icon,
-  Delete01Icon,
   MoneyNotFoundIcon,
   MoneyReceiveCircleIcon,
   MoneySendCircleIcon,
-  MoreHorizontalIcon,
-  PencilEdit02Icon,
 } from "@hugeicons/core-free-icons";
-import { buttonVariants } from "@mint/ui/components/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@mint/ui/components/dropdown-menu";
-import { DynamicIcon, Icon } from "@mint/ui/components/icon";
+import { Icon } from "@mint/ui/components/icon";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
-import { format, isToday, isYesterday } from "date-fns";
+import { format } from "date-fns";
 import { useState } from "react";
 import { EmptyState } from "@/components/empty-state";
+import { TransactionRow } from "@/features/transactions/components/transaction-row";
 import { formatAmountByCurrency } from "@/utils/format";
+import { groupByDate } from "@/utils/group-by-date";
 
 type ActivityItem
   = | { kind: "transaction"; data: Transaction; date: Date }
     | { kind: "transfer"; data: WalletTransfer; date: Date };
-
-function groupByDate(items: ActivityItem[]): [string, ActivityItem[]][] {
-  const map = new Map<string, ActivityItem[]>();
-  for (const item of items) {
-    const key = isToday(item.date)
-      ? "Today"
-      : isYesterday(item.date)
-        ? "Yesterday"
-        : format(item.date, "MMMM d, yyyy");
-    if (!map.has(key))
-      map.set(key, []);
-    map.get(key)!.push(item);
-  }
-  return [...map.entries()];
-}
 
 type WalletActivityListProps = {
   walletId: string;
@@ -91,7 +65,7 @@ export function WalletActivityList({
     );
   }
 
-  const groups = groupByDate(items);
+  const groups = groupByDate(items, item => item.date);
 
   function toggleGroup(label: string) {
     setCollapsed((prev) => {
@@ -131,7 +105,7 @@ export function WalletActivityList({
                   {groupItems.map(item =>
                     item.kind === "transaction"
                       ? (
-                          <TransactionActivityRow
+                          <TransactionRow
                             key={item.data.id}
                             tx={item.data}
                             onEditAction={() => onEditAction(item.data)}
@@ -152,75 +126,6 @@ export function WalletActivityList({
           </div>
         );
       })}
-    </div>
-  );
-}
-
-function TransactionActivityRow({
-  tx,
-  onEditAction,
-  onDeleteAction,
-}: {
-  tx: Transaction;
-  onEditAction?: () => void;
-  onDeleteAction?: () => void;
-}) {
-  const hasRecurring = !!tx.recurring;
-
-  return (
-    <div className="group flex items-center gap-3 pb-3.5">
-      <div className="relative size-10 rounded-2xl bg-muted flex items-center justify-center shrink-0">
-        <DynamicIcon name={tx.category.icon} className="size-5 text-muted-foreground" />
-        {!hasRecurring && (
-          <span className={cn(
-            "absolute bottom-0 -right-1 flex size-3.5 items-center justify-center rounded-full ring-1 ring-border",
-            tx.type === "income" ? "bg-income" : "bg-expense",
-          )}
-          >
-            <Icon
-              icon={tx.type === "income" ? ArrowDownLeft01Icon : ArrowUpRight01Icon}
-              strokeWidth={2.5}
-              className="size-3 text-white"
-            />
-          </span>
-        )}
-      </div>
-
-      <div className="ml-1 flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate leading-snug">
-          {hasRecurring ? tx.recurring!.name : tx.category.name}
-        </p>
-        {tx.note && <p className="text-xs text-muted-foreground truncate mt-0.5">{tx.note}</p>}
-      </div>
-
-      <div className="flex items-center gap-1.5 shrink-0">
-        <div className="w-0 overflow-hidden group-hover:w-7 has-data-popup-open:w-7 [@media(hover:none)]:w-7 transition-all duration-200">
-          <DropdownMenu>
-            <DropdownMenuTrigger className={cn(buttonVariants({ size: "icon-sm", variant: "ghost" }), "shrink-0")}>
-              <Icon icon={MoreHorizontalIcon} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={onEditAction}>
-                <Icon icon={PencilEdit02Icon} />
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem variant="destructive" onClick={onDeleteAction}>
-                <Icon icon={Delete01Icon} />
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-        <span className={cn(
-          "text-sm font-medium tabular-nums",
-          tx.type === "income" ? "text-primary" : "text-destructive",
-        )}
-        >
-          {tx.type === "income" ? "+" : "-"}
-          {formatAmountByCurrency(Number.parseFloat(tx.amount), tx.currency)}
-        </span>
-      </div>
     </div>
   );
 }

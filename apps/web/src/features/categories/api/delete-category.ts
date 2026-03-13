@@ -15,7 +15,7 @@ type UseDeleteCategoryOptions = {
 
 export function useDeleteCategory({ mutationConfig }: UseDeleteCategoryOptions = {}) {
   const queryClient = useQueryClient();
-  const { onSuccess, ...restConfig } = mutationConfig || {};
+  const { onSuccess, ...restConfig } = mutationConfig ?? {};
 
   return useMutation({
     onSuccess: (...args) => {

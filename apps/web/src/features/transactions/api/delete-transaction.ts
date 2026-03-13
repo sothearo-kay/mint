@@ -15,7 +15,7 @@ type UseDeleteTransactionOptions = {
 
 export function useDeleteTransaction({ mutationConfig }: UseDeleteTransactionOptions = {}) {
   const queryClient = useQueryClient();
-  const { onSuccess, ...restConfig } = mutationConfig || {};
+  const { onSuccess, ...restConfig } = mutationConfig ?? {};
 
   return useMutation({
     onSuccess: (...args) => {

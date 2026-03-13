@@ -5,23 +5,12 @@ import { ArrowRight01Icon, MoneyNotFoundIcon } from "@hugeicons/core-free-icons"
 import { Icon } from "@mint/ui/components/icon";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
-import { format, isToday, isYesterday } from "date-fns";
+import { format } from "date-fns";
 import { useState } from "react";
 import { EmptyState } from "@/components/empty-state";
 import { ErrorState } from "@/components/error-state";
+import { groupByDate } from "@/utils/group-by-date";
 import { TransactionRow } from "./transaction-row";
-
-function groupByDate(transactions: Transaction[]): [string, Transaction[]][] {
-  const map = new Map<string, Transaction[]>();
-  for (const tx of transactions) {
-    const d = new Date(tx.date);
-    const key = isToday(d) ? "Today" : isYesterday(d) ? "Yesterday" : format(d, "MMMM d, yyyy");
-    if (!map.has(key))
-      map.set(key, []);
-    map.get(key)!.push(tx);
-  }
-  return [...map.entries()];
-}
 
 type TransactionListProps = {
   isError: boolean;
@@ -34,7 +23,7 @@ type TransactionListProps = {
 
 export function TransactionList({ isError, isPending, transactions, from, onEditAction, onDeleteAction }: TransactionListProps) {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
-  const groups = groupByDate(transactions);
+  const groups = groupByDate(transactions, tx => new Date(tx.date));
 
   function toggleGroup(label: string) {
     setCollapsed((prev) => {

@@ -25,7 +25,7 @@ type UseCreateCategoryOptions = {
 
 export function useCreateCategory({ mutationConfig }: UseCreateCategoryOptions = {}) {
   const queryClient = useQueryClient();
-  const { onSuccess, ...restConfig } = mutationConfig || {};
+  const { onSuccess, ...restConfig } = mutationConfig ?? {};
 
   return useMutation({
     onSuccess: (...args) => {

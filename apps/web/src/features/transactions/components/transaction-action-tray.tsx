@@ -7,8 +7,8 @@ import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
 import { toast } from "@mint/ui/components/sonner";
 import { Tray, TrayBody, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
-import Image from "next/image";
 import { useSession } from "@/features/auth/api";
+import { LogoIcon } from "@/features/recurring/components/logo-registry";
 import { useGuestTransactions } from "@/store/guest-transactions";
 import { formatBalanceAmount } from "@/utils/format";
 import { useDeleteTransaction } from "../api/delete-transaction";
@@ -95,7 +95,7 @@ function DeleteView({ transaction, onCloseAction }: { transaction: Transaction; 
         <div className="flex flex-col items-center gap-2 rounded-2xl bg-muted py-5 px-4">
           <div className="size-12 rounded-2xl bg-background flex items-center justify-center overflow-hidden">
             {transaction.recurring?.logo
-              ? <Image src={transaction.recurring.logo} alt={transaction.recurring.name} width={24} height={24} className="size-6 object-contain" />
+              ? <LogoIcon name={transaction.recurring.logo} className="size-6" />
               : <DynamicIcon name={transaction.category.icon} className="size-6 text-muted-foreground" />}
           </div>
           <div className="text-center">
