@@ -7,9 +7,9 @@ export const env = createEnv({
       .enum(["development", "production", "test"])
       .default("development"),
     PORT: z.coerce.number().default(8080),
+    BASE_URL: z.url(),
     DATABASE_URL: z.url(),
     BETTER_AUTH_SECRET: z.string(),
-    BETTER_AUTH_URL: z.url(),
     BETTER_AUTH_TRUSTED_ORIGIN: z.url(),
     GOOGLE_CLIENT_ID: z.string(),
     GOOGLE_CLIENT_SECRET: z.string(),

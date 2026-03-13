@@ -70,7 +70,7 @@ export function WalletItem({ wallet, color, onEditAction, onDeleteAction }: Wall
       </button>
 
       <div
-        className="size-9 rounded-xl flex items-center justify-center shrink-0"
+        className="-ml-1 size-9 rounded-xl flex items-center justify-center shrink-0"
         style={{ backgroundColor: `color-mix(in srgb, ${iconColor} 15%, transparent)` }}
       >
         <Icon icon={WalletIcon} className="size-4.5" style={{ color: iconColor }} />

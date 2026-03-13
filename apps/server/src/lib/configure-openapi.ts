@@ -1,4 +1,5 @@
 import type { AppOpenAPI } from "./types";
+import { env } from "@mint/env/server";
 
 import { Scalar } from "@scalar/hono-api-reference";
 
@@ -12,7 +13,7 @@ export default function configureOpenAPI(app: AppOpenAPI) {
     },
     servers: [
       {
-        url: "http://localhost:8080",
+        url: env.BASE_URL,
         description: "Development server",
       },
     ],

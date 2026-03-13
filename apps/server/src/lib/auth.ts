@@ -7,7 +7,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg", schema }),
   secret: env.BETTER_AUTH_SECRET,
-  baseURL: env.BETTER_AUTH_URL,
+  baseURL: env.BASE_URL,
   trustedOrigins: [env.BETTER_AUTH_TRUSTED_ORIGIN],
   advanced: {
     ...(env.COOKIE_DOMAIN && {

@@ -69,7 +69,7 @@ export function WalletList({ wallets, onEditAction, onDeleteAction }: WalletList
             {items.slice(1).map((_, i) => (
               <div
                 key={i}
-                className="absolute left-10 right-0 border-t border-dashed border-border"
+                className="absolute left-8 right-0 border-t border-dashed border-border"
                 style={{ top: (i + 1) * 65.25 }}
               />
             ))}
@@ -98,7 +98,7 @@ export function WalletListSkeleton({ count = 2 }: { count?: number }) {
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="flex items-center gap-3 py-3.5">
           <Skeleton className="-ml-2 size-7 rounded-lg shrink-0" />
-          <Skeleton className="size-9 rounded-xl shrink-0" />
+          <Skeleton className="-ml-1 size-9 rounded-xl shrink-0" />
           <div className="flex-1 flex flex-col gap-1.5">
             <Skeleton className="h-4 w-28 rounded" />
             <Skeleton className="h-3 w-20 rounded" />
