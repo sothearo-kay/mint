@@ -17,6 +17,28 @@ export const walletSchema = z.object({
   updatedAt: z.string(),
 });
 
+const walletSummarySchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  currency: z.enum(["USD", "KHR"]),
+  type: z.enum(["cash", "bank", "savings"]),
+});
+
+export const walletTransferSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  fromWalletId: z.string(),
+  toWalletId: z.string(),
+  fromAmount: z.string(),
+  toAmount: z.string(),
+  note: z.string().nullable(),
+  date: z.string(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  fromWallet: walletSummarySchema,
+  toWallet: walletSummarySchema,
+});
+
 export const list = createRoute({
   operationId: "listWallets",
   path: "/wallets",
@@ -62,6 +84,71 @@ export const create = createRoute({
     401: {
       content: { "application/json": { schema: errorSchema } },
       description: "Unauthorized",
+    },
+  },
+});
+
+export const transfer = createRoute({
+  operationId: "transferWallet",
+  path: "/wallets/transfer",
+  method: "post",
+  middleware: [authMiddleware],
+  tags,
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: z.object({
+            fromWalletId: z.string(),
+            toWalletId: z.string(),
+            fromAmount: z.string(),
+            toAmount: z.string(),
+            note: z.string().optional(),
+            date: z.string(),
+          }),
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      content: { "application/json": { schema: walletTransferSchema } },
+      description: "Created transfer",
+    },
+    400: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Bad request",
+    },
+    401: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Unauthorized",
+    },
+    404: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Wallet not found",
+    },
+  },
+});
+
+export const listTransfers = createRoute({
+  operationId: "listWalletTransfers",
+  path: "/wallets/{id}/transfers",
+  method: "get",
+  middleware: [authMiddleware],
+  tags,
+  request: { params: paramsSchema },
+  responses: {
+    200: {
+      content: { "application/json": { schema: z.array(walletTransferSchema) } },
+      description: "List of transfers for this wallet",
+    },
+    401: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Unauthorized",
+    },
+    404: {
+      content: { "application/json": { schema: errorSchema } },
+      description: "Wallet not found",
     },
   },
 });
@@ -157,6 +244,8 @@ export const remove = createRoute({
 
 export type ListRoute = typeof list;
 export type CreateRoute = typeof create;
+export type TransferRoute = typeof transfer;
+export type ListTransfersRoute = typeof listTransfers;
 export type UpdateRoute = typeof update;
 export type ReorderRoute = typeof reorder;
 export type RemoveRoute = typeof remove;

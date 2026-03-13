@@ -29,7 +29,7 @@ type UseCreateTransactionOptions = {
 
 export function useCreateTransaction({ mutationConfig }: UseCreateTransactionOptions = {}) {
   const queryClient = useQueryClient();
-  const { onSuccess, ...restConfig } = mutationConfig || {};
+  const { onSuccess, ...restConfig } = mutationConfig ?? {};
 
   return useMutation({
     onSuccess: (...args) => {

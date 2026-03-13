@@ -12,7 +12,7 @@ import {
 } from "@mint/ui/components/dropdown-menu";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
-import Image from "next/image";
+import { LogoIcon } from "@/features/recurring/components/logo-registry";
 import { formatAmountByCurrency } from "@/utils/format";
 
 type TransactionRowProps = {
@@ -29,13 +29,7 @@ export function TransactionRow({ tx, onEditAction, onDeleteAction }: Transaction
       <div className="relative size-10 rounded-2xl bg-muted flex items-center justify-center shrink-0">
         {hasRecurring && tx.recurring!.logo
           ? (
-              <Image
-                src={tx.recurring!.logo}
-                alt={tx.recurring!.name}
-                width={20}
-                height={20}
-                className="size-5 object-contain"
-              />
+              <LogoIcon name={tx.recurring!.logo} className="size-5" />
             )
           : <DynamicIcon name={tx.category.icon} className="size-5 text-muted-foreground" />}
 
@@ -63,9 +57,7 @@ export function TransactionRow({ tx, onEditAction, onDeleteAction }: Transaction
                 {tx.category.name}
                 {tx.note && (
                   <>
-                    {" "}
-                    <span className="inline-block mx-0.5">{" · "}</span>
-                    {" "}
+                    <span className="inline-block mx-1.5">·</span>
                     {tx.note}
                   </>
                 )}

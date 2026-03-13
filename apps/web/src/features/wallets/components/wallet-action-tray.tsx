@@ -70,9 +70,7 @@ function DeleteView({ wallet, onCloseAction }: { wallet: Wallet; onCloseAction: 
           <p className="text-lg font-semibold text-foreground">{wallet.name}</p>
           <p className="text-sm text-muted-foreground capitalize">
             {wallet.type}
-            {" "}
-            <span className="inline-block mx-0.5">{" · "}</span>
-            {" "}
+            <span className="inline-block mx-1.5">·</span>
             {wallet.currency}
           </p>
           <p className="text-2xl font-bold tabular-nums tracking-tight text-foreground mt-1">

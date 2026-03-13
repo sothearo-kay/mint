@@ -99,9 +99,7 @@ export function SavingsRateCard({
           <div className="flex flex-col gap-1.5">
             <p className="text-xs text-muted-foreground font-medium">
               Income
-              {" "}
-              <span className="inline-block mx-0.5">{" · "}</span>
-              {" "}
+              <span className="inline-block mx-1.5">·</span>
               {MONTHS[displayIndex]}
             </p>
             {incomeCategories.length === 0

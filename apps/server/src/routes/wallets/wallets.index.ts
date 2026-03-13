@@ -6,7 +6,9 @@ import * as routes from "./wallets.routes";
 const router = createRouter()
   .openapi(routes.list, handlers.list)
   .openapi(routes.create, handlers.create)
+  .openapi(routes.transfer, handlers.transfer)
   .openapi(routes.reorder, handlers.reorder)
+  .openapi(routes.listTransfers, handlers.listTransfers)
   .openapi(routes.update, handlers.update)
   .openapi(routes.remove, handlers.remove);
 
