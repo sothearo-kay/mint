@@ -63,9 +63,7 @@ export function TransactionRow({ tx, onEditAction, onDeleteAction }: Transaction
                 {tx.category.name}
                 {tx.note && (
                   <>
-                    {" "}
-                    <span className="inline-block mx-0.5">{" · "}</span>
-                    {" "}
+                    <span className="inline-block mx-1.5">·</span>
                     {tx.note}
                   </>
                 )}

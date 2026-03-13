@@ -53,12 +53,12 @@ export function RecurringDashboard() {
     <>
       <RecurringActionTray />
       {session && <Fab onClickAction={openCreate} />}
-      <div className="h-full relative flex flex-col gap-4 mb-10.5">
+      <div className="relative h-full flex flex-col gap-4 mb-10.5">
         {!isSessionPending && !session && (
           <div className="absolute inset-0 z-10 rounded-xl overflow-hidden">
-            <div className="absolute inset-0 bg-linear-to-b from-transparent from-10% via-background/80 via-30% to-background to-50%" />
-            <div className="absolute inset-0 mask-[linear-gradient(to_bottom,transparent_10%,black_40%)] backdrop-blur-sm" />
-            <div className="absolute left-0 right-0 flex flex-col items-center gap-2 text-center pb-16 max-sm:top-1/3 sm:bottom-1/2">
+            <div className="absolute inset-0 bg-linear-to-b from-transparent from-10% via-background via-45% to-background" />
+            <div className="absolute inset-0 mask-[linear-gradient(to_bottom,transparent_10%,black_60%)] backdrop-blur-sm" />
+            <div className="absolute left-0 right-0 flex flex-col items-center gap-2 text-center pb-16 max-sm:top-1/3 sm:top-40">
               <EmptyState
                 title="Sign in to view recurring"
                 description="Track subscriptions, bills, and salary automatically when signed in."

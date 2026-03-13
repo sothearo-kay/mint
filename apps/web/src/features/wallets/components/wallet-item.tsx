@@ -19,6 +19,7 @@ import {
 } from "@mint/ui/components/dropdown-menu";
 import { Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
+import Link from "next/link";
 import { formatAmountByCurrency } from "@/utils/format";
 import { WALLET_ICONS } from "../utils";
 
@@ -69,23 +70,23 @@ export function WalletItem({ wallet, color, onEditAction, onDeleteAction }: Wall
         <Icon icon={DragDropVerticalIcon} />
       </button>
 
-      <div
-        className="-ml-1 size-9 rounded-xl flex items-center justify-center shrink-0"
-        style={{ backgroundColor: `color-mix(in srgb, ${iconColor} 15%, transparent)` }}
-      >
-        <Icon icon={WalletIcon} className="size-4.5" style={{ color: iconColor }} />
-      </div>
+      <Link href={`/wallets/${wallet.id}`} className="flex items-center gap-3 flex-1 min-w-0">
+        <div
+          className="-ml-1 size-9 rounded-xl flex items-center justify-center shrink-0"
+          style={{ backgroundColor: `color-mix(in srgb, ${iconColor} 15%, transparent)` }}
+        >
+          <Icon icon={WalletIcon} className="size-4.5" style={{ color: iconColor }} />
+        </div>
 
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate leading-snug">{wallet.name}</p>
-        <p className="text-xs text-muted-foreground capitalize mt-0.5">
-          {wallet.type}
-          {" "}
-          <span className="inline-block mx-0.5">{" · "}</span>
-          {" "}
-          {wallet.currency}
-        </p>
-      </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-medium text-foreground truncate leading-snug">{wallet.name}</p>
+          <p className="text-xs text-muted-foreground capitalize mt-0.5">
+            {wallet.type}
+            <span className="inline-block mx-1.5">·</span>
+            {wallet.currency}
+          </p>
+        </div>
+      </Link>
 
       <div className="flex items-center gap-1.5 shrink-0">
         <div className="w-0 overflow-hidden group-hover:w-7 has-data-popup-open:w-7 [@media(hover:none)]:w-7 transition-all duration-200">

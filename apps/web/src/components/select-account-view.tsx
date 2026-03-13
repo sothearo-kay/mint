@@ -49,9 +49,7 @@ export function SelectAccountView({ wallets, onSelectAction }: SelectAccountView
                   <p className="text-sm font-medium text-foreground truncate">{wallet.name}</p>
                   <p className="text-xs text-muted-foreground capitalize mt-0.5">
                     {wallet.type}
-                    {" "}
-                    <span className="inline-block mx-0.5">{" · "}</span>
-                    {" "}
+                    <span className="inline-block mx-1.5">·</span>
                     {wallet.currency}
                   </p>
                 </div>

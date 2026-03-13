@@ -69,9 +69,7 @@ export function RecurringRow({ recurring, onEditAction, onDeleteAction }: Recurr
         </div>
         <p className="text-xs text-muted-foreground mt-0.5">
           {FREQUENCY_LABEL[recurring.frequency]}
-          {" "}
-          <span className="inline-block mx-0.5">{" · "}</span>
-          {" "}
+          <span className="inline-block mx-1.5">·</span>
           <span className={cn(isOverdue ? "text-destructive font-medium" : "")}>{nextDue}</span>
         </p>
       </div>
