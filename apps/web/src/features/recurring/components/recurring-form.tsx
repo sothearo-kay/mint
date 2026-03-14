@@ -29,11 +29,11 @@ import { useAnimate } from "motion/react";
 import { useEffect, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { AmountInput } from "@/components/amount-input";
-import { formatBalanceAmount } from "@/utils/format";
 import { ToggleGroup } from "@/components/toggle-group";
 import { useSession } from "@/features/auth/api";
 import { useCategories } from "@/features/transactions/api/get-categories";
 import { useWallets } from "@/features/wallets/api/get-wallets";
+import { formatBalanceAmount } from "@/utils/format";
 import { createRecurringSchema, useCreateRecurring } from "../api/create-recurring";
 import { useUpdateRecurring } from "../api/update-recurring";
 import { LogoPicker } from "./logo-picker";
@@ -104,10 +104,16 @@ export function RecurringForm({
   const walletId = watch("walletId");
   const amount = watch("amount");
   const startDate = watch("startDate");
+  const frequency = watch("frequency");
   const categories = allCategories.filter(c => c.type === type);
 
   const selectedWallet = session ? (wallets.find(w => w.id === walletId) ?? null) : null;
   const runsImmediately = new Date(startDate) <= new Date();
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const startOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const editDisabled = isEditing
+    ? { before: frequency === "weekly" ? today : startOfCurrentMonth }
+    : undefined;
   const isBalanceExceeded = type === "expense"
     && selectedWallet !== null
     && runsImmediately
@@ -199,17 +205,20 @@ export function RecurringForm({
           )}
 
           <div className="flex gap-2">
-            <Controller
-              control={control}
-              name="startDate"
-              render={({ field }) => (
-                <DatePicker
-                  value={field.value ? new Date(field.value) : undefined}
-                  onValueChange={d => field.onChange(d?.toISOString() ?? new Date().toISOString())}
-                  className="h-9"
-                />
-              )}
-            />
+            {!(isEditing && frequency === "daily") && (
+              <Controller
+                control={control}
+                name="startDate"
+                render={({ field }) => (
+                  <DatePicker
+                    value={field.value ? new Date(field.value) : undefined}
+                    onValueChange={d => field.onChange(d?.toISOString() ?? new Date().toISOString())}
+                    className="h-9"
+                    disabled={editDisabled}
+                  />
+                )}
+              />
+            )}
             <Controller
               control={control}
               name="categoryId"

@@ -25,6 +25,54 @@ function formatRecurring(
   };
 }
 
+function computeNextScheduledDate(
+  newStartDate: Date,
+  frequency: typeof recurringTransaction.$inferSelect["frequency"],
+  existingNext: Date,
+): Date {
+  const now = new Date();
+  now.setHours(0, 0, 0, 0);
+
+  // Future date beyond the current pending cycle — use as-is
+  if (newStartDate > existingNext) {
+    return newStartDate;
+  }
+
+  switch (frequency) {
+    case "monthly": {
+      const day = newStartDate.getDate();
+      // Anchor to existingNext's month — avoids double-charging if this month already fired
+      let candidate = new Date(existingNext.getFullYear(), existingNext.getMonth(), day);
+      if (candidate <= now)
+        candidate = new Date(existingNext.getFullYear(), existingNext.getMonth() + 1, day);
+      return candidate;
+    }
+    case "weekly": {
+      const targetDow = newStartDate.getDay();
+      const baseDow = existingNext.getDay();
+      let diff = (targetDow - baseDow + 7) % 7;
+      if (diff === 0)
+        diff = 7;
+      const candidate = new Date(existingNext);
+      candidate.setDate(existingNext.getDate() + diff);
+      if (candidate <= now)
+        candidate.setDate(candidate.getDate() + 7);
+      return candidate;
+    }
+    case "yearly": {
+      let candidate = new Date(existingNext.getFullYear(), newStartDate.getMonth(), newStartDate.getDate());
+      if (candidate <= now)
+        candidate = new Date(existingNext.getFullYear() + 1, newStartDate.getMonth(), newStartDate.getDate());
+      return candidate;
+    }
+    case "daily": {
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return tomorrow;
+    }
+  }
+}
+
 function advanceDate(date: Date, frequency: typeof recurringTransaction.$inferSelect["frequency"]): Date {
   const next = new Date(date);
   switch (frequency) {
@@ -154,9 +202,13 @@ export const update: AppRouteHandler<UpdateRoute> = async (c) => {
     return c.json({ message: "Forbidden" }, 403);
 
   const { startDate, endDate, ...rest } = body;
+  const newStartDate = startDate ? new Date(startDate) : undefined;
   const updateData: Partial<typeof recurringTransaction.$inferInsert> = {
     ...rest,
-    ...(startDate && { startDate: new Date(startDate) }),
+    ...(newStartDate && {
+      startDate: newStartDate,
+      nextScheduledDate: computeNextScheduledDate(newStartDate, body.frequency ?? existing.frequency, existing.nextScheduledDate),
+    }),
     ...(endDate && { endDate: new Date(endDate) }),
   };
 
