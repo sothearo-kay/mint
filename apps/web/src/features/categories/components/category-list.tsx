@@ -73,7 +73,7 @@ export function CategoryList() {
       {isPending
         ? <CategorySkeleton />
         : (
-            <div className="flex flex-col sm:flex-row gap-5 sm:gap-0">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-0">
               {[
                 { label: "Expense", items: expense },
                 { label: "Income", items: income },
@@ -82,7 +82,7 @@ export function CategoryList() {
                   key={group.label}
                   className={cn(
                     "flex-1 sm:px-6 first:sm:pl-0 last:sm:pr-0",
-                    i === 0 && "sm:border-r-2 sm:border-dashed sm:border-border/60 pb-6 border-b-2 border-dashed border-border/60 sm:pb-0 sm:border-b-0",
+                    i === 0 && "border-dashed max-sm:pb-6 max-sm:border-b sm:border-r",
                   )}
                 >
                   <p className="text-xs font-semibold text-muted-foreground mb-3">{group.label}</p>
