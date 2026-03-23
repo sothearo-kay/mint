@@ -40,6 +40,17 @@ const transactionBodySchema = z.object({
   walletId: z.string().nullable().optional(),
 });
 
+const currencyTotalsSchema = z.object({ USD: z.string(), KHR: z.string() });
+
+const paginatedTransactionsSchema = z.object({
+  data: z.array(transactionSchema),
+  nextCursor: z.string().nullable(),
+  totals: z.object({
+    income: currencyTotalsSchema,
+    expense: currencyTotalsSchema,
+  }),
+});
+
 export const list = createRoute({
   operationId: "listTransactions",
   path: "/transactions",
@@ -53,12 +64,14 @@ export const list = createRoute({
       from: z.iso.datetime().optional(),
       to: z.iso.datetime().optional(),
       walletId: z.string().optional(),
+      cursor: z.string().optional(),
+      limit: z.coerce.number().int().min(1).max(100).default(20).optional(),
     }),
   },
   responses: {
     200: {
-      content: { "application/json": { schema: z.array(transactionSchema) } },
-      description: "List of transactions",
+      content: { "application/json": { schema: paginatedTransactionsSchema } },
+      description: "Paginated list of transactions with period totals",
     },
     401: {
       content: { "application/json": { schema: errorSchema } },

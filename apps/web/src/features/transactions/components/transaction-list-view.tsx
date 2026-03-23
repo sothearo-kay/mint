@@ -1,12 +1,12 @@
 "use client";
 
 import type { Transaction } from "../api/get-transactions";
-import { ArrowRight01Icon, MoneyNotFoundIcon } from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, Loading03Icon, MoneyNotFoundIcon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
 import { format } from "date-fns";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { EmptyState } from "@/components/empty-state";
 import { ErrorState } from "@/components/error-state";
 import { groupByDate } from "@/utils/group-by-date";
@@ -17,12 +17,39 @@ type TransactionListProps = {
   isPending: boolean;
   transactions: Transaction[];
   from: string;
+  hasNextPage?: boolean;
+  isFetchingNextPage?: boolean;
+  onLoadMoreAction?: () => void;
   onEditAction: (tx: Transaction) => void;
   onDeleteAction: (tx: Transaction) => void;
 };
 
-export function TransactionList({ isError, isPending, transactions, from, onEditAction, onDeleteAction }: TransactionListProps) {
+export function TransactionList({
+  isError,
+  isPending,
+  transactions,
+  from,
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMoreAction,
+  onEditAction,
+  onDeleteAction,
+}: TransactionListProps) {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el || !hasNextPage || isFetchingNextPage)
+      return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting)
+        onLoadMoreAction?.();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, onLoadMoreAction]);
+
   const groups = groupByDate(transactions, tx => new Date(tx.date));
 
   function toggleGroup(label: string) {
@@ -89,6 +116,13 @@ export function TransactionList({ isError, isPending, transactions, from, onEdit
           </div>
         );
       })}
+      <div ref={sentinelRef} />
+      {isFetchingNextPage && (
+        <div className="flex items-center justify-center gap-2 py-2 text-xs text-muted-foreground">
+          <Icon icon={Loading03Icon} className="size-3.5 animate-spin" />
+          Loading more transactions...
+        </div>
+      )}
     </div>
   );
 }

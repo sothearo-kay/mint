@@ -1,6 +1,7 @@
 "use client";
 
 import type { Transaction } from "../api/get-transactions";
+import type { CurrencyBalance } from "./transaction-balance";
 import type { FilterValue } from "./transaction-filters";
 import { useState } from "react";
 import { Fab } from "@/components/fab";
@@ -10,7 +11,7 @@ import { useWallets } from "@/features/wallets/api/get-wallets";
 import { useFilteredGuestTransactions } from "@/store/guest-transactions";
 import { useTransactionTray } from "@/store/transaction-tray";
 import { sumByCurrency } from "@/utils/transactions";
-import { useTransactions } from "../api/get-transactions";
+import { useInfiniteTransactions } from "../api/get-transactions";
 import { TransactionActionTray } from "./transaction-action-tray";
 import { TransactionBalance } from "./transaction-balance";
 import { DEFAULT_FILTERS, TransactionFilters } from "./transaction-filters";
@@ -28,14 +29,32 @@ export function Transactions() {
 
   useRecurring({ queryConfig: { enabled: !!session } }); // triggers processOverdue as side effect
 
-  const { data: apiTransactions = [], isPending: isPendingApi, isPlaceholderData, isError } = useTransactions({
+  const {
+    data: pages,
+    isPending: isPendingApi,
+    isPlaceholderData,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useInfiniteTransactions({
     params: { from: filters.from, to: filters.to, walletId: filters.walletId },
-    queryConfig: { enabled: !!session },
+    enabled: !!session,
   });
 
+  const apiTransactions = pages?.pages.flatMap(p => p.data) ?? [];
   const transactions = session ? apiTransactions : guestTransactions;
   const isPending = isSessionPending || (session ? isPendingApi : !hasHydrated);
-  const currencies = sumByCurrency(transactions);
+
+  const totals = pages?.pages[0]?.totals;
+  const currencies: CurrencyBalance[] = session && totals
+    ? (["USD", "KHR"] as const).map(currency => ({
+        currency,
+        income: Number.parseFloat(totals.income[currency]),
+        expense: Number.parseFloat(totals.expense[currency]),
+        balance: Number.parseFloat(totals.income[currency]) - Number.parseFloat(totals.expense[currency]),
+      }))
+    : sumByCurrency(guestTransactions);
 
   function openEdit(tx: Transaction) {
     setSelectedTx(tx);
@@ -74,6 +93,9 @@ export function Transactions() {
           isPending={isPending}
           transactions={transactions}
           from={filters.from}
+          hasNextPage={!!session && hasNextPage}
+          isFetchingNextPage={isFetchingNextPage}
+          onLoadMoreAction={fetchNextPage}
           onEditAction={openEdit}
           onDeleteAction={openDelete}
         />
