@@ -64,10 +64,8 @@ function Tray({ open, onClose, children, className, containerStyle }: TrayProps)
     if (!el)
       return;
 
-    if (!open) {
-      el.style.bottom = "16px";
+    if (!open)
       return;
-    }
 
     const viewport = window.visualViewport;
     if (!viewport)
@@ -78,6 +76,7 @@ function Tray({ open, onClose, children, className, containerStyle }: TrayProps)
       el.style.bottom = `${keyboardHeight + 16}px`;
     };
 
+    handleResize();
     viewport.addEventListener("resize", handleResize);
     viewport.addEventListener("scroll", handleResize);
 

@@ -25,6 +25,8 @@ type CategoryBreakdownProps = {
 };
 
 export function CategoryBreakdown({ isPending, categories, totalExpense, totalIncome, from }: CategoryBreakdownProps) {
+  const { currency } = useCurrencyStore();
+
   if (isPending)
     return <CategorySkeleton />;
 
@@ -47,8 +49,6 @@ export function CategoryBreakdown({ isPending, categories, totalExpense, totalIn
       />
     );
   }
-
-  const { currency } = useCurrencyStore();
 
   return (
     <div>
