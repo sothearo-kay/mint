@@ -101,9 +101,15 @@ export function TransactionForm({
   const walletId = watch("walletId");
   const amount = watch("amount");
   const selectedWallet = session ? (wallets.find(w => w.id === walletId) ?? null) : null;
+  const originalAmountOnSameWallet = isEditing && transaction.type === "expense" && walletId === transaction.walletId
+    ? Number.parseFloat(transaction.amount)
+    : 0;
+  const effectiveBalance = selectedWallet
+    ? Number.parseFloat(selectedWallet.balance) + originalAmountOnSameWallet
+    : 0;
   const isBalanceExceeded = type === "expense"
     && selectedWallet !== null
-    && Number.parseFloat(amount || "0") > Number.parseFloat(selectedWallet.balance);
+    && Number.parseFloat(amount || "0") > effectiveBalance;
 
   const [amountScope, animateAmount] = useAnimate();
   const prevBalanceExceeded = useRef(false);
@@ -287,7 +293,7 @@ export function TransactionForm({
             {isBalanceExceeded && (
               <p className="text-xs text-destructive mt-1">
                 Exceeds balance (
-                {formatBalanceAmount(Number.parseFloat(selectedWallet!.balance), currency)}
+                {formatBalanceAmount(effectiveBalance, currency)}
                 )
               </p>
             )}
