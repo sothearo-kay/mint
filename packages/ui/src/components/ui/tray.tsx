@@ -57,6 +57,35 @@ type TrayProps = {
 
 function Tray({ open, onClose, children, className, containerStyle }: TrayProps) {
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const dragContainerRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    const el = dragContainerRef.current;
+    if (!el)
+      return;
+
+    if (!open) {
+      el.style.bottom = "16px";
+      return;
+    }
+
+    const viewport = window.visualViewport;
+    if (!viewport)
+      return;
+
+    const handleResize = () => {
+      const keyboardHeight = Math.max(0, window.innerHeight - viewport.height);
+      el.style.bottom = `${keyboardHeight + 16}px`;
+    };
+
+    viewport.addEventListener("resize", handleResize);
+    viewport.addEventListener("scroll", handleResize);
+
+    return () => {
+      viewport.removeEventListener("resize", handleResize);
+      viewport.removeEventListener("scroll", handleResize);
+    };
+  }, [open]);
 
   const onResize = useCallback(
     (target: HTMLDivElement) => {
@@ -83,13 +112,14 @@ function Tray({ open, onClose, children, className, containerStyle }: TrayProps)
             onClick={onClose}
           />
           <motion.div
+            ref={dragContainerRef}
             drag="y"
             dragConstraints={{ top: 0, bottom: 100 }}
             dragSnapToOrigin
             dragElastic={0.1}
             onDragEnd={(_, info) => info.offset.y > 100 && onClose()}
-            className="absolute inset-x-0 bottom-4 z-100"
-            style={containerStyle}
+            className="absolute inset-x-0 z-100"
+            style={{ ...containerStyle, bottom: "16px" }}
           >
             <motion.div
               ref={wrapperRef}

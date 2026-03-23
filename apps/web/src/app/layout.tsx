@@ -43,10 +43,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} ${GeistPixelCircle.variable}`}
     >
       <body>
-        <AppProvider>
-          {children}
-        </AppProvider>
-        <Analytics />
+        <div className="root">
+          <AppProvider>
+            {children}
+          </AppProvider>
+          <Analytics />
+        </div>
       </body>
     </html>
   );
