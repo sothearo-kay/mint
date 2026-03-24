@@ -1,7 +1,6 @@
 "use client";
 
 import type { Wallet } from "@/features/wallets/api/get-wallets";
-import { Wallet01Icon } from "@hugeicons/core-free-icons";
 import { Icon } from "@mint/ui/components/icon";
 import { TrayBody, TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
 import { CHART_COLORS } from "@mint/ui/components/ui/pie-chart";
@@ -17,12 +16,7 @@ export function SelectAccountView({ wallets, onSelectAction }: SelectAccountView
   return (
     <>
       <TrayHeader>
-        <div className="flex items-center gap-3">
-          <div className="size-10 rounded-xl flex items-center justify-center shrink-0 bg-muted">
-            <Icon icon={Wallet01Icon} className="size-5 text-muted-foreground" />
-          </div>
-          <TrayTitle className="font-semibold">Select account</TrayTitle>
-        </div>
+        <TrayTitle className="font-semibold">Select account</TrayTitle>
       </TrayHeader>
 
       <TrayBody>

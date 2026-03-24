@@ -3,7 +3,7 @@
 import type { CreateWalletInput } from "../api/create-wallet";
 import type { Wallet } from "../api/get-wallets";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FloppyDiskIcon, Loading03Icon, Wallet01Icon } from "@hugeicons/core-free-icons";
+import { Loading03Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
 import { Input } from "@mint/ui/components/input";
@@ -31,7 +31,7 @@ type WalletFormProps = {
   onSuccessAction?: () => void;
 };
 
-export function WalletForm({ wallet, onCancelAction, onSuccessAction }: WalletFormProps) {
+export function WalletForm({ wallet, onSuccessAction }: WalletFormProps) {
   const isEditing = !!wallet;
 
   const { control, handleSubmit, formState: { isValid } } = useForm({
@@ -82,12 +82,7 @@ export function WalletForm({ wallet, onCancelAction, onSuccessAction }: WalletFo
   return (
     <>
       <TrayHeader>
-        <div className="flex items-center gap-3">
-          <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-            <Icon icon={Wallet01Icon} className="size-5 text-primary" />
-          </div>
-          <TrayTitle className="font-semibold">{title}</TrayTitle>
-        </div>
+        <TrayTitle className="font-semibold">{title}</TrayTitle>
       </TrayHeader>
 
       <TrayBody>
@@ -135,17 +130,15 @@ export function WalletForm({ wallet, onCancelAction, onSuccessAction }: WalletFo
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCancelAction}>
-          Cancel
-        </Button>
         <Button
           type="submit"
           form="wallet-form"
-          className="sm:flex-1"
+          size="lg"
+          className="w-full"
           disabled={!isValid || isPending}
         >
-          <Icon icon={isPending ? Loading03Icon : FloppyDiskIcon} className={isPending ? "animate-spin" : undefined} />
-          {isEditing ? "Save" : "Create"}
+          {isPending && <Icon icon={Loading03Icon} className="animate-spin" />}
+          {isEditing ? "Save changes" : "Create wallet"}
         </Button>
       </TrayFooter>
     </>

@@ -88,10 +88,7 @@ function SelectAccountSkeleton() {
   return (
     <>
       <TrayHeader>
-        <div className="flex items-center gap-3">
-          <Skeleton className="size-10 rounded-xl shrink-0" />
-          <Skeleton className="h-4 w-28 rounded-full" />
-        </div>
+        <Skeleton className="h-4 w-28 rounded-full" />
       </TrayHeader>
 
       <TrayBody>

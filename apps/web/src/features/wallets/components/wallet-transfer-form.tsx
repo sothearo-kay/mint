@@ -3,7 +3,7 @@
 import type { Wallet } from "../api/get-wallets";
 import type { TransferWalletInput } from "../api/transfer-wallet";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight01Icon, Loading03Icon, MoneyExchange01Icon } from "@hugeicons/core-free-icons";
+import { ArrowRight01Icon, Loading03Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
 import {
@@ -32,7 +32,7 @@ type WalletTransferFormProps = {
   onSuccessAction?: () => void;
 };
 
-export function WalletTransferForm({ wallet, wallets, onCancelAction, onSuccessAction }: WalletTransferFormProps) {
+export function WalletTransferForm({ wallet, wallets, onSuccessAction }: WalletTransferFormProps) {
   const otherWallets = wallets.filter(w => w.id !== wallet.id);
 
   const { control, handleSubmit, watch, setValue, formState: { isValid } } = useForm<TransferWalletInput>({
@@ -92,12 +92,7 @@ export function WalletTransferForm({ wallet, wallets, onCancelAction, onSuccessA
   return (
     <>
       <TrayHeader>
-        <div className="flex items-center gap-3">
-          <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
-            <Icon icon={MoneyExchange01Icon} className="size-5 text-primary" />
-          </div>
-          <TrayTitle className="font-semibold">Transfer</TrayTitle>
-        </div>
+        <TrayTitle className="font-semibold">Transfer</TrayTitle>
       </TrayHeader>
 
       <TrayBody>
@@ -179,17 +174,15 @@ export function WalletTransferForm({ wallet, wallets, onCancelAction, onSuccessA
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCancelAction}>
-          Cancel
-        </Button>
         <Button
           type="submit"
           form="transfer-form"
-          className="sm:flex-1"
+          size="lg"
+          className="w-full"
           disabled={!isValid || isPending}
         >
-          <Icon icon={isPending ? Loading03Icon : MoneyExchange01Icon} className={isPending ? "animate-spin" : undefined} />
-          Transfer
+          {isPending && <Icon icon={Loading03Icon} className="animate-spin" />}
+          Transfer funds
         </Button>
       </TrayFooter>
     </>

@@ -4,12 +4,7 @@ import type { CreateTransactionInput } from "../api/create-transaction";
 import type { Transaction, TransactionType } from "../api/get-transactions";
 import type { Currency } from "@/utils/constants";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Loading03Icon,
-  MoneyReceiveFlow01Icon,
-  MoneySendFlow01Icon,
-  Wallet01Icon,
-} from "@hugeicons/core-free-icons";
+import { Loading03Icon, Wallet01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { DatePicker } from "@mint/ui/components/date-picker";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
@@ -23,7 +18,6 @@ import {
 import { toast } from "@mint/ui/components/sonner";
 import { Textarea } from "@mint/ui/components/textarea";
 import { TrayBody, TrayFooter, TrayHeader, TrayTitle } from "@mint/ui/components/tray";
-import { cn } from "@mint/ui/lib/utils";
 import { useAnimate } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -38,19 +32,6 @@ import { formatBalanceAmount } from "@/utils/format";
 import { createTransactionSchema, useCreateTransaction } from "../api/create-transaction";
 import { useCategories } from "../api/get-categories";
 import { useUpdateTransaction } from "../api/update-transaction";
-
-const TYPE_CONFIG = {
-  expense: {
-    icon: MoneySendFlow01Icon,
-    iconClass: "text-destructive",
-    iconBgClass: "bg-destructive/10",
-  },
-  income: {
-    icon: MoneyReceiveFlow01Icon,
-    iconClass: "text-primary",
-    iconBgClass: "bg-primary/10",
-  },
-} as const;
 
 export type TransactionFormProps = {
   type?: TransactionType;
@@ -152,7 +133,6 @@ export function TransactionForm({
   });
 
   const isPending = isCreating || isUpdating;
-  const config = TYPE_CONFIG[type];
   const title = isEditing ? `Edit ${type}` : "New transaction";
   const selectedCategory = categories.find(c => c.id === categoryId);
 
@@ -197,13 +177,8 @@ export function TransactionForm({
 
   return (
     <>
-      <TrayHeader>
-        <div className="flex items-center gap-3">
-          <div className={cn("size-10 rounded-xl flex items-center justify-center shrink-0", config.iconBgClass)}>
-            <Icon icon={config.icon} className={cn("size-5", config.iconClass)} />
-          </div>
-          <TrayTitle className="font-semibold capitalize">{title}</TrayTitle>
-        </div>
+      <TrayHeader onBack={onBackAction}>
+        <TrayTitle className="font-semibold capitalize">{title}</TrayTitle>
       </TrayHeader>
 
       <TrayBody>
@@ -384,22 +359,15 @@ export function TransactionForm({
 
       <TrayFooter>
         <Button
-          type="button"
-          variant="secondary"
-          className="sm:flex-1"
-          onClick={onBackAction ?? onCancelAction}
-        >
-          {onBackAction ? "Back" : "Cancel"}
-        </Button>
-        <Button
           type="submit"
           form="transaction-form"
           variant="default"
-          className="sm:flex-1"
+          size="lg"
+          className="w-full"
           disabled={!isValid || isPending || isBalanceExceeded}
         >
-          <Icon icon={isPending ? Loading03Icon : config.icon} className={isPending ? "animate-spin" : undefined} />
-          <span className="capitalize">{isEditing ? `Save ${type}` : "Add"}</span>
+          {isPending && <Icon icon={Loading03Icon} className="animate-spin" />}
+          <span>{isEditing ? "Save changes" : "Add transaction"}</span>
         </Button>
       </TrayFooter>
     </>

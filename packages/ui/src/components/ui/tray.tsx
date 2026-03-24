@@ -1,6 +1,6 @@
 "use client";
 
-import { Cancel01Icon } from "@hugeicons/core-free-icons";
+import { ArrowLeft01Icon, Cancel01Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/ui/button";
 import { Icon } from "@mint/ui/components/ui/icon";
 import { cn } from "@mint/ui/lib/utils";
@@ -131,11 +131,11 @@ function Tray({ open, onClose, children, className, containerStyle }: TrayProps)
             >
               <Button
                 variant="ghost"
-                size="icon-sm"
-                className="absolute top-3 right-3 z-10"
+                size="icon"
+                className="absolute top-3 right-4 z-10"
                 onClick={onClose}
               >
-                <Icon icon={Cancel01Icon} />
+                <Icon icon={Cancel01Icon} className="size-4.5" />
                 <span className="sr-only">Close</span>
               </Button>
               <motion.div ref={contentRef}>
@@ -184,14 +184,32 @@ function TrayBody({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function TrayHeader({ className, children, ...props }: React.ComponentProps<"div">) {
+function TrayHeader({ className, children, onBack, ...props }: React.ComponentProps<"div"> & { onBack?: () => void }) {
+  if (onBack) {
+    return (
+      <div
+        data-slot="tray-header"
+        className={cn("relative flex items-center justify-center shrink-0 px-14 py-5 mb-1", className)}
+        {...props}
+      >
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onBack}
+          className="absolute top-3 left-4"
+        >
+          <Icon icon={ArrowLeft01Icon} className="size-4.5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <div
       data-slot="tray-header"
-      className={cn(
-        "flex flex-col gap-2 shrink-0 p-5",
-        className,
-      )}
+      className={cn("flex flex-col gap-2 shrink-0 p-5 pr-14 mb-1", className)}
       {...props}
     >
       {children}

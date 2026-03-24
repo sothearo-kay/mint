@@ -1,7 +1,7 @@
 "use client";
 
 import type { Transaction } from "../api/get-transactions";
-import { Delete01Icon, Loading03Icon } from "@hugeicons/core-free-icons";
+import { Loading03Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
 import { useSidebar } from "@mint/ui/components/sidebar";
@@ -113,18 +113,16 @@ function DeleteView({ transaction, onCloseAction }: { transaction: Transaction; 
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCloseAction}>
-          Cancel
-        </Button>
         <Button
           type="button"
           variant="destructive"
-          className="sm:flex-1"
+          size="lg"
+          className="w-full"
           disabled={isPending}
           onClick={handleDelete}
         >
-          <Icon icon={isPending ? Loading03Icon : Delete01Icon} className={isPending ? "animate-spin" : undefined} />
-          Delete
+          {isPending && <Icon icon={Loading03Icon} className="animate-spin" />}
+          Delete transaction
         </Button>
       </TrayFooter>
     </>

@@ -2,7 +2,7 @@
 
 import type { CreateCategoryInput } from "../api/create-category";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loading03Icon, Tag01Icon } from "@hugeicons/core-free-icons";
+import { Loading03Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { Icon } from "@mint/ui/components/icon";
 import { IconPicker } from "@mint/ui/components/icon-picker";
@@ -18,7 +18,7 @@ type CategoryFormProps = {
   onSuccessAction?: () => void;
 };
 
-export function CategoryForm({ onCancelAction, onSuccessAction }: CategoryFormProps) {
+export function CategoryForm({ onSuccessAction }: CategoryFormProps) {
   const { control, handleSubmit, formState: { isValid } } = useForm<CreateCategoryInput>({
     resolver: zodResolver(createCategorySchema),
     defaultValues: { name: "", icon: "", type: "expense" },
@@ -39,12 +39,7 @@ export function CategoryForm({ onCancelAction, onSuccessAction }: CategoryFormPr
   return (
     <>
       <TrayHeader>
-        <div className="flex items-center gap-3">
-          <div className="size-10 rounded-xl flex items-center justify-center shrink-0 bg-muted">
-            <Icon icon={Tag01Icon} className="size-5 text-muted-foreground" />
-          </div>
-          <TrayTitle className="font-semibold">New category</TrayTitle>
-        </div>
+        <TrayTitle className="font-semibold">New category</TrayTitle>
       </TrayHeader>
 
       <TrayBody>
@@ -95,18 +90,16 @@ export function CategoryForm({ onCancelAction, onSuccessAction }: CategoryFormPr
       </TrayBody>
 
       <TrayFooter>
-        <Button type="button" variant="secondary" className="sm:flex-1" onClick={onCancelAction}>
-          Cancel
-        </Button>
         <Button
           type="submit"
           form="category-form"
           variant="default"
-          className="sm:flex-1"
+          size="lg"
+          className="w-full"
           disabled={!isValid || isPending}
         >
-          <Icon icon={isPending ? Loading03Icon : Tag01Icon} className={isPending ? "animate-spin" : undefined} />
-          Create
+          {isPending && <Icon icon={Loading03Icon} className="animate-spin" />}
+          Create category
         </Button>
       </TrayFooter>
     </>
