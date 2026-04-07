@@ -1,7 +1,7 @@
 "use client";
 
-import type * as React from "react";
 import type { ChartConfig } from "@mint/ui/components/ui/chart";
+import type * as React from "react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@mint/ui/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
 

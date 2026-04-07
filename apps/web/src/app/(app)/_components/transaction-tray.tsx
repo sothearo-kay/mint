@@ -19,7 +19,7 @@ export function TransactionTray() {
   const [view, setView] = useState<View>("loading");
   const [selectedWalletId, setSelectedWalletId] = useState<string | null>(null);
 
-  const { data: session, isPending: isSessionPending } = useSession();
+  const { data: session } = useSession();
   const { data: Rawwallets = [], isPending: isWalletsPending } = useWallets({ queryConfig: { enabled: !!session } });
 
   const walletsLoading = !!session && isWalletsPending;
@@ -28,7 +28,7 @@ export function TransactionTray() {
   useEffect(() => {
     if (!isOpen)
       return;
-    if (isSessionPending || walletsLoading) {
+    if (walletsLoading) {
       setView("loading");
       return;
     }
@@ -40,7 +40,7 @@ export function TransactionTray() {
     if (view !== "loading")
       return;
     setView(wallets.length === 0 ? "form" : "select-account");
-  }, [isOpen, session, isSessionPending, walletsLoading, wallets.length, view]);
+  }, [isOpen, session, walletsLoading, wallets.length, view]);
 
   const close = useCallback(() => {
     storeClose();

@@ -4,7 +4,7 @@ import type { AppRouteHandler } from "@/lib/types";
 import { randomUUID } from "node:crypto";
 import { db } from "@mint/db";
 import { transaction, wallet, walletTransfer } from "@mint/db/schema";
-import { and, asc, desc, eq, getTableColumns, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, getTableColumns, gte, lte, or, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 const fromWallet = alias(wallet, "from_wallet");
@@ -140,6 +140,7 @@ export const transfer: AppRouteHandler<TransferRoute> = async (c) => {
 export const listTransfers: AppRouteHandler<ListTransfersRoute> = async (c) => {
   const user = c.var.user!;
   const { id } = c.req.valid("param");
+  const { from, to } = c.req.valid("query");
 
   const [w] = await db
     .select()
@@ -175,6 +176,8 @@ export const listTransfers: AppRouteHandler<ListTransfersRoute> = async (c) => {
           eq(walletTransfer.fromWalletId, id),
           eq(walletTransfer.toWalletId, id),
         ),
+        from ? gte(walletTransfer.date, new Date(from)) : undefined,
+        to ? lte(walletTransfer.date, new Date(to)) : undefined,
       ),
     )
     .orderBy(desc(walletTransfer.date));

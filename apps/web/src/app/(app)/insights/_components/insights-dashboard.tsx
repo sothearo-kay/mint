@@ -27,13 +27,13 @@ import { TopCategoriesCard } from "./top-categories-card";
 export function InsightsDashboard() {
   const [year, setYear] = useState(CURRENT_YEAR);
   const { currency, setCurrency } = useCurrencyStore();
-  const { data: session, isPending: isSessionPending } = useSession();
+  const { data: session } = useSession();
 
   const { data, isPending: isInsightsPending, isPlaceholderData, isError } = useInsights({
     params: { year, currency },
     queryConfig: { enabled: !!session },
   });
-  const isPending = isSessionPending || (!!session && isInsightsPending);
+  const isPending = !!session && isInsightsPending;
 
   const { data: breakdownData } = useBreakdown({
     params: { year, currency },
@@ -55,7 +55,7 @@ export function InsightsDashboard() {
     params: { from, to, currency },
     queryConfig: { enabled: !!session },
   });
-  const isSummaryPending = isSessionPending || (!!session && isSummaryPendingRaw);
+  const isSummaryPending = !!session && isSummaryPendingRaw;
   const summaryData = session ? summaryDataRaw : undefined;
 
   const totalIncome = monthly.reduce((sum, m) => sum + m.income, 0);
@@ -70,7 +70,7 @@ export function InsightsDashboard() {
 
   return (
     <div className="relative flex flex-col gap-4">
-      {!isSessionPending && !session && (
+      {!session && (
         <div className="absolute inset-0 z-10 rounded-xl overflow-hidden">
           <div className="absolute inset-0 bg-linear-to-b from-transparent via-background/70 to-background" />
           <div className="absolute inset-0 mask-[linear-gradient(to_bottom,transparent_20%,black_60%)] backdrop-blur-sm" />

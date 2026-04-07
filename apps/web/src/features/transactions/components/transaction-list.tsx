@@ -23,7 +23,7 @@ export function Transactions() {
   const [selectedTx, setSelectedTx] = useState<Transaction | null>(null);
   const [actionMode, setActionMode] = useState<"edit" | "delete" | null>(null);
 
-  const { data: session, isPending: isSessionPending } = useSession();
+  const { data: session } = useSession();
   const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
   const { transactions: guestTransactions, hasHydrated } = useFilteredGuestTransactions(filters.from, filters.to);
 
@@ -44,7 +44,7 @@ export function Transactions() {
 
   const apiTransactions = pages?.pages.flatMap(p => p.data) ?? [];
   const transactions = session ? apiTransactions : guestTransactions;
-  const isPending = isSessionPending || (session ? isPendingApi : !hasHydrated);
+  const isPending = session ? isPendingApi : !hasHydrated;
 
   const totals = pages?.pages[0]?.totals;
   const currencies: CurrencyBalance[] = session && totals

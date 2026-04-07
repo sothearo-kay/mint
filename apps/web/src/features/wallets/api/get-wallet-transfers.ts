@@ -25,28 +25,37 @@ export type WalletTransfer = {
   toWallet: WalletSummary;
 };
 
-export async function getWalletTransfers(walletId: string): Promise<WalletTransfer[]> {
-  const res = await client.api.wallets[":id"].transfers.$get({ param: { id: walletId } });
+type GetWalletTransfersParams = {
+  walletId: string;
+  from?: string;
+  to?: string;
+};
+
+export async function getWalletTransfers({ walletId, from, to }: GetWalletTransfersParams): Promise<WalletTransfer[]> {
+  const res = await client.api.wallets[":id"].transfers.$get({
+    param: { id: walletId },
+    query: { from, to },
+  });
   if (!res.ok)
     throw new Error("Failed to fetch wallet transfers");
   return res.json();
 }
 
-export function getWalletTransfersQueryOptions(walletId?: string) {
+export function getWalletTransfersQueryOptions(params?: GetWalletTransfersParams) {
   return queryOptions({
-    queryKey: ["wallet-transfers", ...(walletId ? [walletId] : [])],
-    queryFn: walletId ? () => getWalletTransfers(walletId) : undefined,
+    queryKey: ["wallet-transfers", ...(params ? [params] : [])],
+    queryFn: params ? () => getWalletTransfers(params) : undefined,
   });
 }
 
 type UseWalletTransfersOptions = {
-  walletId: string;
+  params: GetWalletTransfersParams;
   queryConfig?: QueryConfig<typeof getWalletTransfersQueryOptions>;
 };
 
-export function useWalletTransfers({ walletId, queryConfig }: UseWalletTransfersOptions) {
+export function useWalletTransfers({ params, queryConfig }: UseWalletTransfersOptions) {
   return useQuery({
-    ...getWalletTransfersQueryOptions(walletId),
+    ...getWalletTransfersQueryOptions(params),
     placeholderData: keepPreviousData,
     ...queryConfig,
   });

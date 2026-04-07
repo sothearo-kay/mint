@@ -17,10 +17,10 @@
     "check-types": "tsc --noEmit"
   },
   "dependencies": {
-    "@mint/db": "workspace:*",
-    "@mint/env": "workspace:*",
     "@hono/node-server": "catalog:server",
     "@hono/zod-openapi": "catalog:server",
+    "@mint/db": "workspace:*",
+    "@mint/env": "workspace:*",
     "@scalar/hono-api-reference": "catalog:server",
     "better-auth": "catalog:db",
     "drizzle-orm": "catalog:db",
@@ -28,9 +28,9 @@
     "zod": "catalog:server"
   },
   "devDependencies": {
-    "@types/node": "catalog:dev",
     "@mint/eslint-config": "workspace:*",
     "@mint/typescript-config": "workspace:*",
+    "@types/node": "catalog:dev",
     "eslint": "catalog:dev",
     "tsdown": "catalog:dev",
     "tsx": "catalog:dev",

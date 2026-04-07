@@ -33,14 +33,14 @@ const FREQUENCY_OPTIONS: { value: RecurringTransaction["frequency"]; label: stri
 
 export function RecurringDashboard() {
   const { openCreate } = useRecurringTray();
-  const { data: session, isPending: isSessionPending } = useSession();
+  const { data: session } = useSession();
   const { currency, setCurrency } = useCurrencyStore();
   const [frequency, setFrequency] = useState<Frequency>("");
 
   const { data: allRecurringRaw = [], isPending: isQueryPending } = useRecurring({
     queryConfig: { enabled: !!session },
   });
-  const isPending = isSessionPending || (!!session && isQueryPending);
+  const isPending = !!session && isQueryPending;
   const allRecurring = session ? allRecurringRaw : [];
 
   const filtered = allRecurring.filter((r) => {
@@ -54,7 +54,7 @@ export function RecurringDashboard() {
       <RecurringActionTray />
       {session && <Fab onClickAction={openCreate} />}
       <div className="relative h-full flex flex-col gap-4 mb-10.5">
-        {!isSessionPending && !session && (
+        {!session && (
           <div className="absolute inset-0 z-10 rounded-xl overflow-hidden">
             <div className="absolute inset-0 bg-linear-to-b from-transparent from-10% via-background via-45% to-background" />
             <div className="absolute inset-0 mask-[linear-gradient(to_bottom,transparent_10%,black_60%)] backdrop-blur-sm" />

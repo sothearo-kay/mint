@@ -1,24 +1,10 @@
 "use client";
 
-import type { DragEndEvent } from "@dnd-kit/core";
 import type { Wallet } from "../api/get-wallets";
-import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { CHART_COLORS } from "@mint/ui/components/ui/pie-chart";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
-import { useEffect, useState } from "react";
+import { Reorder } from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useReorderWallets } from "../api/reorder-wallets";
 import { WalletItem } from "./wallet-item";
 
@@ -31,64 +17,49 @@ type WalletListProps = {
 export function WalletList({ wallets, onEditAction, onDeleteAction }: WalletListProps) {
   const [items, setItems] = useState(wallets);
   const { mutate: reorder } = useReorderWallets();
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
+
+  // Stable color map — only updates after server sync, not during drag
+  const colorMap = useMemo(
+    () => new Map(wallets.map((w, i) => [w.id, CHART_COLORS[i % CHART_COLORS.length]])),
+    [wallets],
+  );
 
   useEffect(() => {
     setItems(wallets);
   }, [wallets]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over || active.id === over.id)
-      return;
-
-    const oldIndex = items.findIndex(w => w.id === active.id);
-    const newIndex = items.findIndex(w => w.id === over.id);
-    if (oldIndex === -1 || newIndex === -1)
-      return;
-
-    const reordered = arrayMove(items, oldIndex, newIndex);
-    setItems(reordered);
-    reorder(reordered.map((w, i) => ({ id: w.id, position: i })));
+  function handleDragEnd() {
+    reorder(itemsRef.current.map((w, i) => ({ id: w.id, position: i })));
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
-      <SortableContext items={items.map(w => w.id)} strategy={verticalListSortingStrategy}>
-        <div className="relative">
-          {/* Static divider layer — not affected by drag transforms */}
-          <div className="absolute inset-0 pointer-events-none">
-            {items.slice(1).map((_, i) => (
-              <div
-                key={i}
-                className="absolute left-8 right-0 border-t border-dashed border-border"
-                style={{ top: (i + 1) * 65.25 }}
-              />
-            ))}
-          </div>
+    <div className="relative">
+      {/* Static divider layer — not affected by drag transforms */}
+      <div className="absolute inset-0 pointer-events-none">
+        {items.slice(1).map((_, i) => (
+          <div
+            key={i}
+            className="absolute left-8 right-0 border-t border-dashed border-border"
+            style={{ top: (i + 1) * 65.25 }}
+          />
+        ))}
+      </div>
 
-          <div className="flex flex-col">
-            {items.map((wallet, i) => (
-              <WalletItem
-                key={wallet.id}
-                wallet={wallet}
-                color={CHART_COLORS[i % CHART_COLORS.length]}
-                onEditAction={onEditAction}
-                onDeleteAction={onDeleteAction}
-              />
-            ))}
-          </div>
-        </div>
-      </SortableContext>
-    </DndContext>
+      <Reorder.Group as="div" axis="y" values={items} onReorder={setItems} className="flex flex-col">
+        {items.map(wallet => (
+          <WalletItem
+            key={wallet.id}
+            wallet={wallet}
+            color={colorMap.get(wallet.id)}
+            onEditAction={onEditAction}
+            onDeleteAction={onDeleteAction}
+            onDragEndAction={handleDragEnd}
+          />
+        ))}
+      </Reorder.Group>
+    </div>
   );
 }
 

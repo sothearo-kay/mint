@@ -136,7 +136,13 @@ export const listTransfers = createRoute({
   method: "get",
   middleware: [authMiddleware],
   tags,
-  request: { params: paramsSchema },
+  request: {
+    params: paramsSchema,
+    query: z.object({
+      from: z.iso.datetime().optional(),
+      to: z.iso.datetime().optional(),
+    }),
+  },
   responses: {
     200: {
       content: { "application/json": { schema: z.array(walletTransferSchema) } },

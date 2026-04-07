@@ -1,13 +1,14 @@
 import { cn } from "@mint/ui/lib/utils";
 
-interface ShimmerProps {
+type ShimmerProps = {
   isPending?: boolean;
   long?: boolean;
   className?: string;
-}
+};
 
 export function Shimmer({ isPending, long, className }: ShimmerProps) {
-  if (!isPending) return null;
+  if (!isPending)
+    return null;
 
   return (
     <span

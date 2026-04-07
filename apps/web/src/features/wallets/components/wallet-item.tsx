@@ -1,8 +1,6 @@
 "use client";
 
 import type { Wallet } from "../api/get-wallets";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import {
   Delete01Icon,
   DragDropVerticalIcon,
@@ -19,7 +17,9 @@ import {
 } from "@mint/ui/components/dropdown-menu";
 import { Icon } from "@mint/ui/components/icon";
 import { cn } from "@mint/ui/lib/utils";
+import { Reorder, useDragControls } from "motion/react";
 import Link from "next/link";
+import { useState } from "react";
 import { formatAmountByCurrency } from "@/utils/format";
 import { WALLET_ICONS } from "../utils";
 
@@ -28,35 +28,31 @@ type WalletItemProps = {
   color?: string;
   onEditAction: (wallet: Wallet) => void;
   onDeleteAction: (wallet: Wallet) => void;
+  onDragEndAction: () => void;
 };
 
-export function WalletItem({ wallet, color, onEditAction, onDeleteAction }: WalletItemProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging: isSortableDragging,
-  } = useSortable({ id: wallet.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
+export function WalletItem({ wallet, color, onEditAction, onDeleteAction, onDragEndAction }: WalletItemProps) {
+  const controls = useDragControls();
+  const [isDragging, setIsDragging] = useState(false);
 
   const WalletIcon = WALLET_ICONS[wallet.type];
   const iconColor = color ?? "var(--chart-1)";
   const balance = Number.parseFloat(wallet.balance);
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      className={cn(
-        "group flex items-center gap-3 py-3.5 transition-opacity",
-        isSortableDragging && "opacity-40",
-      )}
+    <Reorder.Item
+      as="div"
+      value={wallet}
+      dragListener={false}
+      dragControls={controls}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => {
+        setIsDragging(false);
+        onDragEndAction();
+      }}
+      transition={{ type: "spring", stiffness: 600, damping: 40 }}
+      dragTransition={{ bounceStiffness: 600, bounceDamping: 40 }}
+      className={cn("group flex items-center gap-3 py-3.5", isDragging && "opacity-40")}
     >
       <button
         type="button"
@@ -64,8 +60,7 @@ export function WalletItem({ wallet, color, onEditAction, onDeleteAction }: Wall
           buttonVariants({ variant: "ghost", size: "icon-sm" }),
           "-ml-2 cursor-grab active:cursor-grabbing text-muted-foreground touch-none shrink-0",
         )}
-        {...attributes}
-        {...listeners}
+        onPointerDown={e => controls.start(e)}
       >
         <Icon icon={DragDropVerticalIcon} />
       </button>
@@ -114,6 +109,6 @@ export function WalletItem({ wallet, color, onEditAction, onDeleteAction }: Wall
           {formatAmountByCurrency(balance, wallet.currency)}
         </span>
       </div>
-    </div>
+    </Reorder.Item>
   );
 }

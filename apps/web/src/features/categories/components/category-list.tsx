@@ -1,21 +1,6 @@
 "use client";
 
-import type { DragEndEvent } from "@dnd-kit/core";
 import type { Category } from "@/features/transactions/api/get-categories";
-import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { Delete01Icon, Loading03Icon } from "@hugeicons/core-free-icons";
 import { Button } from "@mint/ui/components/button";
 import { DynamicIcon, Icon } from "@mint/ui/components/icon";
@@ -24,7 +9,8 @@ import { toast } from "@mint/ui/components/sonner";
 import { Tray, TrayBody, TrayDescription, TrayFooter, TrayHeader, TrayTitle, TrayView } from "@mint/ui/components/tray";
 import { Skeleton } from "@mint/ui/components/ui/skeleton";
 import { cn } from "@mint/ui/lib/utils";
-import { useEffect, useState } from "react";
+import { Reorder } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { Fab } from "@/components/fab";
 import { useDeleteCategory } from "@/features/categories/api/delete-category";
 import { useReorderCategories } from "@/features/categories/api/reorder-categories";
@@ -113,29 +99,15 @@ function SortableCategoryGroup({
 
   const [localUserItems, setLocalUserItems] = useState(userItems);
   const { mutate: reorder } = useReorderCategories();
+  const localUserItemsRef = useRef(localUserItems);
+  localUserItemsRef.current = localUserItems;
 
   useEffect(() => {
     setLocalUserItems(userItems);
   }, [items]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
-  );
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-    if (!over || active.id === over.id)
-      return;
-
-    const oldIndex = localUserItems.findIndex(c => c.id === active.id);
-    const newIndex = localUserItems.findIndex(c => c.id === over.id);
-    if (oldIndex === -1 || newIndex === -1)
-      return;
-
-    const reordered = arrayMove(localUserItems, oldIndex, newIndex);
-    setLocalUserItems(reordered);
-    reorder(reordered.map((c, i) => ({ id: c.id, position: i })));
+  function handleDragEnd() {
+    reorder(localUserItemsRef.current.map((c, i) => ({ id: c.id, position: i })));
   }
 
   return (
@@ -145,13 +117,16 @@ function SortableCategoryGroup({
       ))}
 
       {localUserItems.length > 0 && (
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          <SortableContext items={localUserItems.map(c => c.id)} strategy={verticalListSortingStrategy}>
-            {localUserItems.map(cat => (
-              <CategoryRow key={cat.id} category={cat} onDeleteAction={() => onDeleteAction(cat)} />
-            ))}
-          </SortableContext>
-        </DndContext>
+        <Reorder.Group as="div" axis="y" values={localUserItems} onReorder={setLocalUserItems} className="flex flex-col gap-2">
+          {localUserItems.map(cat => (
+            <CategoryRow
+              key={cat.id}
+              category={cat}
+              onDeleteAction={() => onDeleteAction(cat)}
+              onDragEndAction={handleDragEnd}
+            />
+          ))}
+        </Reorder.Group>
       )}
     </div>
   );

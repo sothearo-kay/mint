@@ -15,7 +15,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@mint/ui/components/sidebar";
-import { Skeleton } from "@mint/ui/components/skeleton";
 import { toast } from "@mint/ui/components/sonner";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -24,25 +23,11 @@ import { LoginDialog } from "@/features/auth/components/login-dialog";
 import { getInitials } from "@/utils/format";
 
 export function SidebarAuth() {
-  const { data, isPending } = useSession();
+  const { data } = useSession();
   const router = useRouter();
   const { mutate: signOut } = useSignOut({
     mutationConfig: { onSuccess: () => router.refresh() },
   });
-
-  if (isPending) {
-    return (
-      <SidebarMenu>
-        <SidebarMenuItem>
-          <div className="flex h-auto items-center gap-2 rounded-md px-2 py-1.5">
-            <Skeleton className="size-8 rounded-full shrink-0" />
-            <Skeleton className="h-3.5 w-24 rounded-md" />
-            <Skeleton className="size-4 rounded-md ml-auto shrink-0" />
-          </div>
-        </SidebarMenuItem>
-      </SidebarMenu>
-    );
-  }
 
   if (!data) {
     return (

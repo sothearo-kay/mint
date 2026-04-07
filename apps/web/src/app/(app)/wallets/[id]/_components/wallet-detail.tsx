@@ -35,7 +35,7 @@ export function WalletDetail({ walletId }: WalletDetailProps) {
   const [txActionMode, setTxActionMode] = useState<"edit" | "delete" | null>(null);
   const [transferOpen, setTransferOpen] = useState(false);
 
-  const { data: session, isPending: isSessionPending } = useSession();
+  const { data: session } = useSession();
   const { data: rawWallets = [], isPending: isWalletsPending } = useWallets({
     queryConfig: { enabled: !!session },
   });
@@ -51,14 +51,13 @@ export function WalletDetail({ walletId }: WalletDetailProps) {
   });
 
   const { data: transfers = [], isPending: isTransfersPending } = useWalletTransfers({
-    walletId,
+    params: { walletId, from: filters.from, to: filters.to },
     queryConfig: { enabled: !!session && !!wallet },
   });
 
   const transactions = session ? apiTransactions : [];
-  const isPending = isSessionPending || (!!session && isWalletsPending);
-  const isActivityPending = isSessionPending || (!!session && (isTxPending || isTransfersPending));
-
+  const isPending = !!session && isWalletsPending;
+  const isActivityPending = !!session && (isTxPending || isTransfersPending);
 
   const containerStyle = isMobile
     ? undefined

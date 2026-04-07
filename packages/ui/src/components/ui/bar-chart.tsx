@@ -1,7 +1,7 @@
 "use client";
 
-import type * as React from "react";
 import type { ChartConfig } from "@mint/ui/components/ui/chart";
+import type * as React from "react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@mint/ui/components/ui/chart";
 import { Bar, BarChart, XAxis } from "recharts";
 
@@ -15,7 +15,7 @@ type MintBarChartProps = {
   valueFormatter?: (value: number | string) => React.ReactNode;
 };
 
-const CustomHatchedBar = (props: React.SVGProps<SVGRectElement> & { dataKey?: string; fill?: string }) => {
+function CustomHatchedBar(props: React.SVGProps<SVGRectElement> & { dataKey?: string; fill?: string }) {
   const { fill, x, y, width, height, dataKey } = props;
   const patternId = `hatched-bar-${dataKey}`;
   return (
@@ -29,13 +29,15 @@ const CustomHatchedBar = (props: React.SVGProps<SVGRectElement> & { dataKey?: st
       <rect rx={4} x={x} y={y} width={width} height={height} fill={`url(#${patternId})`} />
     </>
   );
-};
+}
 
-const DottedBackground = () => (
-  <pattern id="bar-dots" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-    <circle cx="2" cy="2" r="1" className="fill-muted dark:fill-muted/40" />
-  </pattern>
-);
+function DottedBackground() {
+  return (
+    <pattern id="bar-dots" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" className="fill-muted dark:fill-muted/40" />
+    </pattern>
+  );
+}
 
 function MintBarChart({ data, dataKey, color, label, xAxisKey = "month", className, valueFormatter }: MintBarChartProps) {
   const chartConfig = {

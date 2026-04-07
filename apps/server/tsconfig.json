@@ -1,16 +1,16 @@
 {
   "extends": "@mint/typescript-config/base",
   "compilerOptions": {
-    "types": ["node"],
     "composite": true,
-    "declarationMap": true,
     "rootDir": "src",
-    "outDir": "dist",
     "paths": {
       "@/*": [
         "./src/*"
       ]
-    }
+    },
+    "types": ["node"],
+    "declarationMap": true,
+    "outDir": "dist"
   },
   "include": [
     "src/**/*.ts"
