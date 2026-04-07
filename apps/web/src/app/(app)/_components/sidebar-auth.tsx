@@ -67,7 +67,7 @@ export function SidebarAuth() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger render={<SidebarMenuButton className="h-auto py-1.5 aria-expanded=true:bg-sidebar-accent aria-expanded=true:text-sidebar-accent-foreground" />}>
+          <DropdownMenuTrigger render={<SidebarMenuButton className="h-auto py-1.5 aria-expanded:bg-sidebar-accent aria-expanded:text-sidebar-accent-foreground" />}>
             <Avatar>
               <AvatarImage src={user.image ?? undefined} alt={user.name ?? "User"} />
               <AvatarFallback>{initial}</AvatarFallback>
