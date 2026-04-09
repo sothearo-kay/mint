@@ -25,7 +25,7 @@ export function Transactions() {
 
   const { data: session } = useSession();
   const { data: wallets = [] } = useWallets({ queryConfig: { enabled: !!session } });
-  const { transactions: guestTransactions, hasHydrated } = useFilteredGuestTransactions(filters.from, filters.to);
+  const { transactions: guestTransactions } = useFilteredGuestTransactions(filters.from, filters.to);
 
   useRecurring({ queryConfig: { enabled: !!session } }); // triggers processOverdue as side effect
 
@@ -44,7 +44,7 @@ export function Transactions() {
 
   const apiTransactions = pages?.pages.flatMap(p => p.data) ?? [];
   const transactions = session ? apiTransactions : guestTransactions;
-  const isPending = session ? isPendingApi : !hasHydrated;
+  const isPending = !!session && isPendingApi;
 
   const totals = pages?.pages[0]?.totals;
   const currencies: CurrencyBalance[] = session && totals
